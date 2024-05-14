@@ -39,17 +39,17 @@ quality: format lint type-check
 	@:
 
 .PHONY: unit-test
-unit-test:
+unit-test: build-cython
 	@poetry run pytest --cov=src tests/unit
 
 .PHONY: integration-test
-integration-test:
+integration-test: build-cython
 	@poetry run pytest --cov=src tests/integration
 
 .PHONY: test
-test:
-	@poetry run pytest --cov=src
+test: build-cython
+	@poetry run pytest --cov=src/
 
-.PHONY: build
-build:
-	@poetry build -f wheel
+.PHONY: build-cython
+build-cython:
+	@poetry run python setup.py build_ext --inplace
