@@ -44,11 +44,11 @@ unit-test: build-cython
 
 .PHONY: integration-test
 integration-test: build-cython
-	@poetry run pytest --cov=src tests/integration
+	@poetry run pytest --log-cli-level=DEBUG --cov=src tests/integration
 
 .PHONY: test
 test: build-cython
-	@poetry run pytest --cov=src/
+	@poetry run pytest --log-cli-level=DEBUG --cov=src/
 
 .PHONY: build-cython
 build-cython:
