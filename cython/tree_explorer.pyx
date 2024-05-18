@@ -16,14 +16,17 @@ cdef class tree_explorer():
     cdef np.ndarray tag
     cdef np.ndarray state
     cdef np.ndarray last_tags
+    cdef np.ndarray fixed_points 
 
-    def __cinit__(self, int start_tg, int start_lvl, int max_d, np.ndarray gen, np.ndarray fsa):
+    def __cinit__(self, int start_tg, int start_lvl, int max_d, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):
         self.start_tag = start_tg
         self.level = start_lvl 
         self.max_depth = max_d 
         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
         self.generators = gen 
-        self.FSA = fsa 
+        self.FSA = fsa
+        self.fixed_points = fix_pt 
+        
         self.tag       = np.empty((self.max_depth), dtype=int)
         self.state     = np.empty((self.max_depth), dtype=int)
         self.last_tags = np.empty((self.max_depth), dtype=int)
@@ -115,11 +118,7 @@ cdef class tree_explorer():
             
         self.level += 1
 
-        _logger.debug("Turn Forward move")
-        _logger.debug(f"nex_gen : {idx_gen}")
-        _logger.debug(f"curr_state : {self.curr_state}")
         self.print_word()
-        _logger.debug(f"level {self.level}")
 
     cpdef void forward_move(self):
         cdef int idx_gen = self.get_right_gen()
@@ -153,9 +152,6 @@ cdef class tree_explorer():
             if self.level == -1 and self.tag[0] == 1:
                 break
             self.turn_forward_move()
-            _logger.debug(self.level != -1 and self.tag[0] != 1)
-        _logger.debug(self.tag[0])
-        _logger.debug(self.level)
 
         #TODO: Adapt to explore all branch and returns list of reached tags + words
         #if start_word == np.identity(2): 
