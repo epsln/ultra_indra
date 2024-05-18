@@ -1,6 +1,9 @@
 import cython 
 cimport numpy as np
 import numpy as np
+import logging
+
+_logger = logging.getLogger(__name__)
 
 cdef class tree_explorer():
     cdef np.ndarray words
@@ -9,6 +12,7 @@ cdef class tree_explorer():
     cdef int level
     cdef int start_tag 
     cdef int max_depth
+    cdef int curr_state 
     cdef np.ndarray tag
     cdef np.ndarray state
     cdef np.ndarray last_tags
@@ -17,7 +21,7 @@ cdef class tree_explorer():
         self.start_tag = start_tg
         self.level = start_lvl 
         self.max_depth = max_d 
-        self.words = np.empty((self.max_depth * 2 * 2), dtype=complex)
+        self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
         self.generators = gen 
         self.FSA = fsa 
         self.tag       = np.empty((self.max_depth), dtype=int)
@@ -26,24 +30,35 @@ cdef class tree_explorer():
 
 
     cpdef void set_next_state(self, int idx_gen):
-        self.state[self.level + 1] = self.FSA[self.state[self.level] * 4 + idx_gen]
+        self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
 
     cpdef int get_next_state(self, int idx_gen):
-        return self.FSA[self.state[self.level] * 4 + idx_gen]
+        return self.FSA[self.state[self.level]][idx_gen]
 
-    cpdef int get_next_gen(self):
+    cpdef int get_right_gen(self):
         cdef int idx_gen = 0
         cdef int i = 1
         while True:
-            idx_gen = (self.tag[self.level + 1] - i) % 4
-            i -= 1
+            idx_gen = (self.tag[self.level] + i) % 4
+            i += 1
             if self.get_next_state(idx_gen) != 0:
                 break
         return idx_gen
 
+    cpdef int get_left_gen(self):
+        cdef int idx_gen = 0
+        cdef int i = 1
+        while True:
+            idx_gen = (self.tag[self.level + 1] - i) % 4
+            i += 1
+            if self.get_next_state(idx_gen) != 0:
+                break
+        return idx_gen
+
+
     cpdef int branch_terminated(self):
         points = []
-        if self.level == self.max_depth:
+        if self.level == self.max_depth - 1:
             return 1 
 
         #for fp in fixed_points[1:]:
@@ -54,56 +69,96 @@ cdef class tree_explorer():
 
         return 0 
 
+    def print_word(self):
+        word = ""
+        for i in range(self.level + 1):
+            t = self.tag[i]
+            if i == self.level:
+                word += "\x1b[31;20m"
+            else:
+                word += "\x1b[0m" 
+            if t == 0:
+                word += "a"
+            elif t == 1:
+                word += "b"
+            elif t == 2:
+                word += "A"
+            elif t == 3:
+                word += "B"
+        _logger.debug(f"Word: {word}")
+
     cpdef void backward_move(self):
         self.level -= 1
+        _logger.debug("Backward move")
+        _logger.debug(f"level {self.level}")
 
     cpdef int available_turn(self):
+        cdef int idx_gen = self.get_right_gen() 
         if self.level == -1:
-            return 0 
+            return 1 
 
         #TODO: Check this line
-        if self.FSA[self.curr_state * 4 + (self.tag[self.level + 1] - 1)] % 4 == 0:
+        if self.FSA[self.state[self.level + 1]][idx_gen] == 0:
             return 0 
         else:
             return 1 
 
     cpdef void turn_forward_move(self):
-        cdef int idx_gen = self.get_next_gen()
+        self.curr_state = self.state[self.level]
+        _logger.debug(f"curr_state : {self.curr_state}")
+        cdef int idx_gen = self.get_left_gen()
         self.set_next_state(idx_gen)
         self.curr_state = self.state[self.level + 1]
         self.tag[self.level + 1] = idx_gen
 
-        if self.level == -1:
-            self.words[0] = self.generators[self.tag[0]]
-        else:
-            self.words[0] = np.matmul(self.word, self.generators[idx_gen])
+        self.words[self.level] = np.matmul(self.words[self.level], self.generators[idx_gen])
             
         self.level += 1
 
+        _logger.debug("Turn Forward move")
+        _logger.debug(f"nex_gen : {idx_gen}")
+        _logger.debug(f"curr_state : {self.curr_state}")
+        self.print_word()
+        _logger.debug(f"level {self.level}")
+
     cpdef void forward_move(self):
-        cdef int idx_gen = self.get_next_gen()
+        cdef int idx_gen = self.get_right_gen()
 
         self.set_next_state(idx_gen)
         self.curr_state = self.state[self.level + 1]
         self.tag[self.level + 1] = idx_gen
 
+
+        self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
+
         self.level += 1
 
-        self.word = np.matmul(self.word, self.generators[idx_gen])
+        _logger.debug("Forward move")
+        _logger.debug(f"nex_gen : {idx_gen}")
+        _logger.debug(f"curr_state : {self.curr_state}")
+        self.print_word()
+        _logger.debug(f"level {self.level}")
 
     cpdef np.ndarray compute_leaf(self):
-        while self.level != -1 or self.tag[0] == self.start_tag:
-            while self.branch_terminated() == False:
+        self.state[0] = 1
+        self.tag[0] = 0
+        fuckout = 0
+        while not (self.level == -1 and self.tag[0] == 1):
+            while self.branch_terminated() == 0:
                 self.forward_move()
             while True:
                 self.backward_move() 
-                if self.available_turn() == True or self.level == -1:
+                if self.available_turn() == 1 or self.level == -1:
                     break
+            if self.level == -1 and self.tag[0] == 1:
+                break
             self.turn_forward_move()
+            _logger.debug(self.level != -1 and self.tag[0] != 1)
+        _logger.debug(self.tag[0])
+        _logger.debug(self.level)
 
         #TODO: Adapt to explore all branch and returns list of reached tags + words
         #if start_word == np.identity(2): 
         #    return self.last_words, self.last_tags 
         #else:
-        return self.points
 
