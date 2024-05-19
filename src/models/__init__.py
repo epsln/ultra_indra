@@ -1,2 +1,2 @@
-from .compute_model import ComputeModel
-from .fractal_model import FractalModel
+from .compute_model import ComputeModel # noqa
+from .fractal_model import FractalModel # noqa

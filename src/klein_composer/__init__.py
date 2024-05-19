@@ -1,1 +1,1 @@
-from .klein_composer import KleinComposer
+from .klein_composer import KleinComposer # noqa
