@@ -17,9 +17,9 @@ cdef class tree_explorer():
     cdef np.ndarray state
     cdef np.ndarray last_tags
     cdef np.ndarray fixed_points 
+    cdef np.ndarray start_word
 
-    def __cinit__(self, int start_tg, int start_lvl, int max_d, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):
-        self.start_tag = start_tg
+    def __cinit__(self, int start_tg, int start_lvl, int max_d, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt, np.ndarray start_word):
         self.level = start_lvl 
         self.max_depth = max_d 
         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
@@ -30,6 +30,10 @@ cdef class tree_explorer():
         self.tag       = np.empty((self.max_depth), dtype=int)
         self.state     = np.empty((self.max_depth), dtype=int)
         self.last_tags = np.empty((self.max_depth), dtype=int)
+        self.last_words = np.empty((4 * np.pow(3, self.max_depth)), dtype=int)
+
+        self.words[0] = start_word
+        self.tag[0] = start_tg
 
 
     cpdef void set_next_state(self, int idx_gen):
@@ -62,6 +66,8 @@ cdef class tree_explorer():
     cpdef int branch_terminated(self):
         points = []
         if self.level == self.max_depth - 1:
+            idx = (self.last_words != 0).argmax()
+            self.last_words[idx] = self.words[self.level]
             return 1 
 
         #for fp in fixed_points[1:]:
@@ -139,8 +145,6 @@ cdef class tree_explorer():
         _logger.debug(f"level {self.level}")
 
     cpdef np.ndarray compute_leaf(self):
-        self.state[0] = 1
-        self.tag[0] = 0
         fuckout = 0
         while not (self.level == -1 and self.tag[0] == 1):
             while self.branch_terminated() == 0:
@@ -154,7 +158,7 @@ cdef class tree_explorer():
             self.turn_forward_move()
 
         #TODO: Adapt to explore all branch and returns list of reached tags + words
-        #if start_word == np.identity(2): 
-        #    return self.last_words, self.last_tags 
+        if self.start_word == np.identity(2): 
+            return self.last_words, self.last_tags 
         #else:
 
