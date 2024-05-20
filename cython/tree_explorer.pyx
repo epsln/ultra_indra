@@ -69,13 +69,16 @@ cdef class tree_explorer():
             self.last_words[idx] = self.words[self.level]
             return 1 
 
-        #for fp in fixed_points[1:]:
-        #    #Append p to some array and return it
-        #    points.append(np.matmul(word, fp))
-        #    if np.isclose(points[i], points[i - 1], atol = self.epsilon):
-        #        return True
+        idx_gen = self.tag[self.level]
+        cdef np.ndarray p = np.matmul(self.words[self.level], self.fixed_points[idx_gen][0])
+        for fp in self.fixed_points[idx_gen][1:]:
+            #Append p to some array and return it
+            old_p = p 
+            p = np.matmul(self.words[self.level], fp)
+            if not np.isclose(p, old_p, atol = self.epsilon):
+                return 0 
 
-        return 0 
+        return 1 
 
     def print_word(self):
         word = ""
