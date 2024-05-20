@@ -1,6 +1,4 @@
 from klein_compute.tree_explorer import tree_explorer
-from src.klein_composer.utils import pad_to_dense
-from src.klein_composer.utils import compute_fix_pts
 
 import numpy as np
 import threading
@@ -24,8 +22,7 @@ class KleinComposer:
         self.word_length = 0
         # self.fix_pts = self.compute_fix_pts(self.special_word)
         self.special_word = [0]
-        self.fix_pts = compute_fix_pts(self.gen, self.special_word)  # special word abAB
-        self.fix_pts = pad_to_dense(self.fix_pts)
+        self.fix_pts = fractal_model.fixed_points
 
 
     def compute_start_points(self):
