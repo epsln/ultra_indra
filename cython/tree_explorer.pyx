@@ -15,7 +15,7 @@ cdef class tree_explorer():
     cdef int curr_state 
     cdef np.ndarray tag
     cdef np.ndarray state
-    cdef np.ndarray last_tags
+    cdef np.ndarray last_words
     cdef np.ndarray fixed_points 
     cdef np.ndarray start_word
 
@@ -29,8 +29,7 @@ cdef class tree_explorer():
         
         self.tag       = np.empty((self.max_depth), dtype=int)
         self.state     = np.empty((self.max_depth), dtype=int)
-        self.last_tags = np.empty((self.max_depth), dtype=int)
-        self.last_words = np.empty((4 * np.pow(3, self.max_depth)), dtype=int)
+        self.last_words = np.empty((4 * np.power(3, self.max_depth)), dtype=int)
 
         self.words[0] = start_word
         self.tag[0] = start_tg
@@ -159,6 +158,6 @@ cdef class tree_explorer():
 
         #TODO: Adapt to explore all branch and returns list of reached tags + words
         if self.start_word == np.identity(2): 
-            return self.last_words, self.last_tags 
+            return self.last_words
         #else:
 
