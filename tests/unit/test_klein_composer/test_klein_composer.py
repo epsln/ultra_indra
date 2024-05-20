@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 from src.klein_composer import KleinComposer
 from src.klein_composer.utils import mobius_fixed_point 
-from tests.conftest import fractal_model_fixture, compute_model_fixture 
+from tests.conftest import fractal_model_fixture, compute_model_fixture, klein_composer_fixture
 
 
 def test_init(fractal_model_fixture, compute_model_fixture):
@@ -20,3 +20,6 @@ def test_fix_pts(fractal_model_fixture, compute_model_fixture):
     test_word = np.matmul(test_word, kc.gen[2]) 
     test_word = np.matmul(test_word, kc.gen[3]) 
     assert mobius_fixed_point(test_word)[0] in kc.fix_pts  
+
+def test_compute_start_pts(klein_composer_fixture):
+    start_pts = klein_composer_fixture.compute_start_points() 
