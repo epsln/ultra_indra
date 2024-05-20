@@ -12,7 +12,7 @@ def fractal_model_fixture():
                                         [1, 2, 3, 0], 
                                         [0, 2, 3, 4], 
                                         [1, 0, 3, 4]]),
-                        special_fract = Fraction(0, 1)
+                        special_fract = Fraction(0, 1),
                         )
 
 @pytest.fixture
