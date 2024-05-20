@@ -27,7 +27,7 @@ format:
 	@poetry run black src/
 
 .PHONY: lint
-python-lint:
+lint:
 	@poetry run ruff check --fix --force-exclude src/
 
 .PHONY: type-check
