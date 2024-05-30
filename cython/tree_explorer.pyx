@@ -13,13 +13,15 @@ cdef class tree_explorer():
     cdef int start_tag 
     cdef int max_depth
     cdef int curr_state 
+    cdef int last_idx 
+    cdef float epsilon
     cdef np.ndarray tag
     cdef np.ndarray state
     cdef np.ndarray last_words
     cdef np.ndarray fixed_points 
     cdef np.ndarray start_word
 
-    def __cinit__(self, int start_tg, int start_lvl, int max_d, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt, np.ndarray start_word):
+    def __cinit__(self, int start_tg, int start_state, int start_lvl, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt, np.ndarray start_word):
         self.level = start_lvl 
         self.max_depth = max_d 
         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
@@ -29,16 +31,21 @@ cdef class tree_explorer():
         
         self.tag       = np.empty((self.max_depth), dtype=int)
         self.state     = np.empty((self.max_depth), dtype=int)
-        self.last_words = np.empty((4 * np.power(3, self.max_depth)), dtype=int)
+        self.last_words = np.zeros((4 * np.power(3, self.max_depth), 2, 2), dtype=complex)
+        self.start_word = start_word
 
         self.words[0] = start_word
         self.tag[0] = start_tg
+        self.state[0] = start_state
+        self.last_idx = 0
+        _logger.debug(f"{self.generators}")
 
 
     cpdef void set_next_state(self, int idx_gen):
         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
 
     cpdef int get_next_state(self, int idx_gen):
+        _logger.debug(f"{self.level}, {self.state}");
         return self.FSA[self.state[self.level]][idx_gen]
 
     cpdef int get_right_gen(self):
@@ -61,20 +68,24 @@ cdef class tree_explorer():
                 break
         return idx_gen
 
+    cpdef complex mobius(self, np.ndarray m, complex z):
+        return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
 
     cpdef int branch_terminated(self):
         points = []
         if self.level == self.max_depth - 1:
-            idx = (self.last_words != 0).argmax()
-            self.last_words[idx] = self.words[self.level]
+            self.last_words[self.last_idx] = self.words[self.level]
+            _logger.debug(f"Hit max depth {self.level}: last_word[{self.last_idx}] = {self.words[self.level]}")
+            self.last_idx += 1
             return 1 
 
         idx_gen = self.tag[self.level]
-        cdef np.ndarray p = np.matmul(self.words[self.level], self.fixed_points[idx_gen][0])
+        cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
+        cdef complex old_p = p
         for fp in self.fixed_points[idx_gen][1:]:
             #Append p to some array and return it
             old_p = p 
-            p = np.matmul(self.words[self.level], fp)
+            p = self.mobius(self.words[self.level], fp)
             if not np.isclose(p, old_p, atol = self.epsilon):
                 return 0 
 
@@ -116,15 +127,21 @@ cdef class tree_explorer():
 
     cpdef void turn_forward_move(self):
         self.curr_state = self.state[self.level]
+        _logger.debug(f"Turn forward move")
         _logger.debug(f"curr_state : {self.curr_state}")
+        _logger.debug(f"level: {self.level}")
         cdef int idx_gen = self.get_left_gen()
         self.set_next_state(idx_gen)
         self.curr_state = self.state[self.level + 1]
         self.tag[self.level + 1] = idx_gen
-
-        self.words[self.level] = np.matmul(self.words[self.level], self.generators[idx_gen])
+        _logger.debug(f"gen: {idx_gen}")
+        if self.level == -1:
+            self.words[0] = self.generators[idx_gen] 
+        else:
+            self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
             
         self.level += 1
+        _logger.debug(f"{self.words}")
 
         self.print_word()
 
@@ -134,9 +151,10 @@ cdef class tree_explorer():
         self.set_next_state(idx_gen)
         self.curr_state = self.state[self.level + 1]
         self.tag[self.level + 1] = idx_gen
-
-
-        self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
+        if self.level == -1:
+            self.words[0] = self.generators[idx_gen]
+        else:
+            self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
 
         self.level += 1
 
@@ -145,6 +163,7 @@ cdef class tree_explorer():
         _logger.debug(f"curr_state : {self.curr_state}")
         self.print_word()
         _logger.debug(f"level {self.level}")
+        _logger.debug(f"{self.words}")
 
     cpdef np.ndarray compute_leaf(self):
         fuckout = 0
@@ -160,7 +179,7 @@ cdef class tree_explorer():
             self.turn_forward_move()
 
         #TODO: Adapt to explore all branch and returns list of reached tags + words
-        if self.start_word == np.identity(2): 
+        if self.start_word.all() == self.generators[0].all(): 
             return self.last_words
         #else:
 
