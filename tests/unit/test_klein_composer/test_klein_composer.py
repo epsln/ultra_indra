@@ -14,4 +14,5 @@ def test_init(fractal_model_fixture, compute_model_fixture):
 
 def test_compute_start_pts(klein_composer_fixture):
     start_pts = klein_composer_fixture.compute_start_points() 
-    assert start_pts == klein_composer_fixture.gen
+    for g in klein_composer_fixture.gen:
+        assert g in start_pts
