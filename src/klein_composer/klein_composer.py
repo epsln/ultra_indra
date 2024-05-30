@@ -24,9 +24,10 @@ class KleinComposer:
         self.special_word = [0]
         self.fix_pts = fractal_model.fixed_points
 
-
     def compute_start_points(self):
-        tree_exp = tree_explorer(0, 0, 3, self.gen, self.fsa, self.fix_pts, np.identity(2, dtype = complex))
+        tree_exp = tree_explorer(
+            0, 0, 0, 1, 0.01, self.gen, self.fsa, self.fix_pts, self.gen[0]
+        )
         return tree_exp.compute_leaf()
 
     def compute_thread(self, depth):
@@ -37,5 +38,9 @@ class KleinComposer:
             if n_threads == self.num_threads:
                 # Check if one is done
                 continue
-            tree_explorer.append(tree_explorer(start_points, self.gen, self.fsa, self.fix_pts))
-            thread = threading.Thread(target=tree_explorers[n_threads].compute_leaf, args=())
+            tree_explorer.append(
+                tree_explorer(start_points, self.gen, self.fsa, self.fix_pts)
+            )
+            thread = threading.Thread(
+                target=tree_explorers[n_threads].compute_leaf, args=()
+            )
