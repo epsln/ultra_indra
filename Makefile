@@ -48,7 +48,7 @@ integration-test: build-cython
 
 .PHONY: test
 test: build-cython
-	@poetry run pytest --log-cli-level=DEBUG --cov=src/
+	@poetry run pytest -vv --log-cli-level=DEBUG --cov=src/
 
 .PHONY: build-cython
 build-cython:

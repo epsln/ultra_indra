@@ -1,1 +1,1 @@
-from .utils import pad_to_dense #noqa
+from .utils import pad_to_dense  # noqa
