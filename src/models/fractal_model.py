@@ -1,19 +1,22 @@
 import numpy as np
-from dataclasses import dataclass
 from fractions import Fraction
 from itertools import permutations
 from typing import Optional
 
-DEFAULT_FSA: np.ndarray = np.array([[1, 2, 3, 4], 
-                            [1, 2, 0, 4], 
-                            [1, 2, 3, 0], 
-                            [0, 2, 3, 4], 
-                            [1, 0, 3, 4]])
+DEFAULT_FSA: np.ndarray = np.array(
+    [[1, 2, 3, 4], [1, 2, 0, 4], [1, 2, 3, 0], [0, 2, 3, 4], [1, 0, 3, 4]]
+)
 
 from src.utils import pad_to_dense
 
+
 class FractalModel:
-    def __init__(self, generators: np.ndarray, special_fract: Fraction, FSA: Optional[np.ndarray] = DEFAULT_FSA): 
+    def __init__(
+        self,
+        generators: np.ndarray,
+        special_fract: Fraction,
+        FSA: Optional[np.ndarray] = DEFAULT_FSA,
+    ):
         self.generators: np.ndarray = generators
         self.special_fract: Fraction = special_fract
         self._compute_special_word()
@@ -25,15 +28,18 @@ class FractalModel:
         return np.roots(coeff)
 
     def _compute_special_word(self):
-        #See pp. 276
+        # See pp. 276
         num = 1
         c = self.special_fract.denominator
         special_word = []
         while True:
-            if (num + self.special_fract.denominator > self.special_fract.numerator + self.special_fract.denominator):
-                c = -self.special_fract.numerator 
+            if (
+                num + self.special_fract.denominator
+                > self.special_fract.numerator + self.special_fract.denominator
+            ):
+                c = -self.special_fract.numerator
                 gen = 0
-            elif (num - self.special_fract.numerator < 1):
+            elif num - self.special_fract.numerator < 1:
                 c = self.special_fract.denominator
                 gen = 3
 
