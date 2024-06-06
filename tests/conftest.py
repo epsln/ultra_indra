@@ -29,4 +29,5 @@ def klein_composer_fixture(fractal_model_fixture, compute_model_fixture):
 
 @pytest.fixture
 def output_manager_fixture():
-    return OutputManager(file_type = "jpg", output_dir = "output")
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        return OutputManager(file_type = "jpg", output_dir = tmpdirname)
