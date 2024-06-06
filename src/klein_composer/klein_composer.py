@@ -27,9 +27,6 @@ class KleinComposer:
 
         #TODO: Rename threads into workers
         self.pool = Pool(self.cm.num_threads)
-        self.tree_explorator = tree_explorer(
-            self.start_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points
-        )
 
 
     @staticmethod
@@ -46,9 +43,12 @@ class KleinComposer:
         return tree_exp.compute_tree()
 
     def compute_thread(self):
+        tree_explorator = tree_explorer(
+            self.max_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points
+        )
         start_points, start_states, start_tags = self.compute_start_points()
-        arguments = [(sp, ss, st) for sp, ss, st in zip(start_points, start_states, start_tags)]
+        arguments = [(st, ss, self.start_depth, sp) for sp, ss, st in zip(start_points, start_states, start_tags)]
             
         with self.pool as p:
-            output = p.starmap(self.tree_explorator.compute_leaf, arguments)
+            output = p.starmap(tree_explorator.compute_leaf, arguments)
             
