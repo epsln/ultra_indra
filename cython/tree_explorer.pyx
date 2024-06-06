@@ -1,4 +1,5 @@
 import cython 
+from cython.parallel import prange
 cimport numpy as np
 import numpy as np
 import logging
@@ -14,15 +15,21 @@ cdef class tree_explorer():
     cdef int max_depth
     cdef int curr_state 
     cdef int last_idx 
+    cdef int last_idx_points
+    cdef int precomputing 
     cdef float epsilon
     cdef np.ndarray tag
     cdef np.ndarray state
     cdef np.ndarray last_words
+    cdef np.ndarray last_state
+    cdef np.ndarray last_tags
     cdef np.ndarray fixed_points 
     cdef np.ndarray start_word
+    cdef np.ndarray points 
 
-    def __cinit__(self, int start_tg, int start_state, int start_lvl, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt, np.ndarray start_word):
-        self.level = start_lvl 
+    def __cinit__(self, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):
+        self.level = 0 
+        self.precomputing = 0
         self.max_depth = max_d 
         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
         self.generators = gen 
@@ -32,20 +39,18 @@ cdef class tree_explorer():
         self.tag       = np.empty((self.max_depth), dtype=int)
         self.state     = np.empty((self.max_depth), dtype=int)
         self.last_words = np.zeros((4 * np.power(3, self.max_depth), 2, 2), dtype=complex)
-        self.start_word = start_word
+        self.last_state = np.zeros((4 * np.power(3, self.max_depth)), dtype=int)
+        self.last_tags = np.zeros((4 * np.power(3, self.max_depth)), dtype=int)
+        self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * np.power(3, self.max_depth)), dtype=complex)
 
-        self.words[0] = start_word
-        self.tag[0] = start_tg
-        self.state[0] = start_state
         self.last_idx = 0
-        _logger.debug(f"{self.generators}")
+        self.last_idx_points = 0
 
 
     cpdef void set_next_state(self, int idx_gen):
         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
 
     cpdef int get_next_state(self, int idx_gen):
-        _logger.debug(f"{self.level}, {self.state}");
         return self.FSA[self.state[self.level]][idx_gen]
 
     cpdef int get_right_gen(self):
@@ -74,20 +79,30 @@ cdef class tree_explorer():
     cpdef int branch_terminated(self):
         points = []
         if self.level == self.max_depth - 1:
-            self.last_words[self.last_idx] = self.words[self.level]
-            _logger.debug(f"Hit max depth {self.level}: last_word[{self.last_idx}] = {self.words[self.level]}")
-            self.last_idx += 1
+            _logger.debug(f"{self.level}, {self.last_idx}")
+            if self.precomputing == 1:
+                self.last_words[self.last_idx] = self.words[self.level]
+                self.last_state[self.last_idx] = self.state[self.level]
+                self.last_tags[self.last_idx] = self.tag[self.level]
+                self.last_idx += 1
             return 1 
 
         idx_gen = self.tag[self.level]
+
         cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
         cdef complex old_p = p
-        for fp in self.fixed_points[idx_gen][1:]:
-            #Append p to some array and return it
+        self.points[self.last_idx] = p
+        self.last_idx_points += 1
+
+        for i, fp in enumerate(self.fixed_points[idx_gen][1:]):
             old_p = p 
             p = self.mobius(self.words[self.level], fp)
             if not np.isclose(p, old_p, atol = self.epsilon):
+                self.last_idx_points -= i + 1 
                 return 0 
+            _logger.debug(f"Last idx: {self.last_idx}")
+            self.points[self.last_idx_points] = p
+            self.last_idx_points += 1
 
         return 1 
 
@@ -111,8 +126,6 @@ cdef class tree_explorer():
 
     cpdef void backward_move(self):
         self.level -= 1
-        _logger.debug("Backward move")
-        _logger.debug(f"level {self.level}")
 
     cpdef int available_turn(self):
         cdef int idx_gen = self.get_right_gen() 
@@ -127,22 +140,16 @@ cdef class tree_explorer():
 
     cpdef void turn_forward_move(self):
         self.curr_state = self.state[self.level]
-        _logger.debug(f"Turn forward move")
-        _logger.debug(f"curr_state : {self.curr_state}")
-        _logger.debug(f"level: {self.level}")
         cdef int idx_gen = self.get_left_gen()
         self.set_next_state(idx_gen)
         self.curr_state = self.state[self.level + 1]
         self.tag[self.level + 1] = idx_gen
-        _logger.debug(f"gen: {idx_gen}")
         if self.level == -1:
             self.words[0] = self.generators[idx_gen] 
         else:
             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
             
         self.level += 1
-        _logger.debug(f"{self.words}")
-
         self.print_word()
 
     cpdef void forward_move(self):
@@ -158,16 +165,14 @@ cdef class tree_explorer():
 
         self.level += 1
 
-        _logger.debug("Forward move")
-        _logger.debug(f"nex_gen : {idx_gen}")
-        _logger.debug(f"curr_state : {self.curr_state}")
         self.print_word()
-        _logger.debug(f"level {self.level}")
-        _logger.debug(f"{self.words}")
 
-    cpdef np.ndarray compute_leaf(self):
-        fuckout = 0
-        while not (self.level == -1 and self.tag[0] == 1):
+    cpdef tuple compute_tree(self):
+        self.words[0] = self.generators[0] 
+        self.tag[0] = 0 
+        self.state[0] = 1 
+        self.precomputing = 1
+        while not (self.level == -1 and self.tag[0] == 0):
             while self.branch_terminated() == 0:
                 self.forward_move()
             while True:
@@ -178,8 +183,23 @@ cdef class tree_explorer():
                 break
             self.turn_forward_move()
 
-        #TODO: Adapt to explore all branch and returns list of reached tags + words
-        if self.start_word.all() == self.generators[0].all(): 
-            return self.last_words
-        #else:
+        return self.last_words, self.last_state, self.last_tags
+
+    cpdef tuple compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):
+        self.level = start_level 
+        self.words[0] = start_word
+        self.tag[0] = start_tag
+        self.state[0] = start_state
+        while not (self.level == -1 and self.tag[0] == start_tag):
+            while self.branch_terminated() == 0:
+                self.forward_move()
+            while True:
+                self.backward_move() 
+                if self.available_turn() == 1 or self.level == -1:
+                    break
+            if self.level == -1 and self.tag[0] == 1:
+                break
+            self.turn_forward_move()
+
+        return self.points
 

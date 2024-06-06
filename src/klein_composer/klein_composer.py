@@ -1,7 +1,7 @@
 from klein_compute.tree_explorer import tree_explorer
 
 import numpy as np
-import threading
+from multiprocessing import Pool
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -17,30 +17,38 @@ class KleinComposer:
         self.num_threads = compute_model.num_threads
         self.max_depth = compute_model.max_depth
         self.special_fract = fractal_model.special_fract
-        # self.word_length = special_word.p + special_word.q
-        # self.special_word = self.compute_special_word()
         self.word_length = 0
-        # self.fix_pts = self.compute_fix_pts(self.special_word)
         self.special_word = [0]
         self.fix_pts = fractal_model.fixed_points
+        self.start_depth = self.compute_start_depth(self.num_threads)
+
+        self.cm = compute_model
+        self.fm = fractal_model 
+
+        #TODO: Rename threads into workers
+        self.pool = Pool(self.cm.num_threads)
+        self.tree_explorator = tree_explorer(
+            self.start_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points
+        )
+
+
+    @staticmethod
+    def compute_start_depth(num_threads):
+        if num_threads <= 4:
+            return 1
+        else:
+            return np.floor(np.log(num_threads - 4)/np.log(3))
 
     def compute_start_points(self):
         tree_exp = tree_explorer(
-            0, 0, 0, 1, 0.01, self.gen, self.fsa, self.fix_pts, self.gen[0]
+            self.start_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points
         )
-        return tree_exp.compute_leaf()
+        return tree_exp.compute_tree()
 
-    def compute_thread(self, depth):
-        start_points = self.compute_start_points()
-        n_threads = 0
-        for n in start_points:
-            n_threads += 1
-            if n_threads == self.num_threads:
-                # Check if one is done
-                continue
-            tree_explorer.append(
-                tree_explorer(start_points, self.gen, self.fsa, self.fix_pts)
-            )
-            thread = threading.Thread(
-                target=tree_explorers[n_threads].compute_leaf, args=()
-            )
+    def compute_thread(self):
+        start_points, start_states, start_tags = self.compute_start_points()
+        arguments = [(sp, ss, st) for sp, ss, st in zip(start_points, start_states, start_tags)]
+            
+        with self.pool as p:
+            output = p.starmap(self.tree_explorator.compute_leaf, arguments)
+            
