@@ -3,11 +3,11 @@ from cython.parallel import prange
 cimport numpy as np
 import numpy as np
 import logging
+from multiprocessing import current_process
 
 _logger = logging.getLogger(__name__)
 
-cdef class tree_explorer():
-    cdef np.ndarray words
+cdef class tree_explorer:
     cdef np.ndarray generators
     cdef np.ndarray FSA
     cdef int level
@@ -20,6 +20,7 @@ cdef class tree_explorer():
     cdef float epsilon
     cdef np.ndarray tag
     cdef np.ndarray state
+    cdef np.ndarray words
     cdef np.ndarray last_words
     cdef np.ndarray last_state
     cdef np.ndarray last_tags
@@ -27,20 +28,20 @@ cdef class tree_explorer():
     cdef np.ndarray start_word
     cdef np.ndarray points 
 
-    def __cinit__(self, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):
+    def __init__(self, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):
         self.level = 0 
         self.precomputing = 0
         self.max_depth = max_d 
-        self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
         self.generators = gen 
         self.FSA = fsa
         self.fixed_points = fix_pt 
         
+        self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
         self.tag       = np.empty((self.max_depth), dtype=int)
         self.state     = np.empty((self.max_depth), dtype=int)
-        self.last_words = np.zeros((4 * np.power(3, self.max_depth), 2, 2), dtype=complex)
-        self.last_state = np.zeros((4 * np.power(3, self.max_depth)), dtype=int)
-        self.last_tags = np.zeros((4 * np.power(3, self.max_depth)), dtype=int)
+        self.last_words = np.zeros((4 * np.power(3, self.max_depth -1 ), 2, 2), dtype=complex)
+        self.last_state = np.zeros((4 * np.power(3, self.max_depth -1 )), dtype=int)
+        self.last_tags = np.zeros((4 * np.power(3, self.max_depth -1 )), dtype=int)
         self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * np.power(3, self.max_depth)), dtype=complex)
 
         self.last_idx = 0
@@ -79,7 +80,6 @@ cdef class tree_explorer():
     cpdef int branch_terminated(self):
         points = []
         if self.level == self.max_depth - 1:
-            _logger.debug(f"{self.level}, {self.last_idx}")
             if self.precomputing == 1:
                 self.last_words[self.last_idx] = self.words[self.level]
                 self.last_state[self.last_idx] = self.state[self.level]
@@ -88,7 +88,6 @@ cdef class tree_explorer():
             return 1 
 
         idx_gen = self.tag[self.level]
-
         cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
         cdef complex old_p = p
         self.points[self.last_idx] = p
@@ -100,7 +99,6 @@ cdef class tree_explorer():
             if not np.isclose(p, old_p, atol = self.epsilon):
                 self.last_idx_points -= i + 1 
                 return 0 
-            _logger.debug(f"Last idx: {self.last_idx}")
             self.points[self.last_idx_points] = p
             self.last_idx_points += 1
 
@@ -122,7 +120,7 @@ cdef class tree_explorer():
                 word += "A"
             elif t == 3:
                 word += "B"
-        _logger.debug(f"Word: {word}")
+        _logger.debug(f"{word}")
 
     cpdef void backward_move(self):
         self.level -= 1
@@ -185,8 +183,7 @@ cdef class tree_explorer():
 
         return self.last_words, self.last_state, self.last_tags
 
-    cpdef tuple compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):
-        self.level = start_level 
+    cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):
         self.words[0] = start_word
         self.tag[0] = start_tag
         self.state[0] = start_state
@@ -197,9 +194,7 @@ cdef class tree_explorer():
                 self.backward_move() 
                 if self.available_turn() == 1 or self.level == -1:
                     break
-            if self.level == -1 and self.tag[0] == 1:
+            if self.level == -1 and self.tag[0] == start_tag:
                 break
             self.turn_forward_move()
-
         return self.points
-
