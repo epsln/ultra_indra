@@ -22,22 +22,21 @@ class OutputManager:
     
     def process_points(self, list_points):
         img_arr = np.zeros((self.image_width, self.image_height, 3))
-        xs = np.arange(self.center - self.bounds, self.center + self.bounds, self.bounds * 2/max(self.image_width, self.image_height))
         aspect_ratio = max(self.image_width, self.image_height)/min(self.image_height, self.image_width)
         #There is some way to do it without all the ifs but I can't think of anything clever right now
         #TODO: Do the clever thing
         if self.image_height > self.image_width:
-            interp_func_width = interp1d(xs, np.arange(self.image_width) , fill_value = "extrapolate")
-            interp_func_height = interp1d(xs * aspect_ratio, np.arange(self.image_height), fill_value = "extrapolate")
+            xs = np.array([self.center - self.bounds, self.center + self.bounds])
+            ys = xs * aspect_ratio
         elif self.image_height < self.image_width:
-            interp_func_width = interp1d(xs * aspect_ratio, np.arange(self.image_width) , fill_value = "extrapolate")
-            interp_func_height = interp1d(xs, np.arange(self.image_height), fill_value = "extrapolate")
+            ys = np.array([self.center - self.bounds, self.center + self.bounds])
+            xs = ys * aspect_ratio
         else:
-            interp_func_width = interp1d(xs, np.arange(self.image_width) , fill_value = "extrapolate")
-            interp_func_height = interp1d(xs, np.arange(self.image_height), fill_value = "extrapolate")
+            xs = np.array([self.center - self.bounds, self.center + self.bounds])
+            ys = xs 
 
         for p in list_points: 
-            x, y = int(interp_func_width(p.real)), int(interp_func_height(p.imag))
+            x, y = int(np.interp(p.real, xs, [0, self.image_width])), int(np.interp(p.imag, ys, [0, self.image_width]))
             if x >= 0 and x < self.image_width and y >= 0 and y < self.image_height:
                 img_arr[x][y][:] = 255 
         return np.moveaxis(img_arr,0, 1)
