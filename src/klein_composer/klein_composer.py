@@ -51,4 +51,8 @@ class KleinComposer:
             
         with self.pool as p:
             output = p.starmap(tree_explorator.compute_leaf, arguments)
-            
+        
+        out = np.concatenate(output).ravel()
+        out = out[out != 0 + 0j]
+
+        return out 
