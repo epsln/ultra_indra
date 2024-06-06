@@ -7,11 +7,6 @@ from tests.conftest import output_manager_fixture
 import tempfile
 import os
 
-def test_init():
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        om = OutputManager(file_type = "bmp", output_dir = tmpdirname)
-        assert om.file_type == "bmp"
-    
 def test_get_filename(output_manager_fixture):
     om = output_manager_fixture
     om._get_filename()
@@ -19,8 +14,8 @@ def test_get_filename(output_manager_fixture):
 
 def test_save_image(output_manager_fixture):
     with tempfile.TemporaryDirectory() as tmpdirname:
-        om = OutputManager(output_dir = tmpdirname) 
-        image = np.random.uniform(0, 255, size = (100, 100, 3))
+        om = output_manager_fixture 
         for i in range(10):
+            image =  np.random.uniform(-1, 1, 100) + 1.j * np.random.uniform(-1, 1, 100)
             om.save(image)
             assert os.path.isfile(os.path.join(om.output_dir, om.filename))

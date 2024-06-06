@@ -1,4 +1,4 @@
-from src.models import FractalModel, ComputeModel
+from src.models import FractalModel, ComputeModel, OutputModel
 from src.klein_composer import KleinComposer 
 from src.output_manager import OutputManager 
 import numpy as np
@@ -28,6 +28,10 @@ def klein_composer_fixture(fractal_model_fixture, compute_model_fixture):
     return KleinComposer(fractal_model_fixture, compute_model_fixture)
 
 @pytest.fixture
-def output_manager_fixture():
+def output_model_fixture():
     with tempfile.TemporaryDirectory() as tmpdirname:
-        return OutputManager(file_type = "jpg", output_dir = tmpdirname)
+        return OutputModel(output_directory = tmpdirname)
+
+@pytest.fixture
+def output_manager_fixture(output_model_fixture):
+        return OutputManager(output_model_fixture)
