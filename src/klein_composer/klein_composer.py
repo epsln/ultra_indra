@@ -23,36 +23,46 @@ class KleinComposer:
         self.start_depth = self.compute_start_depth(self.num_threads)
 
         self.cm = compute_model
-        self.fm = fractal_model 
+        self.fm = fractal_model
 
-        #TODO: Rename threads into workers
+        # TODO: Rename threads into workers
         self.pool = Pool(self.cm.num_threads)
-
 
     @staticmethod
     def compute_start_depth(num_threads):
         if num_threads <= 4:
             return 1
         else:
-            return np.floor(np.log(num_threads - 4)/np.log(3))
+            return np.floor(np.log(num_threads - 4) / np.log(3))
 
     def compute_start_points(self):
         tree_exp = tree_explorer(
-            self.start_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points
+            self.start_depth,
+            self.cm.epsilon,
+            self.fm.generators,
+            self.fm.FSA,
+            self.fm.fixed_points,
         )
         return tree_exp.compute_tree()
 
     def compute_thread(self):
         tree_explorator = tree_explorer(
-            self.max_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points
+            self.max_depth,
+            self.cm.epsilon,
+            self.fm.generators,
+            self.fm.FSA,
+            self.fm.fixed_points,
         )
         start_points, start_states, start_tags = self.compute_start_points()
-        arguments = [(st, ss, self.start_depth, sp) for sp, ss, st in zip(start_points, start_states, start_tags)]
-            
+        arguments = [
+            (st, ss, self.start_depth, sp)
+            for sp, ss, st in zip(start_points, start_states, start_tags)
+        ]
+
         with self.pool as p:
             output = p.starmap(tree_explorator.compute_leaf, arguments)
-        
+
         out = np.concatenate(output).ravel()
         out = out[out != 0 + 0j]
 
-        return out 
+        return out

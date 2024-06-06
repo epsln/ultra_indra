@@ -1,1 +1,1 @@
-from .output_manager import OutputManager
+from .output_manager import OutputManager  # noqa

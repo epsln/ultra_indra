@@ -1,3 +1,5 @@
+from src.utils import pad_to_dense
+
 import numpy as np
 from fractions import Fraction
 from itertools import permutations
@@ -6,8 +8,6 @@ from typing import Optional
 DEFAULT_FSA: np.ndarray = np.array(
     [[1, 2, 3, 4], [1, 2, 0, 4], [1, 2, 3, 0], [0, 2, 3, 4], [1, 0, 3, 4]]
 )
-
-from src.utils import pad_to_dense
 
 
 class FractalModel:
