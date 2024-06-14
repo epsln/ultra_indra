@@ -35,3 +35,7 @@ def output_model_fixture():
 @pytest.fixture
 def output_manager_fixture(output_model_fixture):
         return OutputManager(output_model_fixture)
+
+@pytest.fixture
+def recipe_manager_fixture():
+        return RecipeManager("maskit")
