@@ -94,11 +94,15 @@ cdef class tree_explorer:
         self.last_idx_points += 1
 
         for i, fp in enumerate(self.fixed_points[idx_gen][1:]):
+            if p == 0 + 0j:
+                return 1 
+
             old_p = p 
             p = self.mobius(self.words[self.level], fp)
             if not np.isclose(p, old_p, atol = self.epsilon):
                 self.last_idx_points -= i + 1 
                 return 0 
+
             self.last_idx_points += 1
             self.points[self.last_idx_points] = p
 
