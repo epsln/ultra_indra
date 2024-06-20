@@ -62,14 +62,19 @@ class FractalModel:
                 if valid: 
                     cleaned_spe_w.append(perm)
 
-        print(cleaned_spe_w)
         for perm in cleaned_spe_w:
-            word = self.generators[perm[0]]
+            word     = self.generators[perm[0]]
+            word_inv = self.generators[(perm[0] + 2) % 4]
             for p in perm[1:]:
-                word = np.matmul(word, self.generators[p])
+                word     = np.matmul(word, self.generators[p])
+                word_inv = np.matmul(word_inv, self.generators[(p + 2) % 4])
 
             idx_gen = perm[-1]
             for w in self._mobius_fixed_point(word).flatten().tolist():
                 fix_pts[idx_gen].append(w)
 
+            for w in self._mobius_fixed_point(word_inv).flatten().tolist():
+                fix_pts[idx_gen].append(w)
+
         self.fixed_points = pad_to_dense(fix_pts)
+        print(self.fixed_points)
