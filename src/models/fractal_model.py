@@ -14,7 +14,7 @@ class FractalModel:
     def __init__(
         self,
         generators: np.ndarray,
-        special_fract: Fraction = Fraction(1, 2),
+        special_fract: Fraction = Fraction(0, 1),
         FSA: Optional[np.ndarray] = DEFAULT_FSA,
     ):
         self.generators: np.ndarray = generators
@@ -24,7 +24,7 @@ class FractalModel:
         self.FSA = FSA
 
     def _mobius_fixed_point(self, mat: np.ndarray):
-        coeff = np.array([mat[1, 1], (mat[1, 1] - mat[0, 0]), -mat[0, 1]])
+        coeff = np.array([mat[1, 0], (mat[1, 1] - mat[0, 0]), -mat[0, 1]])
         return np.roots(coeff)
 
     def _compute_special_word(self):
@@ -61,7 +61,7 @@ class FractalModel:
                         break
                 if valid: 
                     cleaned_spe_w.append(perm)
-
+        
         for perm in cleaned_spe_w:
             word     = self.generators[perm[0]]
             word_inv = self.generators[(perm[0] + 2) % 4]
@@ -77,4 +77,3 @@ class FractalModel:
                 fix_pts[idx_gen].append(w)
 
         self.fixed_points = pad_to_dense(fix_pts)
-        print(self.fixed_points)
