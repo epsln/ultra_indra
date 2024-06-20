@@ -99,8 +99,8 @@ cdef class tree_explorer:
             if not np.isclose(p, old_p, atol = self.epsilon):
                 self.last_idx_points -= i + 1 
                 return 0 
-            self.points[self.last_idx_points] = p
             self.last_idx_points += 1
+            self.points[self.last_idx_points] = p
 
         return 1 
 

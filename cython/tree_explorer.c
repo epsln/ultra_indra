@@ -7425,7 +7425,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  *             if not np.isclose(p, old_p, atol = self.epsilon):
  *                 self.last_idx_points -= i + 1             # <<<<<<<<<<<<<<
  *                 return 0
- *             self.points[self.last_idx_points] = p
+ *             self.last_idx_points += 1
  */
       __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->last_idx_points); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 100, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
@@ -7443,8 +7443,8 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  *             if not np.isclose(p, old_p, atol = self.epsilon):
  *                 self.last_idx_points -= i + 1
  *                 return 0             # <<<<<<<<<<<<<<
- *             self.points[self.last_idx_points] = p
  *             self.last_idx_points += 1
+ *             self.points[self.last_idx_points] = p
  */
       __pyx_r = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7463,23 +7463,23 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
     /* "cython/tree_explorer.pyx":102
  *                 self.last_idx_points -= i + 1
  *                 return 0
- *             self.points[self.last_idx_points] = p             # <<<<<<<<<<<<<<
- *             self.last_idx_points += 1
+ *             self.last_idx_points += 1             # <<<<<<<<<<<<<<
+ *             self.points[self.last_idx_points] = p
  * 
  */
-    __pyx_t_12 = __pyx_PyComplex_FromComplex(__pyx_v_p); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 102, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->points), __pyx_v_self->last_idx_points, __pyx_t_12, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 102, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_v_self->last_idx_points = (__pyx_v_self->last_idx_points + 1);
 
     /* "cython/tree_explorer.pyx":103
  *                 return 0
- *             self.points[self.last_idx_points] = p
- *             self.last_idx_points += 1             # <<<<<<<<<<<<<<
+ *             self.last_idx_points += 1
+ *             self.points[self.last_idx_points] = p             # <<<<<<<<<<<<<<
  * 
  *         return 1
  */
-    __pyx_v_self->last_idx_points = (__pyx_v_self->last_idx_points + 1);
+    __pyx_t_12 = __pyx_PyComplex_FromComplex(__pyx_v_p); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 103, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->points), __pyx_v_self->last_idx_points, __pyx_t_12, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 103, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
     /* "cython/tree_explorer.pyx":96
  *         self.last_idx_points += 1
@@ -7493,7 +7493,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "cython/tree_explorer.pyx":105
- *             self.last_idx_points += 1
+ *             self.points[self.last_idx_points] = p
  * 
  *         return 1             # <<<<<<<<<<<<<<
  * 
