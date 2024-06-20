@@ -196,7 +196,7 @@ cdef class tree_explorer:
                 self.forward_move()
             while True:
                 self.backward_move() 
-                if self.available_turn() == 1 or self.level == -1:
+                if self.level == -1 or self.available_turn():
                     break
             if self.level == -1 and self.tag[0] == start_tag:
                 break
