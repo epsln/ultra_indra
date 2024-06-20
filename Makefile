@@ -19,7 +19,7 @@ update:
 	@poetry run pip check
 
 .PHONY: run
-run:
+run: build-cython
 	@poetry run python main.py 
 
 .PHONY: format
