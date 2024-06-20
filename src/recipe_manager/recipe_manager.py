@@ -52,7 +52,7 @@ class RecipeManager:
         b = complex(-ta * tb)
         c = complex(ta * ta + tb * tb)
         delta = b * b - 4 * a * c
-        tab = (-b - np.sqrt(delta))/(2 * a)
+        tab = (-b + np.sqrt(delta))/(2 * a)
         z0 = ((tab - 2) * tb)/(tb * tab - 2 * ta + 2j * tab) 
 
         gen_a = np.zeros((2, 2), dtype = complex)
@@ -66,7 +66,7 @@ class RecipeManager:
         gen_b[0, 0] = (tb - 2j)/2 
         gen_b[0, 1] = tb/2 
         gen_b[1, 0] = tb/2 
-        gen_b[1, 1] = (tb - 2j)/2 
+        gen_b[1, 1] = (tb + 2j)/2 
 
         _logger.debug(f"{gen_a}")
         _logger.debug(f"{gen_b}")
