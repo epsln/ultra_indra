@@ -14,7 +14,7 @@ class FractalModel:
     def __init__(
         self,
         generators: np.ndarray,
-        special_fract: Fraction,
+        special_fract: Fraction = Fraction(1, 2),
         FSA: Optional[np.ndarray] = DEFAULT_FSA,
     ):
         self.generators: np.ndarray = generators
@@ -51,14 +51,25 @@ class FractalModel:
 
     def _compute_fixed_points(self):
         fix_pts = [[] for i in range(4)]
+        cleaned_spe_w = []
         for spe_w in [self.special_word, [0, 1, 2, 3]]:
             for perm in set(permutations(spe_w)):
-                word = self.generators[perm[0]]
-                for p in perm[1:]:
-                    word = np.matmul(word, self.generators[p])
+                valid = True
+                for curr_e, next_e in zip(perm, perm[1:]):
+                    if (curr_e + 2) % 4 == next_e:
+                        valid = False
+                        break
+                if valid: 
+                    cleaned_spe_w.append(perm)
 
-                idx_gen = perm[-1]
-                for w in self._mobius_fixed_point(word).flatten().tolist():
-                    fix_pts[idx_gen].append(w)
+        print(cleaned_spe_w)
+        for perm in cleaned_spe_w:
+            word = self.generators[perm[0]]
+            for p in perm[1:]:
+                word = np.matmul(word, self.generators[p])
+
+            idx_gen = perm[-1]
+            for w in self._mobius_fixed_point(word).flatten().tolist():
+                fix_pts[idx_gen].append(w)
 
         self.fixed_points = pad_to_dense(fix_pts)

@@ -9,4 +9,4 @@ class ComputeModel:
     start_word: np.ndarray = np.identity(2, dtype=complex)
     start_tag: int = 0
     start_level: int = 0
-    epsilon: float = 0.01
+    epsilon: float = 0.1
