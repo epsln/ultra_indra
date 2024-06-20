@@ -1,4 +1,5 @@
 import numpy as np
+from src.models import FractalModel
 import logging 
 
 _logger = logging.getLogger(__name__)
@@ -7,18 +8,24 @@ class RecipeManager:
     def __init__(self, recipe_name):
         self.recipe_name = recipe_name
         if self.recipe_name == "maskit":
-            self.generate = self.maskit
+            self.compute_generators = self.maskit
         elif self.recipe_name == "grandma_recipe":
-            self.generate = self.grandma_recipe
+            self.compute_generators = self.grandma_recipe
         elif self.recipe_name == "grandma_special_recipe":
-            self.generate = self.grandma_special_recipe
+            self.compute_generators = self.grandma_special_recipe
         elif self.recipe_name == "jorgensen":
-            self.generate = self.jorgensen_recipe
+            self.compute_generators = self.jorgensen_recipe
         else:
             raise ValueError(f"No recipe named {recipe_name} ! Crashing.")
 
-    def generate(ta, tb):
+    def compute_generators(ta, tb, tab):
         pass
+
+    def generate(self, ta, tb = None, tab = None):
+        gens = self.compute_generators(ta, tb)
+        return FractalModel(
+            generators = gens
+        )
 
     @staticmethod
     def maskit(ta):
