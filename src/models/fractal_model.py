@@ -1,4 +1,4 @@
-from utils import pad_to_dense
+from src.utils import pad_to_dense
 
 import numpy as np
 from fractions import Fraction
