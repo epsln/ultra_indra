@@ -32,6 +32,7 @@ cdef class tree_explorer:
         self.level = 0 
         self.precomputing = 0
         self.max_depth = max_d 
+        self.epsilon = epsilon
         self.generators = gen 
         self.FSA = fsa
         self.fixed_points = fix_pt 
