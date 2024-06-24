@@ -28,7 +28,7 @@ class RecipeManager:
         )
 
     @staticmethod
-    def maskit(ta):
+    def maskit(ta, tb = None, tab = None):
         mu = ta * -1j
         gen_a = np.zeros((2, 2), dtype = complex)
         gen_b = np.zeros((2, 2), dtype = complex)
@@ -45,7 +45,7 @@ class RecipeManager:
         return np.array([gen_a, gen_b, np.linalg.inv(gen_a), np.linalg.inv(gen_b)])
 
     @staticmethod
-    def grandma_recipe(ta, tb):
+    def grandma_recipe(ta, tb, tab = None):
         if ta == 0 and tb == 0:
             raise ValueError("ta and tb cannot be 0 ! Crashing")
         a = complex(1)

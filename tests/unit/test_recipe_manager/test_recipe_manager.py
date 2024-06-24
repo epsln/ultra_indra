@@ -18,7 +18,7 @@ def test_maskit():
     gen_A = np.linalg.inv(gen_a)
     gen_B = np.linalg.inv(gen_b)
     expected = np.array([gen_a, gen_b, gen_A, gen_B])
-    output = rm.generate(mu) 
+    output = rm.generate(mu).generators 
 
     assert expected.all() == output.all()
     
