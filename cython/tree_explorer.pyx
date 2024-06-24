@@ -7,6 +7,7 @@ from multiprocessing import current_process
 
 _logger = logging.getLogger(__name__)
 
+# cython: profile=True
 cdef class tree_explorer:
     cdef np.ndarray generators
     cdef np.ndarray FSA
@@ -40,10 +41,10 @@ cdef class tree_explorer:
         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
         self.tag       = np.empty((self.max_depth), dtype=int)
         self.state     = np.empty((self.max_depth), dtype=int)
-        self.last_words = np.zeros((4 * np.power(3, self.max_depth -1 ), 2, 2), dtype=complex)
-        self.last_state = np.zeros((4 * np.power(3, self.max_depth -1 )), dtype=int)
-        self.last_tags = np.zeros((4 * np.power(3, self.max_depth -1 )), dtype=int)
-        self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * np.power(3, self.max_depth)), dtype=complex)
+        self.last_words = np.zeros((4 * np.power(3, self.max_depth ), 2, 2), dtype=complex)
+        self.last_state = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
+        self.last_tags = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
+        self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * 4 * np.power(3, self.max_depth)), dtype=complex)
 
         self.last_idx = 0
         self.last_idx_points = 0
@@ -100,12 +101,12 @@ cdef class tree_explorer:
 
             old_p = p 
             p = self.mobius(self.words[self.level], fp)
-            if not np.isclose(p, old_p, atol = self.epsilon):
+            if abs(old_p - p) > self.epsilon:
                 self.last_idx_points -= i + 1 
                 return 0 
 
-            self.last_idx_points += 1
             self.points[self.last_idx_points] = p
+            self.last_idx_points += 1
 
         return 1 
 
@@ -125,7 +126,7 @@ cdef class tree_explorer:
                 word += "A"
             elif t == 3:
                 word += "B"
-        _logger.debug(f"{word}")
+        _logger.debug(f"{word}\x1b[0m")
 
     cpdef void backward_move(self):
         self.level -= 1
@@ -174,8 +175,8 @@ cdef class tree_explorer:
         self.words[0] = self.generators[0] 
         self.tag[0] = 0 
         self.state[0] = 1 
-        self.precomputing = 1
-        while not (self.level == -1 and self.tag[0] == 0):
+        self.precomputing = 0
+        while not (self.level == -1 and self.tag[0] == 1):
             while self.branch_terminated() == 0:
                 self.forward_move()
             while True:
