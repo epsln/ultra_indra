@@ -14,7 +14,7 @@ class FractalModel:
     def __init__(
         self,
         generators: np.ndarray,
-        special_fract: Fraction = Fraction(0, 1),
+        special_fract: Fraction = Fraction(1, 2),
         FSA: Optional[np.ndarray] = DEFAULT_FSA,
     ):
         self.generators: np.ndarray = generators
