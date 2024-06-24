@@ -53,3 +53,7 @@ test: build-cython
 .PHONY: build-cython
 build-cython:
 	@poetry run python setup.py build_ext --inplace
+
+.PHONY: build-cython
+speed-test:
+	@poetry run python tests/performance/perf_klein_explorer.py 
