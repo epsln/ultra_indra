@@ -1,3 +1,4 @@
+# cython: profile=True
 import cython 
 from cython.parallel import prange
 cimport numpy as np
@@ -7,7 +8,6 @@ from multiprocessing import current_process
 
 _logger = logging.getLogger(__name__)
 
-# cython: profile=True
 cdef class tree_explorer:
     cdef np.ndarray generators
     cdef np.ndarray FSA
@@ -80,7 +80,6 @@ cdef class tree_explorer:
         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
 
     cpdef int branch_terminated(self):
-        points = []
         if self.level == self.max_depth - 1:
             if self.precomputing == 1:
                 self.last_words[self.last_idx] = self.words[self.level]
@@ -89,7 +88,7 @@ cdef class tree_explorer:
                 self.last_idx += 1
             return 1 
 
-        idx_gen = self.tag[self.level]
+        cdef int idx_gen = self.tag[self.level]
         cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
         cdef complex old_p = p
         self.points[self.last_idx] = p
@@ -109,24 +108,6 @@ cdef class tree_explorer:
             self.last_idx_points += 1
 
         return 1 
-
-    def print_word(self):
-        word = ""
-        for i in range(self.level + 1):
-            t = self.tag[i]
-            if i == self.level:
-                word += "\x1b[31;20m"
-            else:
-                word += "\x1b[0m" 
-            if t == 0:
-                word += "a"
-            elif t == 1:
-                word += "b"
-            elif t == 2:
-                word += "A"
-            elif t == 3:
-                word += "B"
-        _logger.debug(f"{word}\x1b[0m")
 
     cpdef void backward_move(self):
         self.level -= 1
@@ -154,7 +135,6 @@ cdef class tree_explorer:
             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
             
         self.level += 1
-        self.print_word()
 
     cpdef void forward_move(self):
         cdef int idx_gen = self.get_right_gen()
@@ -168,8 +148,6 @@ cdef class tree_explorer:
             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
 
         self.level += 1
-
-        self.print_word()
 
     cpdef tuple compute_tree(self):
         self.words[0] = self.generators[0] 
@@ -186,7 +164,8 @@ cdef class tree_explorer:
             if self.level == -1 and self.tag[0] == 1:
                 break
             self.turn_forward_move()
-
+        self.last_idx_points = 0
+        self.last_idx  = 0
         return self.last_words, self.last_state, self.last_tags
 
     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):
