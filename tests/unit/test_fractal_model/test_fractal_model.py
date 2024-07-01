@@ -31,3 +31,5 @@ def test_compute_fixed_points(fractal_model_fixture):
     test_word = np.matmul(test_word, fm.generators[3]) 
     fm._compute_fixed_points() 
     assert fm._mobius_fixed_point(test_word)[0] in fm.fixed_points 
+    for e, s in zip(fm.fixed_points, fm.fixed_points_shape):
+        assert np.count_nonzero(e) == s

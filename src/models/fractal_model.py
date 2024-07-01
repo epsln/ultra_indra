@@ -76,4 +76,7 @@ class FractalModel:
             for w in self._mobius_fixed_point(word_inv).flatten().tolist():
                 fix_pts[idx_gen].append(w)
 
+        for f in fix_pts:
+            self.fixed_points_shape = len(f)
+
         self.fixed_points = pad_to_dense(fix_pts)
