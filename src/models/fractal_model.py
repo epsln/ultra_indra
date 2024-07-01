@@ -51,6 +51,7 @@ class FractalModel:
 
     def _compute_fixed_points(self):
         fix_pts = [[] for i in range(4)]
+        self.fixed_points_shape = np.array([0, 0, 0, 0]) 
         cleaned_spe_w = []
         for spe_w in [self.special_word, [0, 1, 2, 3]]:
             for perm in set(permutations(spe_w)):
@@ -76,7 +77,7 @@ class FractalModel:
             for w in self._mobius_fixed_point(word_inv).flatten().tolist():
                 fix_pts[idx_gen].append(w)
 
-        for f in fix_pts:
-            self.fixed_points_shape = len(f)
+        for idx_gen, f in enumerate(fix_pts):
+            self.fixed_points_shape[idx_gen] = len(f)
 
         self.fixed_points = pad_to_dense(fix_pts)
