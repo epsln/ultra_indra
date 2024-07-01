@@ -1,5 +1,7 @@
 from distutils.core import setup
 from distutils.extension import Extension
+import Cython.Compiler.Options
+Cython.Compiler.Options.annotate = True
 
 try:
     from Cython.Distutils import build_ext
@@ -14,6 +16,7 @@ ext_modules = []
 if use_cython:
     ext_modules += [
         Extension("klein_compute.tree_explorer", ["cython/tree_explorer.pyx"]),
+        Extension("klein_compute.tree_exp", ["cython/tree_explorer_classless.pyx"]),
     ]
     cmdclass.update({'build_ext': build_ext})
 else:
