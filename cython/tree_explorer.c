@@ -1523,6 +1523,41 @@ static const char *__pyx_f[] = {
   #define __PYX_FORCE_INIT_THREADS 0
 #endif
 
+/* BufferFormatStructs.proto */
+struct __Pyx_StructField_;
+#define __PYX_BUF_FLAGS_PACKED_STRUCT (1 << 0)
+typedef struct {
+  const char* name;
+  struct __Pyx_StructField_* fields;
+  size_t size;
+  size_t arraysize[8];
+  int ndim;
+  char typegroup;
+  char is_unsigned;
+  int flags;
+} __Pyx_TypeInfo;
+typedef struct __Pyx_StructField_ {
+  __Pyx_TypeInfo* type;
+  const char* name;
+  size_t offset;
+} __Pyx_StructField;
+typedef struct {
+  __Pyx_StructField* field;
+  size_t parent_offset;
+} __Pyx_BufFmt_StackElem;
+typedef struct {
+  __Pyx_StructField root;
+  __Pyx_BufFmt_StackElem* head;
+  size_t fmt_offset;
+  size_t new_count, enc_count;
+  size_t struct_alignment;
+  int is_complex;
+  char enc_type;
+  char new_packmode;
+  char enc_packmode;
+  char is_valid_array;
+} __Pyx_BufFmt_Context;
+
 /* #### Code section: numeric_typedefs ### */
 
 /* "../../.cache/pypoetry/virtualenvs/ultra-indra-dXaxNIxQ-py3.9/lib/python3.9/site-packages/numpy/__init__.cython-30.pxd":730
@@ -1761,7 +1796,7 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "cython/tree_explorer.pyx":11
+/* "cython/tree_explorer.pyx":12
  * _logger = logging.getLogger(__name__)
  * 
  * cdef class tree_explorer:             # <<<<<<<<<<<<<<
@@ -1795,16 +1830,16 @@ struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer {
 
 
 struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer {
-  void (*set_next_state)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int, int __pyx_skip_dispatch);
-  int (*get_next_state)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int, int __pyx_skip_dispatch);
-  int (*get_right_gen)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
-  int (*get_left_gen)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
-  __pyx_t_double_complex (*mobius)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, PyArrayObject *, __pyx_t_double_complex, int __pyx_skip_dispatch);
-  int (*branch_terminated)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
-  void (*backward_move)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
-  int (*available_turn)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
-  void (*turn_forward_move)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
-  void (*forward_move)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
+  void (*set_next_state)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int);
+  int (*get_next_state)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int);
+  int (*get_right_gen)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *);
+  int (*get_left_gen)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *);
+  __pyx_t_double_complex (*mobius)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, PyArrayObject *, __pyx_t_double_complex);
+  int (*branch_terminated)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *);
+  void (*backward_move)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *);
+  int (*available_turn)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *);
+  void (*turn_forward_move)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *);
+  void (*forward_move)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *);
   PyObject *(*compute_tree)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch);
   PyArrayObject *(*compute_leaf)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int, int, int, PyArrayObject *, int __pyx_skip_dispatch);
 };
@@ -2462,9 +2497,28 @@ static PyObject* __Pyx_PyInt_RemainderObjC(PyObject *op1, PyObject *op2, long in
     (inplace ? PyNumber_InPlaceRemainder(op1, op2) : PyNumber_Remainder(op1, op2))
 #endif
 
-/* KeywordStringCheck.proto */
-static int __Pyx_CheckKeywordStrings(PyObject *kw, const char* function_name, int kw_allowed);
+/* IsLittleEndian.proto */
+static CYTHON_INLINE int __Pyx_Is_Little_Endian(void);
 
+/* BufferFormatCheck.proto */
+static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const char* ts);
+static void __Pyx_BufFmt_Init(__Pyx_BufFmt_Context* ctx,
+                              __Pyx_BufFmt_StackElem* stack,
+                              __Pyx_TypeInfo* type);
+
+/* BufferGetAndValidate.proto */
+#define __Pyx_GetBufferAndValidate(buf, obj, dtype, flags, nd, cast, stack)\
+    ((obj == Py_None || obj == NULL) ?\
+    (__Pyx_ZeroBuffer(buf), 0) :\
+    __Pyx__GetBufferAndValidate(buf, obj, dtype, flags, nd, cast, stack))
+static int  __Pyx__GetBufferAndValidate(Py_buffer* buf, PyObject* obj,
+    __Pyx_TypeInfo* dtype, int flags, int nd, int cast, __Pyx_BufFmt_StackElem* stack);
+static void __Pyx_ZeroBuffer(Py_buffer* buf);
+static CYTHON_INLINE void __Pyx_SafeReleaseBuffer(Py_buffer* info);
+static Py_ssize_t __Pyx_minusones[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+static Py_ssize_t __Pyx_zeros[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+#define __Pyx_BufPtrStrided2d(type, buf, i0, s0, i1, s1) (type)((char*)buf + i0 * s0 + i1 * s1)
 /* SliceObject.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyObject_GetSlice(
         PyObject* obj, Py_ssize_t cstart, Py_ssize_t cstop,
@@ -2484,6 +2538,9 @@ static CYTHON_INLINE int __Pyx_PyInt_BoolEqObjC(PyObject *op1, PyObject *op2, lo
 
 /* RaiseUnexpectedTypeError.proto */
 static int __Pyx_RaiseUnexpectedTypeError(const char *expected, PyObject *obj);
+
+/* KeywordStringCheck.proto */
+static int __Pyx_CheckKeywordStrings(PyObject *kw, const char* function_name, int kw_allowed);
 
 /* GetAttr3.proto */
 static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *);
@@ -2823,6 +2880,29 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 #define __Pyx_HAS_GCC_DIAGNOSTIC
 #endif
 
+/* BufferStructDeclare.proto */
+typedef struct {
+  Py_ssize_t shape, strides, suboffsets;
+} __Pyx_Buf_DimInfo;
+typedef struct {
+  size_t refcount;
+  Py_buffer pybuffer;
+} __Pyx_Buffer;
+typedef struct {
+  __Pyx_Buffer *rcbuffer;
+  char *data;
+  __Pyx_Buf_DimInfo diminfo[8];
+} __Pyx_LocalBuf_ND;
+
+#if PY_MAJOR_VERSION < 3
+    static int __Pyx_GetBuffer(PyObject *obj, Py_buffer *view, int flags);
+    static void __Pyx_ReleaseBuffer(Py_buffer *view);
+#else
+    #define __Pyx_GetBuffer PyObject_GetBuffer
+    #define __Pyx_ReleaseBuffer PyBuffer_Release
+#endif
+
+
 /* FromPy.proto */
 static __pyx_t_double_complex __Pyx_PyComplex_As___pyx_t_double_complex(PyObject*);
 
@@ -2926,16 +3006,16 @@ static CYTHON_INLINE npy_intp *__pyx_f_5numpy_7ndarray_5shape_shape(PyArrayObjec
 static CYTHON_INLINE npy_intp *__pyx_f_5numpy_7ndarray_7strides_strides(PyArrayObject *__pyx_v_self); /* proto*/
 static CYTHON_INLINE npy_intp __pyx_f_5numpy_7ndarray_4size_size(PyArrayObject *__pyx_v_self); /* proto*/
 static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__pyx_v_self); /* proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen, int __pyx_skip_dispatch); /* proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen, int __pyx_skip_dispatch); /* proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static __pyx_t_double_complex __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_mobius(CYTHON_UNUSED struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyArrayObject *__pyx_v_m, __pyx_t_double_complex __pyx_v_z, int __pyx_skip_dispatch); /* proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_terminated(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_turn(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen); /* proto*/
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen); /* proto*/
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto*/
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto*/
+static __pyx_t_double_complex __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_mobius(CYTHON_UNUSED struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyArrayObject *__pyx_v_m, __pyx_t_double_complex __pyx_v_z); /* proto*/
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_terminated(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto*/
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto*/
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_turn(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto*/
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto*/
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto*/
 static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_tree(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
 static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_leaf(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_start_tag, int __pyx_v_start_state, CYTHON_UNUSED int __pyx_v_start_level, PyArrayObject *__pyx_v_start_word, int __pyx_skip_dispatch); /* proto*/
 
@@ -2962,6 +3042,7 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
 /* Module declarations from "klein_compute.tree_explorer" */
 static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_explorer__set_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, PyObject *); /*proto*/
 /* #### Code section: typeinfo ### */
+static __Pyx_TypeInfo __Pyx_TypeInfo___pyx_t_double_complex = { "double complex", NULL, sizeof(__pyx_t_double_complex), { 0 }, 0, 'C', 0, 0 };
 /* #### Code section: before_global_var ### */
 #define __Pyx_MODULE_NAME "klein_compute.tree_explorer"
 extern int __pyx_module_is_main_klein_compute__tree_explorer;
@@ -2972,13 +3053,11 @@ int __pyx_module_is_main_klein_compute__tree_explorer = 0;
 static PyObject *__pyx_builtin_enumerate;
 static PyObject *__pyx_builtin_ImportError;
 /* #### Code section: string_decls ### */
-static const char __pyx_k_m[] = "m";
-static const char __pyx_k_z[] = "z";
 static const char __pyx_k_gc[] = "gc";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k__24[] = ".";
-static const char __pyx_k__25[] = "*";
-static const char __pyx_k__33[] = "?";
+static const char __pyx_k__10[] = ".";
+static const char __pyx_k__11[] = "*";
+static const char __pyx_k__17[] = "?";
 static const char __pyx_k_fsa[] = "fsa";
 static const char __pyx_k_gen[] = "gen";
 static const char __pyx_k_new[] = "__new__";
@@ -3001,13 +3080,11 @@ static const char __pyx_k_fix_pt[] = "fix_pt";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_logger[] = "_logger";
 static const char __pyx_k_matmul[] = "matmul";
-static const char __pyx_k_mobius[] = "mobius";
 static const char __pyx_k_pickle[] = "pickle";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_update[] = "update";
 static const char __pyx_k_disable[] = "disable";
 static const char __pyx_k_epsilon[] = "epsilon";
-static const char __pyx_k_idx_gen[] = "idx_gen";
 static const char __pyx_k_logging[] = "logging";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
@@ -3027,65 +3104,36 @@ static const char __pyx_k_start_level[] = "start_level";
 static const char __pyx_k_start_state[] = "start_state";
 static const char __pyx_k_compute_leaf[] = "compute_leaf";
 static const char __pyx_k_compute_tree[] = "compute_tree";
-static const char __pyx_k_forward_move[] = "forward_move";
-static const char __pyx_k_get_left_gen[] = "get_left_gen";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_stringsource[] = "<stringsource>";
 static const char __pyx_k_use_setstate[] = "use_setstate";
-static const char __pyx_k_backward_move[] = "backward_move";
 static const char __pyx_k_class_getitem[] = "__class_getitem__";
-static const char __pyx_k_get_right_gen[] = "get_right_gen";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_tree_explorer[] = "tree_explorer";
-static const char __pyx_k_available_turn[] = "available_turn";
-static const char __pyx_k_get_next_state[] = "get_next_state";
-static const char __pyx_k_set_next_state[] = "set_next_state";
 static const char __pyx_k_current_process[] = "current_process";
 static const char __pyx_k_multiprocessing[] = "multiprocessing";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
-static const char __pyx_k_branch_terminated[] = "branch_terminated";
-static const char __pyx_k_turn_forward_move[] = "turn_forward_move";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_tree_explorer_mobius[] = "tree_explorer.mobius";
 static const char __pyx_k_cython_tree_explorer_pyx[] = "cython/tree_explorer.pyx";
 static const char __pyx_k_pyx_unpickle_tree_explorer[] = "__pyx_unpickle_tree_explorer";
 static const char __pyx_k_tree_explorer_compute_leaf[] = "tree_explorer.compute_leaf";
 static const char __pyx_k_tree_explorer_compute_tree[] = "tree_explorer.compute_tree";
-static const char __pyx_k_tree_explorer_forward_move[] = "tree_explorer.forward_move";
-static const char __pyx_k_tree_explorer_get_left_gen[] = "tree_explorer.get_left_gen";
 static const char __pyx_k_klein_compute_tree_explorer[] = "klein_compute.tree_explorer";
-static const char __pyx_k_tree_explorer_backward_move[] = "tree_explorer.backward_move";
-static const char __pyx_k_tree_explorer_get_right_gen[] = "tree_explorer.get_right_gen";
-static const char __pyx_k_tree_explorer_available_turn[] = "tree_explorer.available_turn";
-static const char __pyx_k_tree_explorer_get_next_state[] = "tree_explorer.get_next_state";
-static const char __pyx_k_tree_explorer_set_next_state[] = "tree_explorer.set_next_state";
 static const char __pyx_k_tree_explorer___reduce_cython[] = "tree_explorer.__reduce_cython__";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_tree_explorer___setstate_cython[] = "tree_explorer.__setstate_cython__";
-static const char __pyx_k_tree_explorer_branch_terminated[] = "tree_explorer.branch_terminated";
-static const char __pyx_k_tree_explorer_turn_forward_move[] = "tree_explorer.turn_forward_move";
 static const char __pyx_k_Incompatible_checksums_0x_x_vs_0[] = "Incompatible checksums (0x%x vs (0x51e0759, 0xea6f3a4, 0xaf31500) = (FSA, curr_state, epsilon, fixed_points, generators, last_idx, last_idx_points, last_state, last_tags, last_words, level, max_depth, points, precomputing, start_tag, start_word, state, tag, words))";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
 /* #### Code section: decls ### */
 static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_max_d, float __pyx_v_epsilon, PyArrayObject *__pyx_v_gen, PyArrayObject *__pyx_v_fsa, PyArrayObject *__pyx_v_fix_pt); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_2set_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_4get_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_6get_right_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_8get_left_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_10mobius(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyArrayObject *__pyx_v_m, __pyx_t_double_complex __pyx_v_z); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_12branch_terminated(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_14backward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_16available_turn(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_18turn_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_20forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_22compute_tree(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_24compute_leaf(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_start_tag, int __pyx_v_start_state, int __pyx_v_start_level, PyArrayObject *__pyx_v_start_word); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_26__reduce_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_28__setstate_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_2compute_tree(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_4compute_leaf(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_start_tag, int __pyx_v_start_state, int __pyx_v_start_level, PyArrayObject *__pyx_v_start_word); /* proto */
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_6__reduce_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_8__setstate_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_13klein_compute_13tree_explorer___pyx_unpickle_tree_explorer(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_13klein_compute_13tree_explorer_tree_explorer(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 /* #### Code section: late_includes ### */
@@ -3158,13 +3206,10 @@ typedef struct {
   PyObject *__pyx_n_s_ImportError;
   PyObject *__pyx_kp_s_Incompatible_checksums_0x_x_vs_0;
   PyObject *__pyx_n_s_PickleError;
-  PyObject *__pyx_kp_u__24;
-  PyObject *__pyx_n_s__25;
-  PyObject *__pyx_n_s__33;
+  PyObject *__pyx_kp_u__10;
+  PyObject *__pyx_n_s__11;
+  PyObject *__pyx_n_s__17;
   PyObject *__pyx_n_s_asyncio_coroutines;
-  PyObject *__pyx_n_s_available_turn;
-  PyObject *__pyx_n_s_backward_move;
-  PyObject *__pyx_n_s_branch_terminated;
   PyObject *__pyx_n_s_class_getitem;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_compute_leaf;
@@ -3180,16 +3225,11 @@ typedef struct {
   PyObject *__pyx_n_s_enumerate;
   PyObject *__pyx_n_s_epsilon;
   PyObject *__pyx_n_s_fix_pt;
-  PyObject *__pyx_n_s_forward_move;
   PyObject *__pyx_n_s_fsa;
   PyObject *__pyx_kp_u_gc;
   PyObject *__pyx_n_s_gen;
   PyObject *__pyx_n_s_getLogger;
-  PyObject *__pyx_n_s_get_left_gen;
-  PyObject *__pyx_n_s_get_next_state;
-  PyObject *__pyx_n_s_get_right_gen;
   PyObject *__pyx_n_s_getstate;
-  PyObject *__pyx_n_s_idx_gen;
   PyObject *__pyx_n_s_import;
   PyObject *__pyx_n_s_initializing;
   PyObject *__pyx_n_s_is_coroutine;
@@ -3197,11 +3237,9 @@ typedef struct {
   PyObject *__pyx_n_s_klein_compute_tree_explorer;
   PyObject *__pyx_n_s_logger;
   PyObject *__pyx_n_s_logging;
-  PyObject *__pyx_n_s_m;
   PyObject *__pyx_n_s_main;
   PyObject *__pyx_n_s_matmul;
   PyObject *__pyx_n_s_max_d;
-  PyObject *__pyx_n_s_mobius;
   PyObject *__pyx_n_s_multiprocessing;
   PyObject *__pyx_n_s_name;
   PyObject *__pyx_n_s_new;
@@ -3222,7 +3260,6 @@ typedef struct {
   PyObject *__pyx_n_s_reduce_cython;
   PyObject *__pyx_n_s_reduce_ex;
   PyObject *__pyx_n_s_self;
-  PyObject *__pyx_n_s_set_next_state;
   PyObject *__pyx_n_s_setstate;
   PyObject *__pyx_n_s_setstate_cython;
   PyObject *__pyx_n_s_spec;
@@ -3236,22 +3273,10 @@ typedef struct {
   PyObject *__pyx_n_s_tree_explorer;
   PyObject *__pyx_n_s_tree_explorer___reduce_cython;
   PyObject *__pyx_n_s_tree_explorer___setstate_cython;
-  PyObject *__pyx_n_s_tree_explorer_available_turn;
-  PyObject *__pyx_n_s_tree_explorer_backward_move;
-  PyObject *__pyx_n_s_tree_explorer_branch_terminated;
   PyObject *__pyx_n_s_tree_explorer_compute_leaf;
   PyObject *__pyx_n_s_tree_explorer_compute_tree;
-  PyObject *__pyx_n_s_tree_explorer_forward_move;
-  PyObject *__pyx_n_s_tree_explorer_get_left_gen;
-  PyObject *__pyx_n_s_tree_explorer_get_next_state;
-  PyObject *__pyx_n_s_tree_explorer_get_right_gen;
-  PyObject *__pyx_n_s_tree_explorer_mobius;
-  PyObject *__pyx_n_s_tree_explorer_set_next_state;
-  PyObject *__pyx_n_s_tree_explorer_turn_forward_move;
-  PyObject *__pyx_n_s_turn_forward_move;
   PyObject *__pyx_n_s_update;
   PyObject *__pyx_n_s_use_setstate;
-  PyObject *__pyx_n_s_z;
   PyObject *__pyx_n_s_zeros;
   PyObject *__pyx_int_0;
   PyObject *__pyx_int_1;
@@ -3262,35 +3287,19 @@ typedef struct {
   PyObject *__pyx_int_183702784;
   PyObject *__pyx_int_245822372;
   PyObject *__pyx_tuple_;
+  PyObject *__pyx_slice__3;
   PyObject *__pyx_tuple__2;
-  PyObject *__pyx_tuple__8;
   PyObject *__pyx_tuple__9;
-  PyObject *__pyx_slice__13;
-  PyObject *__pyx_tuple__10;
-  PyObject *__pyx_tuple__11;
-  PyObject *__pyx_tuple__23;
-  PyObject *__pyx_tuple__26;
-  PyObject *__pyx_tuple__27;
-  PyObject *__pyx_tuple__28;
-  PyObject *__pyx_tuple__29;
-  PyObject *__pyx_tuple__30;
-  PyObject *__pyx_tuple__31;
-  PyObject *__pyx_tuple__32;
-  PyObject *__pyx_codeobj__3;
+  PyObject *__pyx_tuple__12;
+  PyObject *__pyx_tuple__13;
+  PyObject *__pyx_tuple__14;
+  PyObject *__pyx_tuple__15;
+  PyObject *__pyx_tuple__16;
   PyObject *__pyx_codeobj__4;
   PyObject *__pyx_codeobj__5;
   PyObject *__pyx_codeobj__6;
   PyObject *__pyx_codeobj__7;
-  PyObject *__pyx_codeobj__12;
-  PyObject *__pyx_codeobj__14;
-  PyObject *__pyx_codeobj__15;
-  PyObject *__pyx_codeobj__16;
-  PyObject *__pyx_codeobj__17;
-  PyObject *__pyx_codeobj__18;
-  PyObject *__pyx_codeobj__19;
-  PyObject *__pyx_codeobj__20;
-  PyObject *__pyx_codeobj__21;
-  PyObject *__pyx_codeobj__22;
+  PyObject *__pyx_codeobj__8;
 } __pyx_mstate;
 
 #if CYTHON_USE_MODULE_STATE
@@ -3354,13 +3363,10 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_ImportError);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Incompatible_checksums_0x_x_vs_0);
   Py_CLEAR(clear_module_state->__pyx_n_s_PickleError);
-  Py_CLEAR(clear_module_state->__pyx_kp_u__24);
-  Py_CLEAR(clear_module_state->__pyx_n_s__25);
-  Py_CLEAR(clear_module_state->__pyx_n_s__33);
+  Py_CLEAR(clear_module_state->__pyx_kp_u__10);
+  Py_CLEAR(clear_module_state->__pyx_n_s__11);
+  Py_CLEAR(clear_module_state->__pyx_n_s__17);
   Py_CLEAR(clear_module_state->__pyx_n_s_asyncio_coroutines);
-  Py_CLEAR(clear_module_state->__pyx_n_s_available_turn);
-  Py_CLEAR(clear_module_state->__pyx_n_s_backward_move);
-  Py_CLEAR(clear_module_state->__pyx_n_s_branch_terminated);
   Py_CLEAR(clear_module_state->__pyx_n_s_class_getitem);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_compute_leaf);
@@ -3376,16 +3382,11 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_enumerate);
   Py_CLEAR(clear_module_state->__pyx_n_s_epsilon);
   Py_CLEAR(clear_module_state->__pyx_n_s_fix_pt);
-  Py_CLEAR(clear_module_state->__pyx_n_s_forward_move);
   Py_CLEAR(clear_module_state->__pyx_n_s_fsa);
   Py_CLEAR(clear_module_state->__pyx_kp_u_gc);
   Py_CLEAR(clear_module_state->__pyx_n_s_gen);
   Py_CLEAR(clear_module_state->__pyx_n_s_getLogger);
-  Py_CLEAR(clear_module_state->__pyx_n_s_get_left_gen);
-  Py_CLEAR(clear_module_state->__pyx_n_s_get_next_state);
-  Py_CLEAR(clear_module_state->__pyx_n_s_get_right_gen);
   Py_CLEAR(clear_module_state->__pyx_n_s_getstate);
-  Py_CLEAR(clear_module_state->__pyx_n_s_idx_gen);
   Py_CLEAR(clear_module_state->__pyx_n_s_import);
   Py_CLEAR(clear_module_state->__pyx_n_s_initializing);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_coroutine);
@@ -3393,11 +3394,9 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_klein_compute_tree_explorer);
   Py_CLEAR(clear_module_state->__pyx_n_s_logger);
   Py_CLEAR(clear_module_state->__pyx_n_s_logging);
-  Py_CLEAR(clear_module_state->__pyx_n_s_m);
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
   Py_CLEAR(clear_module_state->__pyx_n_s_matmul);
   Py_CLEAR(clear_module_state->__pyx_n_s_max_d);
-  Py_CLEAR(clear_module_state->__pyx_n_s_mobius);
   Py_CLEAR(clear_module_state->__pyx_n_s_multiprocessing);
   Py_CLEAR(clear_module_state->__pyx_n_s_name);
   Py_CLEAR(clear_module_state->__pyx_n_s_new);
@@ -3418,7 +3417,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce_ex);
   Py_CLEAR(clear_module_state->__pyx_n_s_self);
-  Py_CLEAR(clear_module_state->__pyx_n_s_set_next_state);
   Py_CLEAR(clear_module_state->__pyx_n_s_setstate);
   Py_CLEAR(clear_module_state->__pyx_n_s_setstate_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_spec);
@@ -3432,22 +3430,10 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer);
   Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer___reduce_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer___setstate_cython);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_available_turn);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_backward_move);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_branch_terminated);
   Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_compute_leaf);
   Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_compute_tree);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_forward_move);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_get_left_gen);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_get_next_state);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_get_right_gen);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_mobius);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_set_next_state);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tree_explorer_turn_forward_move);
-  Py_CLEAR(clear_module_state->__pyx_n_s_turn_forward_move);
   Py_CLEAR(clear_module_state->__pyx_n_s_update);
   Py_CLEAR(clear_module_state->__pyx_n_s_use_setstate);
-  Py_CLEAR(clear_module_state->__pyx_n_s_z);
   Py_CLEAR(clear_module_state->__pyx_n_s_zeros);
   Py_CLEAR(clear_module_state->__pyx_int_0);
   Py_CLEAR(clear_module_state->__pyx_int_1);
@@ -3458,35 +3444,19 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_int_183702784);
   Py_CLEAR(clear_module_state->__pyx_int_245822372);
   Py_CLEAR(clear_module_state->__pyx_tuple_);
+  Py_CLEAR(clear_module_state->__pyx_slice__3);
   Py_CLEAR(clear_module_state->__pyx_tuple__2);
-  Py_CLEAR(clear_module_state->__pyx_tuple__8);
   Py_CLEAR(clear_module_state->__pyx_tuple__9);
-  Py_CLEAR(clear_module_state->__pyx_slice__13);
-  Py_CLEAR(clear_module_state->__pyx_tuple__10);
-  Py_CLEAR(clear_module_state->__pyx_tuple__11);
-  Py_CLEAR(clear_module_state->__pyx_tuple__23);
-  Py_CLEAR(clear_module_state->__pyx_tuple__26);
-  Py_CLEAR(clear_module_state->__pyx_tuple__27);
-  Py_CLEAR(clear_module_state->__pyx_tuple__28);
-  Py_CLEAR(clear_module_state->__pyx_tuple__29);
-  Py_CLEAR(clear_module_state->__pyx_tuple__30);
-  Py_CLEAR(clear_module_state->__pyx_tuple__31);
-  Py_CLEAR(clear_module_state->__pyx_tuple__32);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__3);
+  Py_CLEAR(clear_module_state->__pyx_tuple__12);
+  Py_CLEAR(clear_module_state->__pyx_tuple__13);
+  Py_CLEAR(clear_module_state->__pyx_tuple__14);
+  Py_CLEAR(clear_module_state->__pyx_tuple__15);
+  Py_CLEAR(clear_module_state->__pyx_tuple__16);
   Py_CLEAR(clear_module_state->__pyx_codeobj__4);
   Py_CLEAR(clear_module_state->__pyx_codeobj__5);
   Py_CLEAR(clear_module_state->__pyx_codeobj__6);
   Py_CLEAR(clear_module_state->__pyx_codeobj__7);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__12);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__14);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__15);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__16);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__17);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__18);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__19);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__20);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__21);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__22);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__8);
   return 0;
 }
 #endif
@@ -3528,13 +3498,10 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_ImportError);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Incompatible_checksums_0x_x_vs_0);
   Py_VISIT(traverse_module_state->__pyx_n_s_PickleError);
-  Py_VISIT(traverse_module_state->__pyx_kp_u__24);
-  Py_VISIT(traverse_module_state->__pyx_n_s__25);
-  Py_VISIT(traverse_module_state->__pyx_n_s__33);
+  Py_VISIT(traverse_module_state->__pyx_kp_u__10);
+  Py_VISIT(traverse_module_state->__pyx_n_s__11);
+  Py_VISIT(traverse_module_state->__pyx_n_s__17);
   Py_VISIT(traverse_module_state->__pyx_n_s_asyncio_coroutines);
-  Py_VISIT(traverse_module_state->__pyx_n_s_available_turn);
-  Py_VISIT(traverse_module_state->__pyx_n_s_backward_move);
-  Py_VISIT(traverse_module_state->__pyx_n_s_branch_terminated);
   Py_VISIT(traverse_module_state->__pyx_n_s_class_getitem);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_compute_leaf);
@@ -3550,16 +3517,11 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_enumerate);
   Py_VISIT(traverse_module_state->__pyx_n_s_epsilon);
   Py_VISIT(traverse_module_state->__pyx_n_s_fix_pt);
-  Py_VISIT(traverse_module_state->__pyx_n_s_forward_move);
   Py_VISIT(traverse_module_state->__pyx_n_s_fsa);
   Py_VISIT(traverse_module_state->__pyx_kp_u_gc);
   Py_VISIT(traverse_module_state->__pyx_n_s_gen);
   Py_VISIT(traverse_module_state->__pyx_n_s_getLogger);
-  Py_VISIT(traverse_module_state->__pyx_n_s_get_left_gen);
-  Py_VISIT(traverse_module_state->__pyx_n_s_get_next_state);
-  Py_VISIT(traverse_module_state->__pyx_n_s_get_right_gen);
   Py_VISIT(traverse_module_state->__pyx_n_s_getstate);
-  Py_VISIT(traverse_module_state->__pyx_n_s_idx_gen);
   Py_VISIT(traverse_module_state->__pyx_n_s_import);
   Py_VISIT(traverse_module_state->__pyx_n_s_initializing);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_coroutine);
@@ -3567,11 +3529,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_klein_compute_tree_explorer);
   Py_VISIT(traverse_module_state->__pyx_n_s_logger);
   Py_VISIT(traverse_module_state->__pyx_n_s_logging);
-  Py_VISIT(traverse_module_state->__pyx_n_s_m);
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
   Py_VISIT(traverse_module_state->__pyx_n_s_matmul);
   Py_VISIT(traverse_module_state->__pyx_n_s_max_d);
-  Py_VISIT(traverse_module_state->__pyx_n_s_mobius);
   Py_VISIT(traverse_module_state->__pyx_n_s_multiprocessing);
   Py_VISIT(traverse_module_state->__pyx_n_s_name);
   Py_VISIT(traverse_module_state->__pyx_n_s_new);
@@ -3592,7 +3552,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce_ex);
   Py_VISIT(traverse_module_state->__pyx_n_s_self);
-  Py_VISIT(traverse_module_state->__pyx_n_s_set_next_state);
   Py_VISIT(traverse_module_state->__pyx_n_s_setstate);
   Py_VISIT(traverse_module_state->__pyx_n_s_setstate_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_spec);
@@ -3606,22 +3565,10 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer);
   Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer___reduce_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer___setstate_cython);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_available_turn);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_backward_move);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_branch_terminated);
   Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_compute_leaf);
   Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_compute_tree);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_forward_move);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_get_left_gen);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_get_next_state);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_get_right_gen);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_mobius);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_set_next_state);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tree_explorer_turn_forward_move);
-  Py_VISIT(traverse_module_state->__pyx_n_s_turn_forward_move);
   Py_VISIT(traverse_module_state->__pyx_n_s_update);
   Py_VISIT(traverse_module_state->__pyx_n_s_use_setstate);
-  Py_VISIT(traverse_module_state->__pyx_n_s_z);
   Py_VISIT(traverse_module_state->__pyx_n_s_zeros);
   Py_VISIT(traverse_module_state->__pyx_int_0);
   Py_VISIT(traverse_module_state->__pyx_int_1);
@@ -3632,35 +3579,19 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_int_183702784);
   Py_VISIT(traverse_module_state->__pyx_int_245822372);
   Py_VISIT(traverse_module_state->__pyx_tuple_);
+  Py_VISIT(traverse_module_state->__pyx_slice__3);
   Py_VISIT(traverse_module_state->__pyx_tuple__2);
-  Py_VISIT(traverse_module_state->__pyx_tuple__8);
   Py_VISIT(traverse_module_state->__pyx_tuple__9);
-  Py_VISIT(traverse_module_state->__pyx_slice__13);
-  Py_VISIT(traverse_module_state->__pyx_tuple__10);
-  Py_VISIT(traverse_module_state->__pyx_tuple__11);
-  Py_VISIT(traverse_module_state->__pyx_tuple__23);
-  Py_VISIT(traverse_module_state->__pyx_tuple__26);
-  Py_VISIT(traverse_module_state->__pyx_tuple__27);
-  Py_VISIT(traverse_module_state->__pyx_tuple__28);
-  Py_VISIT(traverse_module_state->__pyx_tuple__29);
-  Py_VISIT(traverse_module_state->__pyx_tuple__30);
-  Py_VISIT(traverse_module_state->__pyx_tuple__31);
-  Py_VISIT(traverse_module_state->__pyx_tuple__32);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__3);
+  Py_VISIT(traverse_module_state->__pyx_tuple__12);
+  Py_VISIT(traverse_module_state->__pyx_tuple__13);
+  Py_VISIT(traverse_module_state->__pyx_tuple__14);
+  Py_VISIT(traverse_module_state->__pyx_tuple__15);
+  Py_VISIT(traverse_module_state->__pyx_tuple__16);
   Py_VISIT(traverse_module_state->__pyx_codeobj__4);
   Py_VISIT(traverse_module_state->__pyx_codeobj__5);
   Py_VISIT(traverse_module_state->__pyx_codeobj__6);
   Py_VISIT(traverse_module_state->__pyx_codeobj__7);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__12);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__14);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__15);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__16);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__17);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__18);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__19);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__20);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__21);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__22);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__8);
   return 0;
 }
 #endif
@@ -3732,13 +3663,10 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_ImportError __pyx_mstate_global->__pyx_n_s_ImportError
 #define __pyx_kp_s_Incompatible_checksums_0x_x_vs_0 __pyx_mstate_global->__pyx_kp_s_Incompatible_checksums_0x_x_vs_0
 #define __pyx_n_s_PickleError __pyx_mstate_global->__pyx_n_s_PickleError
-#define __pyx_kp_u__24 __pyx_mstate_global->__pyx_kp_u__24
-#define __pyx_n_s__25 __pyx_mstate_global->__pyx_n_s__25
-#define __pyx_n_s__33 __pyx_mstate_global->__pyx_n_s__33
+#define __pyx_kp_u__10 __pyx_mstate_global->__pyx_kp_u__10
+#define __pyx_n_s__11 __pyx_mstate_global->__pyx_n_s__11
+#define __pyx_n_s__17 __pyx_mstate_global->__pyx_n_s__17
 #define __pyx_n_s_asyncio_coroutines __pyx_mstate_global->__pyx_n_s_asyncio_coroutines
-#define __pyx_n_s_available_turn __pyx_mstate_global->__pyx_n_s_available_turn
-#define __pyx_n_s_backward_move __pyx_mstate_global->__pyx_n_s_backward_move
-#define __pyx_n_s_branch_terminated __pyx_mstate_global->__pyx_n_s_branch_terminated
 #define __pyx_n_s_class_getitem __pyx_mstate_global->__pyx_n_s_class_getitem
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_compute_leaf __pyx_mstate_global->__pyx_n_s_compute_leaf
@@ -3754,16 +3682,11 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_enumerate __pyx_mstate_global->__pyx_n_s_enumerate
 #define __pyx_n_s_epsilon __pyx_mstate_global->__pyx_n_s_epsilon
 #define __pyx_n_s_fix_pt __pyx_mstate_global->__pyx_n_s_fix_pt
-#define __pyx_n_s_forward_move __pyx_mstate_global->__pyx_n_s_forward_move
 #define __pyx_n_s_fsa __pyx_mstate_global->__pyx_n_s_fsa
 #define __pyx_kp_u_gc __pyx_mstate_global->__pyx_kp_u_gc
 #define __pyx_n_s_gen __pyx_mstate_global->__pyx_n_s_gen
 #define __pyx_n_s_getLogger __pyx_mstate_global->__pyx_n_s_getLogger
-#define __pyx_n_s_get_left_gen __pyx_mstate_global->__pyx_n_s_get_left_gen
-#define __pyx_n_s_get_next_state __pyx_mstate_global->__pyx_n_s_get_next_state
-#define __pyx_n_s_get_right_gen __pyx_mstate_global->__pyx_n_s_get_right_gen
 #define __pyx_n_s_getstate __pyx_mstate_global->__pyx_n_s_getstate
-#define __pyx_n_s_idx_gen __pyx_mstate_global->__pyx_n_s_idx_gen
 #define __pyx_n_s_import __pyx_mstate_global->__pyx_n_s_import
 #define __pyx_n_s_initializing __pyx_mstate_global->__pyx_n_s_initializing
 #define __pyx_n_s_is_coroutine __pyx_mstate_global->__pyx_n_s_is_coroutine
@@ -3771,11 +3694,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_klein_compute_tree_explorer __pyx_mstate_global->__pyx_n_s_klein_compute_tree_explorer
 #define __pyx_n_s_logger __pyx_mstate_global->__pyx_n_s_logger
 #define __pyx_n_s_logging __pyx_mstate_global->__pyx_n_s_logging
-#define __pyx_n_s_m __pyx_mstate_global->__pyx_n_s_m
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
 #define __pyx_n_s_matmul __pyx_mstate_global->__pyx_n_s_matmul
 #define __pyx_n_s_max_d __pyx_mstate_global->__pyx_n_s_max_d
-#define __pyx_n_s_mobius __pyx_mstate_global->__pyx_n_s_mobius
 #define __pyx_n_s_multiprocessing __pyx_mstate_global->__pyx_n_s_multiprocessing
 #define __pyx_n_s_name __pyx_mstate_global->__pyx_n_s_name
 #define __pyx_n_s_new __pyx_mstate_global->__pyx_n_s_new
@@ -3796,7 +3717,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_reduce_cython __pyx_mstate_global->__pyx_n_s_reduce_cython
 #define __pyx_n_s_reduce_ex __pyx_mstate_global->__pyx_n_s_reduce_ex
 #define __pyx_n_s_self __pyx_mstate_global->__pyx_n_s_self
-#define __pyx_n_s_set_next_state __pyx_mstate_global->__pyx_n_s_set_next_state
 #define __pyx_n_s_setstate __pyx_mstate_global->__pyx_n_s_setstate
 #define __pyx_n_s_setstate_cython __pyx_mstate_global->__pyx_n_s_setstate_cython
 #define __pyx_n_s_spec __pyx_mstate_global->__pyx_n_s_spec
@@ -3810,22 +3730,10 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_tree_explorer __pyx_mstate_global->__pyx_n_s_tree_explorer
 #define __pyx_n_s_tree_explorer___reduce_cython __pyx_mstate_global->__pyx_n_s_tree_explorer___reduce_cython
 #define __pyx_n_s_tree_explorer___setstate_cython __pyx_mstate_global->__pyx_n_s_tree_explorer___setstate_cython
-#define __pyx_n_s_tree_explorer_available_turn __pyx_mstate_global->__pyx_n_s_tree_explorer_available_turn
-#define __pyx_n_s_tree_explorer_backward_move __pyx_mstate_global->__pyx_n_s_tree_explorer_backward_move
-#define __pyx_n_s_tree_explorer_branch_terminated __pyx_mstate_global->__pyx_n_s_tree_explorer_branch_terminated
 #define __pyx_n_s_tree_explorer_compute_leaf __pyx_mstate_global->__pyx_n_s_tree_explorer_compute_leaf
 #define __pyx_n_s_tree_explorer_compute_tree __pyx_mstate_global->__pyx_n_s_tree_explorer_compute_tree
-#define __pyx_n_s_tree_explorer_forward_move __pyx_mstate_global->__pyx_n_s_tree_explorer_forward_move
-#define __pyx_n_s_tree_explorer_get_left_gen __pyx_mstate_global->__pyx_n_s_tree_explorer_get_left_gen
-#define __pyx_n_s_tree_explorer_get_next_state __pyx_mstate_global->__pyx_n_s_tree_explorer_get_next_state
-#define __pyx_n_s_tree_explorer_get_right_gen __pyx_mstate_global->__pyx_n_s_tree_explorer_get_right_gen
-#define __pyx_n_s_tree_explorer_mobius __pyx_mstate_global->__pyx_n_s_tree_explorer_mobius
-#define __pyx_n_s_tree_explorer_set_next_state __pyx_mstate_global->__pyx_n_s_tree_explorer_set_next_state
-#define __pyx_n_s_tree_explorer_turn_forward_move __pyx_mstate_global->__pyx_n_s_tree_explorer_turn_forward_move
-#define __pyx_n_s_turn_forward_move __pyx_mstate_global->__pyx_n_s_turn_forward_move
 #define __pyx_n_s_update __pyx_mstate_global->__pyx_n_s_update
 #define __pyx_n_s_use_setstate __pyx_mstate_global->__pyx_n_s_use_setstate
-#define __pyx_n_s_z __pyx_mstate_global->__pyx_n_s_z
 #define __pyx_n_s_zeros __pyx_mstate_global->__pyx_n_s_zeros
 #define __pyx_int_0 __pyx_mstate_global->__pyx_int_0
 #define __pyx_int_1 __pyx_mstate_global->__pyx_int_1
@@ -3836,35 +3744,19 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_int_183702784 __pyx_mstate_global->__pyx_int_183702784
 #define __pyx_int_245822372 __pyx_mstate_global->__pyx_int_245822372
 #define __pyx_tuple_ __pyx_mstate_global->__pyx_tuple_
+#define __pyx_slice__3 __pyx_mstate_global->__pyx_slice__3
 #define __pyx_tuple__2 __pyx_mstate_global->__pyx_tuple__2
-#define __pyx_tuple__8 __pyx_mstate_global->__pyx_tuple__8
 #define __pyx_tuple__9 __pyx_mstate_global->__pyx_tuple__9
-#define __pyx_slice__13 __pyx_mstate_global->__pyx_slice__13
-#define __pyx_tuple__10 __pyx_mstate_global->__pyx_tuple__10
-#define __pyx_tuple__11 __pyx_mstate_global->__pyx_tuple__11
-#define __pyx_tuple__23 __pyx_mstate_global->__pyx_tuple__23
-#define __pyx_tuple__26 __pyx_mstate_global->__pyx_tuple__26
-#define __pyx_tuple__27 __pyx_mstate_global->__pyx_tuple__27
-#define __pyx_tuple__28 __pyx_mstate_global->__pyx_tuple__28
-#define __pyx_tuple__29 __pyx_mstate_global->__pyx_tuple__29
-#define __pyx_tuple__30 __pyx_mstate_global->__pyx_tuple__30
-#define __pyx_tuple__31 __pyx_mstate_global->__pyx_tuple__31
-#define __pyx_tuple__32 __pyx_mstate_global->__pyx_tuple__32
-#define __pyx_codeobj__3 __pyx_mstate_global->__pyx_codeobj__3
+#define __pyx_tuple__12 __pyx_mstate_global->__pyx_tuple__12
+#define __pyx_tuple__13 __pyx_mstate_global->__pyx_tuple__13
+#define __pyx_tuple__14 __pyx_mstate_global->__pyx_tuple__14
+#define __pyx_tuple__15 __pyx_mstate_global->__pyx_tuple__15
+#define __pyx_tuple__16 __pyx_mstate_global->__pyx_tuple__16
 #define __pyx_codeobj__4 __pyx_mstate_global->__pyx_codeobj__4
 #define __pyx_codeobj__5 __pyx_mstate_global->__pyx_codeobj__5
 #define __pyx_codeobj__6 __pyx_mstate_global->__pyx_codeobj__6
 #define __pyx_codeobj__7 __pyx_mstate_global->__pyx_codeobj__7
-#define __pyx_codeobj__12 __pyx_mstate_global->__pyx_codeobj__12
-#define __pyx_codeobj__14 __pyx_mstate_global->__pyx_codeobj__14
-#define __pyx_codeobj__15 __pyx_mstate_global->__pyx_codeobj__15
-#define __pyx_codeobj__16 __pyx_mstate_global->__pyx_codeobj__16
-#define __pyx_codeobj__17 __pyx_mstate_global->__pyx_codeobj__17
-#define __pyx_codeobj__18 __pyx_mstate_global->__pyx_codeobj__18
-#define __pyx_codeobj__19 __pyx_mstate_global->__pyx_codeobj__19
-#define __pyx_codeobj__20 __pyx_mstate_global->__pyx_codeobj__20
-#define __pyx_codeobj__21 __pyx_mstate_global->__pyx_codeobj__21
-#define __pyx_codeobj__22 __pyx_mstate_global->__pyx_codeobj__22
+#define __pyx_codeobj__8 __pyx_mstate_global->__pyx_codeobj__8
 /* #### Code section: module_code ### */
 
 /* "../../.cache/pypoetry/virtualenvs/ultra-indra-dXaxNIxQ-py3.9/lib/python3.9/site-packages/numpy/__init__.cython-30.pxd":245
@@ -5129,7 +5021,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "cython/tree_explorer.pyx":32
+/* "cython/tree_explorer.pyx":33
  *     cdef np.ndarray points
  * 
  *     def __init__(self, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):             # <<<<<<<<<<<<<<
@@ -5185,7 +5077,7 @@ static int __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_1__init__(Py
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -5193,9 +5085,9 @@ static int __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_1__init__(Py
           (void)__Pyx_Arg_NewRef_VARARGS(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 1); __PYX_ERR(0, 32, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 1); __PYX_ERR(0, 33, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -5203,9 +5095,9 @@ static int __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_1__init__(Py
           (void)__Pyx_Arg_NewRef_VARARGS(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 2); __PYX_ERR(0, 32, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 2); __PYX_ERR(0, 33, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -5213,9 +5105,9 @@ static int __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_1__init__(Py
           (void)__Pyx_Arg_NewRef_VARARGS(values[3]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 3); __PYX_ERR(0, 32, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 3); __PYX_ERR(0, 33, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
@@ -5223,14 +5115,14 @@ static int __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_1__init__(Py
           (void)__Pyx_Arg_NewRef_VARARGS(values[4]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 4); __PYX_ERR(0, 32, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 4); __PYX_ERR(0, 33, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__init__") < 0)) __PYX_ERR(0, 32, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__init__") < 0)) __PYX_ERR(0, 33, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 5)) {
       goto __pyx_L5_argtuple_error;
@@ -5241,15 +5133,15 @@ static int __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_1__init__(Py
       values[3] = __Pyx_Arg_VARARGS(__pyx_args, 3);
       values[4] = __Pyx_Arg_VARARGS(__pyx_args, 4);
     }
-    __pyx_v_max_d = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_max_d == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
-    __pyx_v_epsilon = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_epsilon == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+    __pyx_v_max_d = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_max_d == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
+    __pyx_v_epsilon = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_epsilon == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
     __pyx_v_gen = ((PyArrayObject *)values[2]);
     __pyx_v_fsa = ((PyArrayObject *)values[3]);
     __pyx_v_fix_pt = ((PyArrayObject *)values[4]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 32, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 33, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5263,9 +5155,9 @@ static int __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_1__init__(Py
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_gen), __pyx_ptype_5numpy_ndarray, 1, "gen", 0))) __PYX_ERR(0, 32, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_fsa), __pyx_ptype_5numpy_ndarray, 1, "fsa", 0))) __PYX_ERR(0, 32, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_fix_pt), __pyx_ptype_5numpy_ndarray, 1, "fix_pt", 0))) __PYX_ERR(0, 32, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_gen), __pyx_ptype_5numpy_ndarray, 1, "gen", 0))) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_fsa), __pyx_ptype_5numpy_ndarray, 1, "fsa", 0))) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_fix_pt), __pyx_ptype_5numpy_ndarray, 1, "fix_pt", 0))) __PYX_ERR(0, 33, __pyx_L1_error)
   __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v_max_d, __pyx_v_epsilon, __pyx_v_gen, __pyx_v_fsa, __pyx_v_fix_pt);
 
   /* function exit code */
@@ -5300,9 +5192,9 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__init__", 1);
-  __Pyx_TraceCall("__init__", __pyx_f[0], 32, 0, __PYX_ERR(0, 32, __pyx_L1_error));
+  __Pyx_TraceCall("__init__", __pyx_f[0], 33, 0, __PYX_ERR(0, 33, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":33
+  /* "cython/tree_explorer.pyx":34
  * 
  *     def __init__(self, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):
  *         self.level = 0             # <<<<<<<<<<<<<<
@@ -5311,7 +5203,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
  */
   __pyx_v_self->level = 0;
 
-  /* "cython/tree_explorer.pyx":34
+  /* "cython/tree_explorer.pyx":35
  *     def __init__(self, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):
  *         self.level = 0
  *         self.precomputing = 0             # <<<<<<<<<<<<<<
@@ -5320,7 +5212,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
  */
   __pyx_v_self->precomputing = 0;
 
-  /* "cython/tree_explorer.pyx":35
+  /* "cython/tree_explorer.pyx":36
  *         self.level = 0
  *         self.precomputing = 0
  *         self.max_depth = max_d             # <<<<<<<<<<<<<<
@@ -5329,7 +5221,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
  */
   __pyx_v_self->max_depth = __pyx_v_max_d;
 
-  /* "cython/tree_explorer.pyx":36
+  /* "cython/tree_explorer.pyx":37
  *         self.precomputing = 0
  *         self.max_depth = max_d
  *         self.epsilon = epsilon             # <<<<<<<<<<<<<<
@@ -5338,7 +5230,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
  */
   __pyx_v_self->epsilon = __pyx_v_epsilon;
 
-  /* "cython/tree_explorer.pyx":37
+  /* "cython/tree_explorer.pyx":38
  *         self.max_depth = max_d
  *         self.epsilon = epsilon
  *         self.generators = gen             # <<<<<<<<<<<<<<
@@ -5351,7 +5243,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
   __Pyx_DECREF((PyObject *)__pyx_v_self->generators);
   __pyx_v_self->generators = __pyx_v_gen;
 
-  /* "cython/tree_explorer.pyx":38
+  /* "cython/tree_explorer.pyx":39
  *         self.epsilon = epsilon
  *         self.generators = gen
  *         self.FSA = fsa             # <<<<<<<<<<<<<<
@@ -5364,7 +5256,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
   __Pyx_DECREF((PyObject *)__pyx_v_self->FSA);
   __pyx_v_self->FSA = __pyx_v_fsa;
 
-  /* "cython/tree_explorer.pyx":39
+  /* "cython/tree_explorer.pyx":40
  *         self.generators = gen
  *         self.FSA = fsa
  *         self.fixed_points = fix_pt             # <<<<<<<<<<<<<<
@@ -5377,137 +5269,137 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
   __Pyx_DECREF((PyObject *)__pyx_v_self->fixed_points);
   __pyx_v_self->fixed_points = __pyx_v_fix_pt;
 
-  /* "cython/tree_explorer.pyx":41
+  /* "cython/tree_explorer.pyx":42
  *         self.fixed_points = fix_pt
  * 
  *         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)             # <<<<<<<<<<<<<<
  *         self.tag       = np.empty((self.max_depth), dtype=int)
  *         self.state     = np.empty((self.max_depth), dtype=int)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_2)) __PYX_ERR(0, 41, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_2)) __PYX_ERR(0, 42, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_int_2)) __PYX_ERR(0, 41, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_int_2)) __PYX_ERR(0, 42, __pyx_L1_error);
   __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error);
   __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 41, __pyx_L1_error)
+  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_4);
   __Pyx_GOTREF((PyObject *)__pyx_v_self->words);
   __Pyx_DECREF((PyObject *)__pyx_v_self->words);
   __pyx_v_self->words = ((PyArrayObject *)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "cython/tree_explorer.pyx":42
+  /* "cython/tree_explorer.pyx":43
  * 
  *         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
  *         self.tag       = np.empty((self.max_depth), dtype=int)             # <<<<<<<<<<<<<<
  *         self.state     = np.empty((self.max_depth), dtype=int)
  *         self.last_words = np.zeros((4 * np.power(3, self.max_depth ), 2, 2), dtype=complex)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_2);
   __Pyx_GOTREF((PyObject *)__pyx_v_self->tag);
   __Pyx_DECREF((PyObject *)__pyx_v_self->tag);
   __pyx_v_self->tag = ((PyArrayObject *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "cython/tree_explorer.pyx":43
+  /* "cython/tree_explorer.pyx":44
  *         self.words = np.empty((self.max_depth, 2, 2), dtype=complex)
  *         self.tag       = np.empty((self.max_depth), dtype=int)
  *         self.state     = np.empty((self.max_depth), dtype=int)             # <<<<<<<<<<<<<<
  *         self.last_words = np.zeros((4 * np.power(3, self.max_depth ), 2, 2), dtype=complex)
  *         self.last_state = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 43, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_3);
   __Pyx_GOTREF((PyObject *)__pyx_v_self->state);
   __Pyx_DECREF((PyObject *)__pyx_v_self->state);
   __pyx_v_self->state = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "cython/tree_explorer.pyx":44
+  /* "cython/tree_explorer.pyx":45
  *         self.tag       = np.empty((self.max_depth), dtype=int)
  *         self.state     = np.empty((self.max_depth), dtype=int)
  *         self.last_words = np.zeros((4 * np.power(3, self.max_depth ), 2, 2), dtype=complex)             # <<<<<<<<<<<<<<
  *         self.last_state = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
  *         self.last_tags = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_power); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_power); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_5 = NULL;
   __pyx_t_6 = 0;
@@ -5528,62 +5420,62 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 2+__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 44, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   }
-  __pyx_t_4 = __Pyx_PyInt_MultiplyCObj(__pyx_int_4, __pyx_t_3, 4, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_MultiplyCObj(__pyx_int_4, __pyx_t_3, 4, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4)) __PYX_ERR(0, 44, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_2)) __PYX_ERR(0, 44, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_2)) __PYX_ERR(0, 45, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_int_2)) __PYX_ERR(0, 44, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_int_2)) __PYX_ERR(0, 45, __pyx_L1_error);
   __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3)) __PYX_ERR(0, 44, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error);
   __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v_self->last_words);
   __Pyx_DECREF((PyObject *)__pyx_v_self->last_words);
   __pyx_v_self->last_words = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cython/tree_explorer.pyx":45
+  /* "cython/tree_explorer.pyx":46
  *         self.state     = np.empty((self.max_depth), dtype=int)
  *         self.last_words = np.zeros((4 * np.power(3, self.max_depth ), 2, 2), dtype=complex)
  *         self.last_state = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)             # <<<<<<<<<<<<<<
  *         self.last_tags = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
  *         self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * 4 * np.power(3, self.max_depth)), dtype=complex)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_power); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_power); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   __pyx_t_6 = 0;
@@ -5604,51 +5496,51 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_6, 2+__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
-  __pyx_t_2 = __Pyx_PyInt_MultiplyCObj(__pyx_int_4, __pyx_t_1, 4, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_MultiplyCObj(__pyx_int_4, __pyx_t_1, 4, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 45, __pyx_L1_error)
+  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_4);
   __Pyx_GOTREF((PyObject *)__pyx_v_self->last_state);
   __Pyx_DECREF((PyObject *)__pyx_v_self->last_state);
   __pyx_v_self->last_state = ((PyArrayObject *)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "cython/tree_explorer.pyx":46
+  /* "cython/tree_explorer.pyx":47
  *         self.last_words = np.zeros((4 * np.power(3, self.max_depth ), 2, 2), dtype=complex)
  *         self.last_state = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
  *         self.last_tags = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)             # <<<<<<<<<<<<<<
  *         self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * 4 * np.power(3, self.max_depth)), dtype=complex)
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_power); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_power); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_5 = NULL;
   __pyx_t_6 = 0;
@@ -5669,55 +5561,55 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
     __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_6, 2+__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
-  __pyx_t_3 = __Pyx_PyInt_MultiplyCObj(__pyx_int_4, __pyx_t_4, 4, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_MultiplyCObj(__pyx_int_4, __pyx_t_4, 4, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3)) __PYX_ERR(0, 46, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error);
   __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v_self->last_tags);
   __Pyx_DECREF((PyObject *)__pyx_v_self->last_tags);
   __pyx_v_self->last_tags = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cython/tree_explorer.pyx":47
+  /* "cython/tree_explorer.pyx":48
  *         self.last_state = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
  *         self.last_tags = np.zeros((4 * np.power(3, self.max_depth )), dtype=int)
  *         self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * 4 * np.power(3, self.max_depth)), dtype=complex)             # <<<<<<<<<<<<<<
  * 
  *         self.last_idx = 0
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_7 = __pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_fix_pt); if (unlikely(__pyx_t_7 == ((npy_intp *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L1_error)
-  __pyx_t_8 = __pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_fix_pt); if (unlikely(__pyx_t_8 == ((npy_intp *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyInt_From_long((((__pyx_t_7[0]) * (__pyx_t_8[1])) * 4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_7 = __pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_fix_pt); if (unlikely(__pyx_t_7 == ((npy_intp *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_8 = __pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_fix_pt); if (unlikely(__pyx_t_8 == ((npy_intp *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_long((((__pyx_t_7[0]) * (__pyx_t_8[1])) * 4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_power); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_power); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->max_depth); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_9 = NULL;
   __pyx_t_6 = 0;
@@ -5738,35 +5630,35 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
     __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_6, 2+__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
-  __pyx_t_5 = PyNumber_Multiply(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Multiply(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_5);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5)) __PYX_ERR(0, 47, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error);
   __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 47, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v_self->points);
   __Pyx_DECREF((PyObject *)__pyx_v_self->points);
   __pyx_v_self->points = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cython/tree_explorer.pyx":49
+  /* "cython/tree_explorer.pyx":50
  *         self.points = np.zeros((fix_pt.shape[0] * fix_pt.shape[1] * 4 * np.power(3, self.max_depth)), dtype=complex)
  * 
  *         self.last_idx = 0             # <<<<<<<<<<<<<<
@@ -5775,7 +5667,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
  */
   __pyx_v_self->last_idx = 0;
 
-  /* "cython/tree_explorer.pyx":50
+  /* "cython/tree_explorer.pyx":51
  * 
  *         self.last_idx = 0
  *         self.last_idx_points = 0             # <<<<<<<<<<<<<<
@@ -5784,7 +5676,7 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
  */
   __pyx_v_self->last_idx_points = 0;
 
-  /* "cython/tree_explorer.pyx":32
+  /* "cython/tree_explorer.pyx":33
  *     cdef np.ndarray points
  * 
  *     def __init__(self, int max_d, float epsilon, np.ndarray gen, np.ndarray fsa, np.ndarray fix_pt):             # <<<<<<<<<<<<<<
@@ -5810,115 +5702,49 @@ static int __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer___init__(str
   return __pyx_r;
 }
 
-/* "cython/tree_explorer.pyx":53
+/* "cython/tree_explorer.pyx":54
  * 
  * 
- *     cpdef void set_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
+ *     cdef void set_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
  *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
  * 
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3set_next_state(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen, int __pyx_skip_dispatch) {
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen) {
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  long __pyx_t_7;
+  long __pyx_t_3;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__3)
   __Pyx_RefNannySetupContext("set_next_state", 1);
-  __Pyx_TraceCall("set_next_state", __pyx_f[0], 53, 0, __PYX_ERR(0, 53, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_set_next_state); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3set_next_state)) {
-        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_idx_gen); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 53, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; __pyx_t_5 = NULL;
-        __pyx_t_6 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-          if (likely(__pyx_t_5)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-            __Pyx_INCREF(__pyx_t_5);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_4, function);
-            __pyx_t_6 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_t_3};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 1+__pyx_t_6);
-          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("set_next_state", __pyx_f[0], 54, 0, __PYX_ERR(0, 54, __pyx_L1_error));
+
+  /* "cython/tree_explorer.pyx":55
+ * 
+ *     cdef void set_next_state(self, int idx_gen):
+ *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef int get_next_state(self, int idx_gen):
+ */
+  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->FSA), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = (__pyx_v_self->level + 1);
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_3, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 0) < 0))) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "cython/tree_explorer.pyx":54
  * 
- *     cpdef void set_next_state(self, int idx_gen):
- *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]             # <<<<<<<<<<<<<<
  * 
- *     cpdef int get_next_state(self, int idx_gen):
- */
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->FSA), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = (__pyx_v_self->level + 1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_7, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0))) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "cython/tree_explorer.pyx":53
- * 
- * 
- *     cpdef void set_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
+ *     cdef void set_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
  *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
  * 
  */
@@ -5928,254 +5754,57 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_sta
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.set_next_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   __Pyx_TraceReturn(Py_None, 0);
   __Pyx_RefNannyFinishContext();
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3set_next_state(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_3set_next_state = {"set_next_state", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3set_next_state, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3set_next_state(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  int __pyx_v_idx_gen;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[1] = {0};
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("set_next_state (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  {
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_idx_gen,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_idx_gen)) != 0)) {
-          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
-          kw_args--;
-        }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "set_next_state") < 0)) __PYX_ERR(0, 53, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 1)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-    }
-    __pyx_v_idx_gen = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_idx_gen == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
-  }
-  goto __pyx_L6_skip;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_next_state", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 53, __pyx_L3_error)
-  __pyx_L6_skip:;
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  {
-    Py_ssize_t __pyx_temp;
-    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
-    }
-  }
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.set_next_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_2set_next_state(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v_idx_gen);
-
-  /* function exit code */
-  {
-    Py_ssize_t __pyx_temp;
-    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
-    }
-  }
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_2set_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__3)
-  __Pyx_RefNannySetupContext("set_next_state", 1);
-  __Pyx_TraceCall("set_next_state (wrapper)", __pyx_f[0], 53, 0, __PYX_ERR(0, 53, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_state(__pyx_v_self, __pyx_v_idx_gen, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.set_next_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":56
+/* "cython/tree_explorer.pyx":57
  *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
  * 
- *     cpdef int get_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
+ *     cdef int get_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
  *         return self.FSA[self.state[self.level]][idx_gen]
  * 
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5get_next_state(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen, int __pyx_skip_dispatch) {
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen) {
   int __pyx_r;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
+  int __pyx_t_3;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__4)
   __Pyx_RefNannySetupContext("get_next_state", 1);
-  __Pyx_TraceCall("get_next_state", __pyx_f[0], 56, 0, __PYX_ERR(0, 56, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_next_state); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5get_next_state)) {
-        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_idx_gen); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; __pyx_t_5 = NULL;
-        __pyx_t_6 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-          if (likely(__pyx_t_5)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-            __Pyx_INCREF(__pyx_t_5);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_4, function);
-            __pyx_t_6 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_t_3};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 1+__pyx_t_6);
-          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        }
-        __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_r = __pyx_t_6;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("get_next_state", __pyx_f[0], 57, 0, __PYX_ERR(0, 57, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":57
+  /* "cython/tree_explorer.pyx":58
  * 
- *     cpdef int get_next_state(self, int idx_gen):
+ *     cdef int get_next_state(self, int idx_gen):
  *         return self.FSA[self.state[self.level]][idx_gen]             # <<<<<<<<<<<<<<
  * 
- *     cpdef int get_right_gen(self):
+ *     cdef int get_right_gen(self):
  */
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->FSA), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->FSA), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_6;
+  __pyx_r = __pyx_t_3;
   goto __pyx_L0;
 
-  /* "cython/tree_explorer.pyx":56
+  /* "cython/tree_explorer.pyx":57
  *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
  * 
- *     cpdef int get_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
+ *     cdef int get_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
  *         return self.FSA[self.state[self.level]][idx_gen]
  * 
  */
@@ -6184,9 +5813,6 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_stat
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.get_next_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -6195,150 +5821,15 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_stat
   return __pyx_r;
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5get_next_state(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_5get_next_state = {"get_next_state", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5get_next_state, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5get_next_state(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  int __pyx_v_idx_gen;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[1] = {0};
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("get_next_state (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  {
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_idx_gen,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_idx_gen)) != 0)) {
-          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
-          kw_args--;
-        }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_next_state") < 0)) __PYX_ERR(0, 56, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 1)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-    }
-    __pyx_v_idx_gen = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_idx_gen == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L3_error)
-  }
-  goto __pyx_L6_skip;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_next_state", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 56, __pyx_L3_error)
-  __pyx_L6_skip:;
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  {
-    Py_ssize_t __pyx_temp;
-    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
-    }
-  }
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.get_next_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_4get_next_state(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v_idx_gen);
-
-  /* function exit code */
-  {
-    Py_ssize_t __pyx_temp;
-    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
-    }
-  }
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_4get_next_state(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_idx_gen) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__4)
-  __Pyx_RefNannySetupContext("get_next_state", 1);
-  __Pyx_TraceCall("get_next_state (wrapper)", __pyx_f[0], 56, 0, __PYX_ERR(0, 56, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_state(__pyx_v_self, __pyx_v_idx_gen, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.get_next_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":59
+/* "cython/tree_explorer.pyx":60
  *         return self.FSA[self.state[self.level]][idx_gen]
  * 
- *     cpdef int get_right_gen(self):             # <<<<<<<<<<<<<<
+ *     cdef int get_right_gen(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = 0
  *         cdef int i = 1
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7get_right_gen(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch) {
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   int __pyx_v_idx_gen;
   int __pyx_v_i;
   int __pyx_r;
@@ -6347,80 +5838,25 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
+  int __pyx_t_4;
   int __pyx_t_5;
-  int __pyx_t_6;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__5)
   __Pyx_RefNannySetupContext("get_right_gen", 1);
-  __Pyx_TraceCall("get_right_gen", __pyx_f[0], 59, 0, __PYX_ERR(0, 59, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_right_gen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7get_right_gen)) {
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        __pyx_t_5 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_5 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_r = __pyx_t_5;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("get_right_gen", __pyx_f[0], 60, 0, __PYX_ERR(0, 60, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":60
+  /* "cython/tree_explorer.pyx":61
  * 
- *     cpdef int get_right_gen(self):
+ *     cdef int get_right_gen(self):
  *         cdef int idx_gen = 0             # <<<<<<<<<<<<<<
  *         cdef int i = 1
  *         while True:
  */
   __pyx_v_idx_gen = 0;
 
-  /* "cython/tree_explorer.pyx":61
- *     cpdef int get_right_gen(self):
+  /* "cython/tree_explorer.pyx":62
+ *     cdef int get_right_gen(self):
  *         cdef int idx_gen = 0
  *         cdef int i = 1             # <<<<<<<<<<<<<<
  *         while True:
@@ -6428,7 +5864,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
  */
   __pyx_v_i = 1;
 
-  /* "cython/tree_explorer.pyx":62
+  /* "cython/tree_explorer.pyx":63
  *         cdef int idx_gen = 0
  *         cdef int i = 1
  *         while True:             # <<<<<<<<<<<<<<
@@ -6437,29 +5873,29 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
  */
   while (1) {
 
-    /* "cython/tree_explorer.pyx":63
+    /* "cython/tree_explorer.pyx":64
  *         cdef int i = 1
  *         while True:
  *             idx_gen = (self.tag[self.level] + i) % 4             # <<<<<<<<<<<<<<
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:
  */
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyInt_RemainderObjC(__pyx_t_3, __pyx_int_4, 4, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_RemainderObjC(__pyx_t_3, __pyx_int_4, 4, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_v_idx_gen = __pyx_t_5;
+    __pyx_v_idx_gen = __pyx_t_4;
 
-    /* "cython/tree_explorer.pyx":64
+    /* "cython/tree_explorer.pyx":65
  *         while True:
  *             idx_gen = (self.tag[self.level] + i) % 4
  *             i += 1             # <<<<<<<<<<<<<<
@@ -6468,18 +5904,18 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
  */
     __pyx_v_i = (__pyx_v_i + 1);
 
-    /* "cython/tree_explorer.pyx":65
+    /* "cython/tree_explorer.pyx":66
  *             idx_gen = (self.tag[self.level] + i) % 4
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:             # <<<<<<<<<<<<<<
  *                 break
  *         return idx_gen
  */
-    __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_next_state(__pyx_v_self, __pyx_v_idx_gen, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 65, __pyx_L1_error)
-    __pyx_t_6 = (__pyx_t_5 != 0);
-    if (__pyx_t_6) {
+    __pyx_t_4 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_next_state(__pyx_v_self, __pyx_v_idx_gen); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
+    __pyx_t_5 = (__pyx_t_4 != 0);
+    if (__pyx_t_5) {
 
-      /* "cython/tree_explorer.pyx":66
+      /* "cython/tree_explorer.pyx":67
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:
  *                 break             # <<<<<<<<<<<<<<
@@ -6488,7 +5924,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
  */
       goto __pyx_L4_break;
 
-      /* "cython/tree_explorer.pyx":65
+      /* "cython/tree_explorer.pyx":66
  *             idx_gen = (self.tag[self.level] + i) % 4
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:             # <<<<<<<<<<<<<<
@@ -6499,20 +5935,20 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
   }
   __pyx_L4_break:;
 
-  /* "cython/tree_explorer.pyx":67
+  /* "cython/tree_explorer.pyx":68
  *             if self.get_next_state(idx_gen) != 0:
  *                 break
  *         return idx_gen             # <<<<<<<<<<<<<<
  * 
- *     cpdef int get_left_gen(self):
+ *     cdef int get_left_gen(self):
  */
   __pyx_r = __pyx_v_idx_gen;
   goto __pyx_L0;
 
-  /* "cython/tree_explorer.pyx":59
+  /* "cython/tree_explorer.pyx":60
  *         return self.FSA[self.state[self.level]][idx_gen]
  * 
- *     cpdef int get_right_gen(self):             # <<<<<<<<<<<<<<
+ *     cdef int get_right_gen(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = 0
  *         cdef int i = 1
  */
@@ -6522,7 +5958,6 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.get_right_gen", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -6531,178 +5966,43 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen
   return __pyx_r;
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7get_right_gen(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_7get_right_gen = {"get_right_gen", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7get_right_gen, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7get_right_gen(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("get_right_gen (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  if (unlikely(__pyx_nargs > 0)) {
-    __Pyx_RaiseArgtupleInvalid("get_right_gen", 1, 0, 0, __pyx_nargs); return NULL;}
-  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "get_right_gen", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_6get_right_gen(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_6get_right_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__5)
-  __Pyx_RefNannySetupContext("get_right_gen", 1);
-  __Pyx_TraceCall("get_right_gen (wrapper)", __pyx_f[0], 59, 0, __PYX_ERR(0, 59, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.get_right_gen", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":69
+/* "cython/tree_explorer.pyx":70
  *         return idx_gen
  * 
- *     cpdef int get_left_gen(self):             # <<<<<<<<<<<<<<
+ *     cdef int get_left_gen(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = 0
  *         cdef int i = 1
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9get_left_gen(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch) {
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   int __pyx_v_idx_gen;
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
+  long __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
   int __pyx_t_5;
-  long __pyx_t_6;
-  int __pyx_t_7;
+  int __pyx_t_6;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__6)
   __Pyx_RefNannySetupContext("get_left_gen", 1);
-  __Pyx_TraceCall("get_left_gen", __pyx_f[0], 69, 0, __PYX_ERR(0, 69, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_left_gen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9get_left_gen)) {
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        __pyx_t_5 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_5 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 69, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_r = __pyx_t_5;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("get_left_gen", __pyx_f[0], 70, 0, __PYX_ERR(0, 70, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":70
+  /* "cython/tree_explorer.pyx":71
  * 
- *     cpdef int get_left_gen(self):
+ *     cdef int get_left_gen(self):
  *         cdef int idx_gen = 0             # <<<<<<<<<<<<<<
  *         cdef int i = 1
  *         while True:
  */
   __pyx_v_idx_gen = 0;
 
-  /* "cython/tree_explorer.pyx":71
- *     cpdef int get_left_gen(self):
+  /* "cython/tree_explorer.pyx":72
+ *     cdef int get_left_gen(self):
  *         cdef int idx_gen = 0
  *         cdef int i = 1             # <<<<<<<<<<<<<<
  *         while True:
@@ -6710,7 +6010,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(
  */
   __pyx_v_i = 1;
 
-  /* "cython/tree_explorer.pyx":72
+  /* "cython/tree_explorer.pyx":73
  *         cdef int idx_gen = 0
  *         cdef int i = 1
  *         while True:             # <<<<<<<<<<<<<<
@@ -6719,30 +6019,30 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(
  */
   while (1) {
 
-    /* "cython/tree_explorer.pyx":73
+    /* "cython/tree_explorer.pyx":74
  *         cdef int i = 1
  *         while True:
  *             idx_gen = (self.tag[self.level + 1] - i) % 4             # <<<<<<<<<<<<<<
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:
  */
-    __pyx_t_6 = (__pyx_v_self->level + 1);
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_t_6, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
+    __pyx_t_1 = (__pyx_v_self->level + 1);
+    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_4 = PyNumber_Subtract(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyInt_RemainderObjC(__pyx_t_3, __pyx_int_4, 4, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_3 = __Pyx_PyInt_RemainderObjC(__pyx_t_4, __pyx_int_4, 4, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 74, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_idx_gen = __pyx_t_5;
 
-    /* "cython/tree_explorer.pyx":74
+    /* "cython/tree_explorer.pyx":75
  *         while True:
  *             idx_gen = (self.tag[self.level + 1] - i) % 4
  *             i += 1             # <<<<<<<<<<<<<<
@@ -6751,18 +6051,18 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(
  */
     __pyx_v_i = (__pyx_v_i + 1);
 
-    /* "cython/tree_explorer.pyx":75
+    /* "cython/tree_explorer.pyx":76
  *             idx_gen = (self.tag[self.level + 1] - i) % 4
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:             # <<<<<<<<<<<<<<
  *                 break
  *         return idx_gen
  */
-    __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_next_state(__pyx_v_self, __pyx_v_idx_gen, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 75, __pyx_L1_error)
-    __pyx_t_7 = (__pyx_t_5 != 0);
-    if (__pyx_t_7) {
+    __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_next_state(__pyx_v_self, __pyx_v_idx_gen); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_6 = (__pyx_t_5 != 0);
+    if (__pyx_t_6) {
 
-      /* "cython/tree_explorer.pyx":76
+      /* "cython/tree_explorer.pyx":77
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:
  *                 break             # <<<<<<<<<<<<<<
@@ -6771,7 +6071,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(
  */
       goto __pyx_L4_break;
 
-      /* "cython/tree_explorer.pyx":75
+      /* "cython/tree_explorer.pyx":76
  *             idx_gen = (self.tag[self.level + 1] - i) % 4
  *             i += 1
  *             if self.get_next_state(idx_gen) != 0:             # <<<<<<<<<<<<<<
@@ -6782,27 +6082,26 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(
   }
   __pyx_L4_break:;
 
-  /* "cython/tree_explorer.pyx":77
+  /* "cython/tree_explorer.pyx":78
  *             if self.get_next_state(idx_gen) != 0:
  *                 break
  *         return idx_gen             # <<<<<<<<<<<<<<
  * 
- *     cpdef complex mobius(self, np.ndarray m, complex z):
+ *     cdef complex mobius(self, np.ndarray[np.complex128_t, ndim = 2] m, np.complex128_t z):
  */
   __pyx_r = __pyx_v_idx_gen;
   goto __pyx_L0;
 
-  /* "cython/tree_explorer.pyx":69
+  /* "cython/tree_explorer.pyx":70
  *         return idx_gen
  * 
- *     cpdef int get_left_gen(self):             # <<<<<<<<<<<<<<
+ *     cdef int get_left_gen(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = 0
  *         cdef int i = 1
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
@@ -6814,399 +6113,106 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(
   return __pyx_r;
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9get_left_gen(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_9get_left_gen = {"get_left_gen", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9get_left_gen, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9get_left_gen(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("get_left_gen (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  if (unlikely(__pyx_nargs > 0)) {
-    __Pyx_RaiseArgtupleInvalid("get_left_gen", 1, 0, 0, __pyx_nargs); return NULL;}
-  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "get_left_gen", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_8get_left_gen(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_8get_left_gen(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__6)
-  __Pyx_RefNannySetupContext("get_left_gen", 1);
-  __Pyx_TraceCall("get_left_gen (wrapper)", __pyx_f[0], 69, 0, __PYX_ERR(0, 69, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 69, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.get_left_gen", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":79
+/* "cython/tree_explorer.pyx":80
  *         return idx_gen
  * 
- *     cpdef complex mobius(self, np.ndarray m, complex z):             # <<<<<<<<<<<<<<
+ *     cdef complex mobius(self, np.ndarray[np.complex128_t, ndim = 2] m, np.complex128_t z):             # <<<<<<<<<<<<<<
  *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
  * 
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_11mobius(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static __pyx_t_double_complex __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_mobius(CYTHON_UNUSED struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyArrayObject *__pyx_v_m, __pyx_t_double_complex __pyx_v_z, int __pyx_skip_dispatch) {
+static __pyx_t_double_complex __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_mobius(CYTHON_UNUSED struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyArrayObject *__pyx_v_m, __pyx_t_double_complex __pyx_v_z) {
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_m;
+  __Pyx_Buffer __pyx_pybuffer_m;
   __pyx_t_double_complex __pyx_r;
   __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  __pyx_t_double_complex __pyx_t_7;
+  Py_ssize_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  __pyx_t_double_complex __pyx_t_5;
+  __pyx_t_double_complex __pyx_t_6;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__7)
-  __Pyx_RefNannySetupContext("mobius", 1);
-  __Pyx_TraceCall("mobius", __pyx_f[0], 79, 0, __PYX_ERR(0, 79, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mobius); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_11mobius)) {
-        __pyx_t_3 = __pyx_PyComplex_FromComplex(__pyx_v_z); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 79, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; __pyx_t_5 = NULL;
-        __pyx_t_6 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-          if (likely(__pyx_t_5)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-            __Pyx_INCREF(__pyx_t_5);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_4, function);
-            __pyx_t_6 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[3] = {__pyx_t_5, ((PyObject *)__pyx_v_m), __pyx_t_3};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 2+__pyx_t_6);
-          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 79, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        }
-        __pyx_t_7 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_2); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_r = __pyx_t_7;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
+  __Pyx_TraceCall("mobius", __pyx_f[0], 80, 0, __PYX_ERR(0, 80, __pyx_L1_error));
+  __pyx_pybuffer_m.pybuffer.buf = NULL;
+  __pyx_pybuffer_m.refcount = 0;
+  __pyx_pybuffernd_m.data = NULL;
+  __pyx_pybuffernd_m.rcbuffer = &__pyx_pybuffer_m;
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_m.rcbuffer->pybuffer, (PyObject*)__pyx_v_m, &__Pyx_TypeInfo___pyx_t_double_complex, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 80, __pyx_L1_error)
   }
+  __pyx_pybuffernd_m.diminfo[0].strides = __pyx_pybuffernd_m.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_m.diminfo[0].shape = __pyx_pybuffernd_m.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_m.diminfo[1].strides = __pyx_pybuffernd_m.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_m.diminfo[1].shape = __pyx_pybuffernd_m.rcbuffer->pybuffer.shape[1];
 
-  /* "cython/tree_explorer.pyx":80
+  /* "cython/tree_explorer.pyx":81
  * 
- *     cpdef complex mobius(self, np.ndarray m, complex z):
+ *     cdef complex mobius(self, np.ndarray[np.complex128_t, ndim = 2] m, np.complex128_t z):
  *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])             # <<<<<<<<<<<<<<
  * 
- *     cpdef int branch_terminated(self):
+ *     cdef int branch_terminated(self):
  */
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_m), __pyx_tuple__8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_PyComplex_FromComplex(__pyx_v_z); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_m), __pyx_tuple__9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_m), __pyx_tuple__10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __pyx_PyComplex_FromComplex(__pyx_v_z); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_m), __pyx_tuple__11); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_4); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_r = __pyx_t_7;
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  if (__pyx_t_1 < 0) __pyx_t_1 += __pyx_pybuffernd_m.diminfo[0].shape;
+  if (__pyx_t_2 < 0) __pyx_t_2 += __pyx_pybuffernd_m.diminfo[1].shape;
+  __pyx_t_3 = 0;
+  __pyx_t_4 = 1;
+  if (__pyx_t_3 < 0) __pyx_t_3 += __pyx_pybuffernd_m.diminfo[0].shape;
+  if (__pyx_t_4 < 0) __pyx_t_4 += __pyx_pybuffernd_m.diminfo[1].shape;
+  __pyx_t_5 = __Pyx_c_sum_double(__Pyx_c_prod_double((*__Pyx_BufPtrStrided2d(__pyx_t_double_complex *, __pyx_pybuffernd_m.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_m.diminfo[0].strides, __pyx_t_2, __pyx_pybuffernd_m.diminfo[1].strides)), __pyx_v_z), (*__Pyx_BufPtrStrided2d(__pyx_t_double_complex *, __pyx_pybuffernd_m.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_m.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_m.diminfo[1].strides)));
+  __pyx_t_4 = 1;
+  __pyx_t_3 = 0;
+  if (__pyx_t_4 < 0) __pyx_t_4 += __pyx_pybuffernd_m.diminfo[0].shape;
+  if (__pyx_t_3 < 0) __pyx_t_3 += __pyx_pybuffernd_m.diminfo[1].shape;
+  __pyx_t_2 = 1;
+  __pyx_t_1 = 1;
+  if (__pyx_t_2 < 0) __pyx_t_2 += __pyx_pybuffernd_m.diminfo[0].shape;
+  if (__pyx_t_1 < 0) __pyx_t_1 += __pyx_pybuffernd_m.diminfo[1].shape;
+  __pyx_t_6 = __Pyx_c_sum_double(__Pyx_c_prod_double((*__Pyx_BufPtrStrided2d(__pyx_t_double_complex *, __pyx_pybuffernd_m.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_m.diminfo[0].strides, __pyx_t_3, __pyx_pybuffernd_m.diminfo[1].strides)), __pyx_v_z), (*__Pyx_BufPtrStrided2d(__pyx_t_double_complex *, __pyx_pybuffernd_m.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_m.diminfo[0].strides, __pyx_t_1, __pyx_pybuffernd_m.diminfo[1].strides)));
+  if (unlikely(__Pyx_c_is_zero_double(__pyx_t_6))) {
+    PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+    __PYX_ERR(0, 81, __pyx_L1_error)
+  }
+  __pyx_r = __Pyx_c_quot_double(__pyx_t_5, __pyx_t_6);
   goto __pyx_L0;
 
-  /* "cython/tree_explorer.pyx":79
+  /* "cython/tree_explorer.pyx":80
  *         return idx_gen
  * 
- *     cpdef complex mobius(self, np.ndarray m, complex z):             # <<<<<<<<<<<<<<
+ *     cdef complex mobius(self, np.ndarray[np.complex128_t, ndim = 2] m, np.complex128_t z):             # <<<<<<<<<<<<<<
  *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
  * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
+  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_m.rcbuffer->pybuffer);
+  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.mobius", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = __pyx_t_double_complex_from_parts(0, 0);
+  goto __pyx_L2;
   __pyx_L0:;
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_m.rcbuffer->pybuffer);
+  __pyx_L2:;
   __Pyx_TraceReturn(Py_None, 0);
-  __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_11mobius(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_11mobius = {"mobius", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_11mobius, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_11mobius(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  PyArrayObject *__pyx_v_m = 0;
-  __pyx_t_double_complex __pyx_v_z;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[2] = {0,0};
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("mobius (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  {
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_m,&__pyx_n_s_z,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_m)) != 0)) {
-          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
-          kw_args--;
-        }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_z)) != 0)) {
-          (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
-          kw_args--;
-        }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("mobius", 1, 2, 2, 1); __PYX_ERR(0, 79, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "mobius") < 0)) __PYX_ERR(0, 79, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 2)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-    }
-    __pyx_v_m = ((PyArrayObject *)values[0]);
-    __pyx_v_z = __Pyx_PyComplex_As___pyx_t_double_complex(values[1]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
-  }
-  goto __pyx_L6_skip;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("mobius", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 79, __pyx_L3_error)
-  __pyx_L6_skip:;
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  {
-    Py_ssize_t __pyx_temp;
-    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
-    }
-  }
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.mobius", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_m), __pyx_ptype_5numpy_ndarray, 1, "m", 0))) __PYX_ERR(0, 79, __pyx_L1_error)
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_10mobius(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v_m, __pyx_v_z);
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __pyx_r = NULL;
-  __pyx_L0:;
-  {
-    Py_ssize_t __pyx_temp;
-    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
-    }
-  }
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_10mobius(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyArrayObject *__pyx_v_m, __pyx_t_double_complex __pyx_v_z) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  __pyx_t_double_complex __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__7)
-  __Pyx_RefNannySetupContext("mobius", 1);
-  __Pyx_TraceCall("mobius (wrapper)", __pyx_f[0], 79, 0, __PYX_ERR(0, 79, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_mobius(__pyx_v_self, __pyx_v_m, __pyx_v_z, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L1_error)
-  __pyx_t_2 = __pyx_PyComplex_FromComplex(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 79, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.mobius", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":82
+/* "cython/tree_explorer.pyx":83
  *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
  * 
- *     cpdef int branch_terminated(self):             # <<<<<<<<<<<<<<
+ *     cdef int branch_terminated(self):             # <<<<<<<<<<<<<<
  *         if self.level == self.max_depth - 1:
  *             if self.precomputing == 1:
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_13branch_terminated(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_terminated(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch) {
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_terminated(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   int __pyx_v_idx_gen;
   __pyx_t_double_complex __pyx_v_p;
   __pyx_t_double_complex __pyx_v_old_p;
@@ -7215,134 +6221,80 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
   int __pyx_r;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_3;
   PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
-  int __pyx_t_6;
+  PyObject *__pyx_t_5 = NULL;
+  __pyx_t_double_complex __pyx_t_6;
   __pyx_t_double_complex __pyx_t_7;
-  __pyx_t_double_complex __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  PyObject *(*__pyx_t_10)(PyObject *);
+  Py_ssize_t __pyx_t_8;
+  PyObject *(*__pyx_t_9)(PyObject *);
+  PyObject *__pyx_t_10 = NULL;
   PyObject *__pyx_t_11 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__12)
   __Pyx_RefNannySetupContext("branch_terminated", 1);
-  __Pyx_TraceCall("branch_terminated", __pyx_f[0], 82, 0, __PYX_ERR(0, 82, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_branch_terminated); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_13branch_terminated)) {
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        __pyx_t_5 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_5 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 82, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_r = __pyx_t_5;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("branch_terminated", __pyx_f[0], 83, 0, __PYX_ERR(0, 83, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":83
+  /* "cython/tree_explorer.pyx":84
  * 
- *     cpdef int branch_terminated(self):
+ *     cdef int branch_terminated(self):
  *         if self.level == self.max_depth - 1:             # <<<<<<<<<<<<<<
  *             if self.precomputing == 1:
  *                 self.last_words[self.last_idx] = self.words[self.level]
  */
-  __pyx_t_6 = (__pyx_v_self->level == (__pyx_v_self->max_depth - 1));
-  if (__pyx_t_6) {
+  __pyx_t_1 = (__pyx_v_self->level == (__pyx_v_self->max_depth - 1));
+  if (__pyx_t_1) {
 
-    /* "cython/tree_explorer.pyx":84
- *     cpdef int branch_terminated(self):
+    /* "cython/tree_explorer.pyx":85
+ *     cdef int branch_terminated(self):
  *         if self.level == self.max_depth - 1:
  *             if self.precomputing == 1:             # <<<<<<<<<<<<<<
  *                 self.last_words[self.last_idx] = self.words[self.level]
  *                 self.last_state[self.last_idx] = self.state[self.level]
  */
-    __pyx_t_6 = (__pyx_v_self->precomputing == 1);
-    if (__pyx_t_6) {
+    __pyx_t_1 = (__pyx_v_self->precomputing == 1);
+    if (__pyx_t_1) {
 
-      /* "cython/tree_explorer.pyx":85
+      /* "cython/tree_explorer.pyx":86
  *         if self.level == self.max_depth - 1:
  *             if self.precomputing == 1:
  *                 self.last_words[self.last_idx] = self.words[self.level]             # <<<<<<<<<<<<<<
  *                 self.last_state[self.last_idx] = self.state[self.level]
  *                 self.last_tags[self.last_idx] = self.tag[self.level]
  */
-      __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->last_words), __pyx_v_self->last_idx, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 85, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->last_words), __pyx_v_self->last_idx, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 0) < 0))) __PYX_ERR(0, 86, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "cython/tree_explorer.pyx":86
+      /* "cython/tree_explorer.pyx":87
  *             if self.precomputing == 1:
  *                 self.last_words[self.last_idx] = self.words[self.level]
  *                 self.last_state[self.last_idx] = self.state[self.level]             # <<<<<<<<<<<<<<
  *                 self.last_tags[self.last_idx] = self.tag[self.level]
  *                 self.last_idx += 1
  */
-      __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->last_state), __pyx_v_self->last_idx, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 86, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->last_state), __pyx_v_self->last_idx, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 0) < 0))) __PYX_ERR(0, 87, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "cython/tree_explorer.pyx":87
+      /* "cython/tree_explorer.pyx":88
  *                 self.last_words[self.last_idx] = self.words[self.level]
  *                 self.last_state[self.last_idx] = self.state[self.level]
  *                 self.last_tags[self.last_idx] = self.tag[self.level]             # <<<<<<<<<<<<<<
  *                 self.last_idx += 1
  *             return 1
  */
-      __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->last_tags), __pyx_v_self->last_idx, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 87, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 88, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->last_tags), __pyx_v_self->last_idx, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 0) < 0))) __PYX_ERR(0, 88, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "cython/tree_explorer.pyx":88
+      /* "cython/tree_explorer.pyx":89
  *                 self.last_state[self.last_idx] = self.state[self.level]
  *                 self.last_tags[self.last_idx] = self.tag[self.level]
  *                 self.last_idx += 1             # <<<<<<<<<<<<<<
@@ -7351,8 +6303,8 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  */
       __pyx_v_self->last_idx = (__pyx_v_self->last_idx + 1);
 
-      /* "cython/tree_explorer.pyx":84
- *     cpdef int branch_terminated(self):
+      /* "cython/tree_explorer.pyx":85
+ *     cdef int branch_terminated(self):
  *         if self.level == self.max_depth - 1:
  *             if self.precomputing == 1:             # <<<<<<<<<<<<<<
  *                 self.last_words[self.last_idx] = self.words[self.level]
@@ -7360,7 +6312,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  */
     }
 
-    /* "cython/tree_explorer.pyx":89
+    /* "cython/tree_explorer.pyx":90
  *                 self.last_tags[self.last_idx] = self.tag[self.level]
  *                 self.last_idx += 1
  *             return 1             # <<<<<<<<<<<<<<
@@ -7370,72 +6322,72 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
     __pyx_r = 1;
     goto __pyx_L0;
 
-    /* "cython/tree_explorer.pyx":83
+    /* "cython/tree_explorer.pyx":84
  * 
- *     cpdef int branch_terminated(self):
+ *     cdef int branch_terminated(self):
  *         if self.level == self.max_depth - 1:             # <<<<<<<<<<<<<<
  *             if self.precomputing == 1:
  *                 self.last_words[self.last_idx] = self.words[self.level]
  */
   }
 
-  /* "cython/tree_explorer.pyx":91
+  /* "cython/tree_explorer.pyx":92
  *             return 1
  * 
  *         cdef int idx_gen = self.tag[self.level]             # <<<<<<<<<<<<<<
- *         cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
- *         cdef complex old_p = p
+ *         cdef cython.complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
+ *         cdef cython.complex old_p = p
  */
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 91, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_idx_gen = __pyx_t_5;
-
-  /* "cython/tree_explorer.pyx":92
- * 
- *         cdef int idx_gen = self.tag[self.level]
- *         cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])             # <<<<<<<<<<<<<<
- *         cdef complex old_p = p
- *         self.points[self.last_idx] = p
- */
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 92, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->fixed_points), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_8 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->mobius(__pyx_v_self, ((PyArrayObject *)__pyx_t_1), __pyx_t_7, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_p = __pyx_t_8;
+  __pyx_v_idx_gen = __pyx_t_3;
 
   /* "cython/tree_explorer.pyx":93
+ * 
  *         cdef int idx_gen = self.tag[self.level]
- *         cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
- *         cdef complex old_p = p             # <<<<<<<<<<<<<<
+ *         cdef cython.complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])             # <<<<<<<<<<<<<<
+ *         cdef cython.complex old_p = p
+ *         self.points[self.last_idx] = p
+ */
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->fixed_points), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_6 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_7 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->mobius(__pyx_v_self, ((PyArrayObject *)__pyx_t_2), __pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_p = __pyx_t_7;
+
+  /* "cython/tree_explorer.pyx":94
+ *         cdef int idx_gen = self.tag[self.level]
+ *         cdef cython.complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
+ *         cdef cython.complex old_p = p             # <<<<<<<<<<<<<<
  *         self.points[self.last_idx] = p
  *         self.last_idx_points += 1
  */
   __pyx_v_old_p = __pyx_v_p;
 
-  /* "cython/tree_explorer.pyx":94
- *         cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
- *         cdef complex old_p = p
+  /* "cython/tree_explorer.pyx":95
+ *         cdef cython.complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
+ *         cdef cython.complex old_p = p
  *         self.points[self.last_idx] = p             # <<<<<<<<<<<<<<
  *         self.last_idx_points += 1
  * 
  */
-  __pyx_t_1 = __pyx_PyComplex_FromComplex(__pyx_v_p); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->points), __pyx_v_self->last_idx, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __pyx_PyComplex_FromComplex(__pyx_v_p); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->points), __pyx_v_self->last_idx, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 0) < 0))) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cython/tree_explorer.pyx":95
- *         cdef complex old_p = p
+  /* "cython/tree_explorer.pyx":96
+ *         cdef cython.complex old_p = p
  *         self.points[self.last_idx] = p
  *         self.last_idx_points += 1             # <<<<<<<<<<<<<<
  * 
@@ -7443,7 +6395,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  */
   __pyx_v_self->last_idx_points = (__pyx_v_self->last_idx_points + 1);
 
-  /* "cython/tree_explorer.pyx":97
+  /* "cython/tree_explorer.pyx":98
  *         self.last_idx_points += 1
  * 
  *         for i, fp in enumerate(self.fixed_points[idx_gen][1:]):             # <<<<<<<<<<<<<<
@@ -7451,86 +6403,86 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  *                 return 1
  */
   __Pyx_INCREF(__pyx_int_0);
-  __pyx_t_1 = __pyx_int_0;
-  __pyx_t_3 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->fixed_points), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 97, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_t_3, 1, 0, NULL, NULL, &__pyx_slice__13, 1, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
-    __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3);
-    __pyx_t_9 = 0;
-    __pyx_t_10 = NULL;
+  __pyx_t_2 = __pyx_int_0;
+  __pyx_t_5 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->fixed_points), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_4 = __Pyx_PyObject_GetSlice(__pyx_t_5, 1, 0, NULL, NULL, &__pyx_slice__3, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
+    __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5);
+    __pyx_t_8 = 0;
+    __pyx_t_9 = NULL;
   } else {
-    __pyx_t_9 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 97, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_10 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 97, __pyx_L1_error)
+    __pyx_t_8 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 98, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_9 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 98, __pyx_L1_error)
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   for (;;) {
-    if (likely(!__pyx_t_10)) {
-      if (likely(PyList_CheckExact(__pyx_t_3))) {
+    if (likely(!__pyx_t_9)) {
+      if (likely(PyList_CheckExact(__pyx_t_5))) {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_3);
+          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 97, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 98, __pyx_L1_error)
           #endif
-          if (__pyx_t_9 >= __pyx_temp) break;
+          if (__pyx_t_8 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_9); __Pyx_INCREF(__pyx_t_2); __pyx_t_9++; if (unlikely((0 < 0))) __PYX_ERR(0, 97, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely((0 < 0))) __PYX_ERR(0, 98, __pyx_L1_error)
         #else
-        __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_3);
+          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_5);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 97, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 98, __pyx_L1_error)
           #endif
-          if (__pyx_t_9 >= __pyx_temp) break;
+          if (__pyx_t_8 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_9); __Pyx_INCREF(__pyx_t_2); __pyx_t_9++; if (unlikely((0 < 0))) __PYX_ERR(0, 97, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely((0 < 0))) __PYX_ERR(0, 98, __pyx_L1_error)
         #else
-        __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
     } else {
-      __pyx_t_2 = __pyx_t_10(__pyx_t_3);
-      if (unlikely(!__pyx_t_2)) {
+      __pyx_t_4 = __pyx_t_9(__pyx_t_5);
+      if (unlikely(!__pyx_t_4)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 97, __pyx_L1_error)
+          else __PYX_ERR(0, 98, __pyx_L1_error)
         }
         break;
       }
-      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_GOTREF(__pyx_t_4);
     }
-    __Pyx_XDECREF_SET(__pyx_v_fp, __pyx_t_2);
-    __pyx_t_2 = 0;
-    __Pyx_INCREF(__pyx_t_1);
-    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
-    __pyx_t_2 = __Pyx_PyInt_AddObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_1);
-    __pyx_t_1 = __pyx_t_2;
-    __pyx_t_2 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_fp, __pyx_t_4);
+    __pyx_t_4 = 0;
+    __Pyx_INCREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
+    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_2);
+    __pyx_t_2 = __pyx_t_4;
+    __pyx_t_4 = 0;
 
-    /* "cython/tree_explorer.pyx":98
+    /* "cython/tree_explorer.pyx":99
  * 
  *         for i, fp in enumerate(self.fixed_points[idx_gen][1:]):
  *             if p == 0 + 0j:             # <<<<<<<<<<<<<<
  *                 return 1
  * 
  */
-    __pyx_t_6 = (__Pyx_c_eq_double(__pyx_v_p, __Pyx_c_sum_double(__pyx_t_double_complex_from_parts(0, 0), __pyx_t_double_complex_from_parts(0, 0.0))));
-    if (__pyx_t_6) {
+    __pyx_t_1 = (__Pyx_c_eq_double(__pyx_v_p, __Pyx_c_sum_double(__pyx_t_double_complex_from_parts(0, 0), __pyx_t_double_complex_from_parts(0, 0.0))));
+    if (__pyx_t_1) {
 
-      /* "cython/tree_explorer.pyx":99
+      /* "cython/tree_explorer.pyx":100
  *         for i, fp in enumerate(self.fixed_points[idx_gen][1:]):
  *             if p == 0 + 0j:
  *                 return 1             # <<<<<<<<<<<<<<
@@ -7538,11 +6490,11 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  *             old_p = p
  */
       __pyx_r = 1;
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       goto __pyx_L0;
 
-      /* "cython/tree_explorer.pyx":98
+      /* "cython/tree_explorer.pyx":99
  * 
  *         for i, fp in enumerate(self.fixed_points[idx_gen][1:]):
  *             if p == 0 + 0j:             # <<<<<<<<<<<<<<
@@ -7551,7 +6503,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  */
     }
 
-    /* "cython/tree_explorer.pyx":101
+    /* "cython/tree_explorer.pyx":102
  *                 return 1
  * 
  *             old_p = p             # <<<<<<<<<<<<<<
@@ -7560,51 +6512,51 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  */
     __pyx_v_old_p = __pyx_v_p;
 
-    /* "cython/tree_explorer.pyx":102
+    /* "cython/tree_explorer.pyx":103
  * 
  *             old_p = p
  *             p = self.mobius(self.words[self.level], fp)             # <<<<<<<<<<<<<<
  *             if abs(old_p - p) > self.epsilon:
  *                 self.last_idx_points -= i + 1
  */
-    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 102, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_v_fp); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 102, __pyx_L1_error)
-    __pyx_t_7 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->mobius(__pyx_v_self, ((PyArrayObject *)__pyx_t_2), __pyx_t_8, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 102, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_v_p = __pyx_t_7;
+    __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 103, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 103, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_v_fp); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
+    __pyx_t_6 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->mobius(__pyx_v_self, ((PyArrayObject *)__pyx_t_4), __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_v_p = __pyx_t_6;
 
-    /* "cython/tree_explorer.pyx":103
+    /* "cython/tree_explorer.pyx":104
  *             old_p = p
  *             p = self.mobius(self.words[self.level], fp)
  *             if abs(old_p - p) > self.epsilon:             # <<<<<<<<<<<<<<
  *                 self.last_idx_points -= i + 1
  *                 return 0
  */
-    __pyx_t_6 = (__Pyx_c_abs_double(__Pyx_c_diff_double(__pyx_v_old_p, __pyx_v_p)) > __pyx_v_self->epsilon);
-    if (__pyx_t_6) {
+    __pyx_t_1 = (__Pyx_c_abs_double(__Pyx_c_diff_double(__pyx_v_old_p, __pyx_v_p)) > __pyx_v_self->epsilon);
+    if (__pyx_t_1) {
 
-      /* "cython/tree_explorer.pyx":104
+      /* "cython/tree_explorer.pyx":105
  *             p = self.mobius(self.words[self.level], fp)
  *             if abs(old_p - p) > self.epsilon:
  *                 self.last_idx_points -= i + 1             # <<<<<<<<<<<<<<
  *                 return 0
  * 
  */
-      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->last_idx_points); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 104, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 104, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_self->last_idx_points); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_11 = PyNumber_InPlaceSubtract(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 104, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __pyx_t_11 = PyNumber_InPlaceSubtract(__pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 105, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_11); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_11); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 105, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __pyx_v_self->last_idx_points = __pyx_t_5;
+      __pyx_v_self->last_idx_points = __pyx_t_3;
 
-      /* "cython/tree_explorer.pyx":105
+      /* "cython/tree_explorer.pyx":106
  *             if abs(old_p - p) > self.epsilon:
  *                 self.last_idx_points -= i + 1
  *                 return 0             # <<<<<<<<<<<<<<
@@ -7612,11 +6564,11 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  *             self.points[self.last_idx_points] = p
  */
       __pyx_r = 0;
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       goto __pyx_L0;
 
-      /* "cython/tree_explorer.pyx":103
+      /* "cython/tree_explorer.pyx":104
  *             old_p = p
  *             p = self.mobius(self.words[self.level], fp)
  *             if abs(old_p - p) > self.epsilon:             # <<<<<<<<<<<<<<
@@ -7625,19 +6577,19 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  */
     }
 
-    /* "cython/tree_explorer.pyx":107
+    /* "cython/tree_explorer.pyx":108
  *                 return 0
  * 
  *             self.points[self.last_idx_points] = p             # <<<<<<<<<<<<<<
  *             self.last_idx_points += 1
  * 
  */
-    __pyx_t_11 = __pyx_PyComplex_FromComplex(__pyx_v_p); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __pyx_t_11 = __pyx_PyComplex_FromComplex(__pyx_v_p); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->points), __pyx_v_self->last_idx_points, __pyx_t_11, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 107, __pyx_L1_error)
+    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->points), __pyx_v_self->last_idx_points, __pyx_t_11, int, 1, __Pyx_PyInt_From_int, 0, 1, 0) < 0))) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-    /* "cython/tree_explorer.pyx":108
+    /* "cython/tree_explorer.pyx":109
  * 
  *             self.points[self.last_idx_points] = p
  *             self.last_idx_points += 1             # <<<<<<<<<<<<<<
@@ -7646,7 +6598,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  */
     __pyx_v_self->last_idx_points = (__pyx_v_self->last_idx_points + 1);
 
-    /* "cython/tree_explorer.pyx":97
+    /* "cython/tree_explorer.pyx":98
  *         self.last_idx_points += 1
  * 
  *         for i, fp in enumerate(self.fixed_points[idx_gen][1:]):             # <<<<<<<<<<<<<<
@@ -7654,33 +6606,33 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
  *                 return 1
  */
   }
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cython/tree_explorer.pyx":110
+  /* "cython/tree_explorer.pyx":111
  *             self.last_idx_points += 1
  * 
  *         return 1             # <<<<<<<<<<<<<<
  * 
- *     cpdef void backward_move(self):
+ *     cdef void backward_move(self):
  */
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "cython/tree_explorer.pyx":82
+  /* "cython/tree_explorer.pyx":83
  *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
  * 
- *     cpdef int branch_terminated(self):             # <<<<<<<<<<<<<<
+ *     cdef int branch_terminated(self):             # <<<<<<<<<<<<<<
  *         if self.level == self.max_depth - 1:
  *             if self.precomputing == 1:
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.branch_terminated", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
@@ -7692,173 +6644,34 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_termin
   return __pyx_r;
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_13branch_terminated(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_13branch_terminated = {"branch_terminated", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_13branch_terminated, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_13branch_terminated(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("branch_terminated (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  if (unlikely(__pyx_nargs > 0)) {
-    __Pyx_RaiseArgtupleInvalid("branch_terminated", 1, 0, 0, __pyx_nargs); return NULL;}
-  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "branch_terminated", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_12branch_terminated(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_12branch_terminated(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__12)
-  __Pyx_RefNannySetupContext("branch_terminated", 1);
-  __Pyx_TraceCall("branch_terminated (wrapper)", __pyx_f[0], 82, 0, __PYX_ERR(0, 82, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_terminated(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 82, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.branch_terminated", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":112
+/* "cython/tree_explorer.pyx":113
  *         return 1
  * 
- *     cpdef void backward_move(self):             # <<<<<<<<<<<<<<
+ *     cdef void backward_move(self):             # <<<<<<<<<<<<<<
  *         self.level -= 1
  * 
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_15backward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch) {
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__14)
-  __Pyx_RefNannySetupContext("backward_move", 1);
-  __Pyx_TraceCall("backward_move", __pyx_f[0], 112, 0, __PYX_ERR(0, 112, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_backward_move); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_15backward_move)) {
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        __pyx_t_5 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_5 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("backward_move", __pyx_f[0], 113, 0, __PYX_ERR(0, 113, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":113
+  /* "cython/tree_explorer.pyx":114
  * 
- *     cpdef void backward_move(self):
+ *     cdef void backward_move(self):
  *         self.level -= 1             # <<<<<<<<<<<<<<
  * 
- *     cpdef int available_turn(self):
+ *     cdef int available_turn(self):
  */
   __pyx_v_self->level = (__pyx_v_self->level - 1);
 
-  /* "cython/tree_explorer.pyx":112
+  /* "cython/tree_explorer.pyx":113
  *         return 1
  * 
- *     cpdef void backward_move(self):             # <<<<<<<<<<<<<<
+ *     cdef void backward_move(self):             # <<<<<<<<<<<<<<
  *         self.level -= 1
  * 
  */
@@ -7866,196 +6679,56 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_mov
   /* function exit code */
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.backward_move", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   __Pyx_TraceReturn(Py_None, 0);
-  __Pyx_RefNannyFinishContext();
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_15backward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_15backward_move = {"backward_move", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_15backward_move, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_15backward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("backward_move (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  if (unlikely(__pyx_nargs > 0)) {
-    __Pyx_RaiseArgtupleInvalid("backward_move", 1, 0, 0, __pyx_nargs); return NULL;}
-  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "backward_move", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_14backward_move(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_14backward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__14)
-  __Pyx_RefNannySetupContext("backward_move", 1);
-  __Pyx_TraceCall("backward_move (wrapper)", __pyx_f[0], 112, 0, __PYX_ERR(0, 112, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_move(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.backward_move", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":115
+/* "cython/tree_explorer.pyx":116
  *         self.level -= 1
  * 
- *     cpdef int available_turn(self):             # <<<<<<<<<<<<<<
+ *     cdef int available_turn(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = self.get_right_gen()
  *         if self.level == -1:
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_17available_turn(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_turn(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch) {
+static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_turn(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   int __pyx_v_idx_gen;
   int __pyx_r;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
   PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
-  int __pyx_t_6;
-  long __pyx_t_7;
+  PyObject *__pyx_t_5 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__15)
   __Pyx_RefNannySetupContext("available_turn", 1);
-  __Pyx_TraceCall("available_turn", __pyx_f[0], 115, 0, __PYX_ERR(0, 115, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_available_turn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_17available_turn)) {
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        __pyx_t_5 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_5 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 115, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_r = __pyx_t_5;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("available_turn", __pyx_f[0], 116, 0, __PYX_ERR(0, 116, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":116
+  /* "cython/tree_explorer.pyx":117
  * 
- *     cpdef int available_turn(self):
+ *     cdef int available_turn(self):
  *         cdef int idx_gen = self.get_right_gen()             # <<<<<<<<<<<<<<
  *         if self.level == -1:
  *             return 1
  */
-  __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_right_gen(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L1_error)
-  __pyx_v_idx_gen = __pyx_t_5;
+  __pyx_t_1 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_right_gen(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_v_idx_gen = __pyx_t_1;
 
-  /* "cython/tree_explorer.pyx":117
- *     cpdef int available_turn(self):
+  /* "cython/tree_explorer.pyx":118
+ *     cdef int available_turn(self):
  *         cdef int idx_gen = self.get_right_gen()
  *         if self.level == -1:             # <<<<<<<<<<<<<<
  *             return 1
  * 
  */
-  __pyx_t_6 = (__pyx_v_self->level == -1L);
-  if (__pyx_t_6) {
+  __pyx_t_2 = (__pyx_v_self->level == -1L);
+  if (__pyx_t_2) {
 
-    /* "cython/tree_explorer.pyx":118
+    /* "cython/tree_explorer.pyx":119
  *         cdef int idx_gen = self.get_right_gen()
  *         if self.level == -1:
  *             return 1             # <<<<<<<<<<<<<<
@@ -8065,8 +6738,8 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_tur
     __pyx_r = 1;
     goto __pyx_L0;
 
-    /* "cython/tree_explorer.pyx":117
- *     cpdef int available_turn(self):
+    /* "cython/tree_explorer.pyx":118
+ *     cdef int available_turn(self):
  *         cdef int idx_gen = self.get_right_gen()
  *         if self.level == -1:             # <<<<<<<<<<<<<<
  *             return 1
@@ -8074,27 +6747,27 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_tur
  */
   }
 
-  /* "cython/tree_explorer.pyx":121
+  /* "cython/tree_explorer.pyx":122
  * 
  *         #TODO: Check this line
  *         if self.FSA[self.state[self.level + 1]][idx_gen] == 0:             # <<<<<<<<<<<<<<
  *             return 0
  *         else:
  */
-  __pyx_t_7 = (__pyx_v_self->level + 1);
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_7, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->FSA), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_6 = (__Pyx_PyInt_BoolEqObjC(__pyx_t_1, __pyx_int_0, 0, 0)); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 121, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__pyx_t_6) {
+  __pyx_t_3 = (__pyx_v_self->level + 1);
+  __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 0, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->FSA), __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 122, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_5, __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_2 = (__Pyx_PyInt_BoolEqObjC(__pyx_t_4, __pyx_int_0, 0, 0)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 122, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__pyx_t_2) {
 
-    /* "cython/tree_explorer.pyx":122
+    /* "cython/tree_explorer.pyx":123
  *         #TODO: Check this line
  *         if self.FSA[self.state[self.level + 1]][idx_gen] == 0:
  *             return 0             # <<<<<<<<<<<<<<
@@ -8104,7 +6777,7 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_tur
     __pyx_r = 0;
     goto __pyx_L0;
 
-    /* "cython/tree_explorer.pyx":121
+    /* "cython/tree_explorer.pyx":122
  * 
  *         #TODO: Check this line
  *         if self.FSA[self.state[self.level + 1]][idx_gen] == 0:             # <<<<<<<<<<<<<<
@@ -8113,32 +6786,30 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_tur
  */
   }
 
-  /* "cython/tree_explorer.pyx":124
+  /* "cython/tree_explorer.pyx":125
  *             return 0
  *         else:
  *             return 1             # <<<<<<<<<<<<<<
  * 
- *     cpdef void turn_forward_move(self):
+ *     cdef void turn_forward_move(self):
  */
   /*else*/ {
     __pyx_r = 1;
     goto __pyx_L0;
   }
 
-  /* "cython/tree_explorer.pyx":115
+  /* "cython/tree_explorer.pyx":116
  *         self.level -= 1
  * 
- *     cpdef int available_turn(self):             # <<<<<<<<<<<<<<
+ *     cdef int available_turn(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = self.get_right_gen()
  *         if self.level == -1:
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.available_turn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -8147,246 +6818,114 @@ static int __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_tur
   return __pyx_r;
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_17available_turn(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_17available_turn = {"available_turn", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_17available_turn, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_17available_turn(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("available_turn (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  if (unlikely(__pyx_nargs > 0)) {
-    __Pyx_RaiseArgtupleInvalid("available_turn", 1, 0, 0, __pyx_nargs); return NULL;}
-  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "available_turn", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_16available_turn(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_16available_turn(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__15)
-  __Pyx_RefNannySetupContext("available_turn", 1);
-  __Pyx_TraceCall("available_turn (wrapper)", __pyx_f[0], 115, 0, __PYX_ERR(0, 115, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_turn(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 115, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.available_turn", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":126
+/* "cython/tree_explorer.pyx":127
  *             return 1
  * 
- *     cpdef void turn_forward_move(self):             # <<<<<<<<<<<<<<
+ *     cdef void turn_forward_move(self):             # <<<<<<<<<<<<<<
  *         self.curr_state = self.state[self.level]
  *         cdef int idx_gen = self.get_left_gen()
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_19turn_forward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch) {
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   int __pyx_v_idx_gen;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
-  long __pyx_t_6;
-  int __pyx_t_7;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  int __pyx_t_4;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__16)
   __Pyx_RefNannySetupContext("turn_forward_move", 1);
-  __Pyx_TraceCall("turn_forward_move", __pyx_f[0], 126, 0, __PYX_ERR(0, 126, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_turn_forward_move); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_19turn_forward_move)) {
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        __pyx_t_5 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_5 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 126, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("turn_forward_move", __pyx_f[0], 127, 0, __PYX_ERR(0, 127, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":127
+  /* "cython/tree_explorer.pyx":128
  * 
- *     cpdef void turn_forward_move(self):
+ *     cdef void turn_forward_move(self):
  *         self.curr_state = self.state[self.level]             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = self.get_left_gen()
  *         self.set_next_state(idx_gen)
  */
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 127, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_self->curr_state = __pyx_t_5;
+  __pyx_v_self->curr_state = __pyx_t_2;
 
-  /* "cython/tree_explorer.pyx":128
- *     cpdef void turn_forward_move(self):
+  /* "cython/tree_explorer.pyx":129
+ *     cdef void turn_forward_move(self):
  *         self.curr_state = self.state[self.level]
  *         cdef int idx_gen = self.get_left_gen()             # <<<<<<<<<<<<<<
  *         self.set_next_state(idx_gen)
  *         self.curr_state = self.state[self.level + 1]
  */
-  __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_left_gen(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L1_error)
-  __pyx_v_idx_gen = __pyx_t_5;
+  __pyx_t_2 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_left_gen(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_v_idx_gen = __pyx_t_2;
 
-  /* "cython/tree_explorer.pyx":129
+  /* "cython/tree_explorer.pyx":130
  *         self.curr_state = self.state[self.level]
  *         cdef int idx_gen = self.get_left_gen()
  *         self.set_next_state(idx_gen)             # <<<<<<<<<<<<<<
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen
  */
-  ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->set_next_state(__pyx_v_self, __pyx_v_idx_gen, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L1_error)
+  ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->set_next_state(__pyx_v_self, __pyx_v_idx_gen); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
 
-  /* "cython/tree_explorer.pyx":130
+  /* "cython/tree_explorer.pyx":131
  *         cdef int idx_gen = self.get_left_gen()
  *         self.set_next_state(idx_gen)
  *         self.curr_state = self.state[self.level + 1]             # <<<<<<<<<<<<<<
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:
  */
-  __pyx_t_6 = (__pyx_v_self->level + 1);
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_6, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_3 = (__pyx_v_self->level + 1);
+  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 131, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_self->curr_state = __pyx_t_5;
+  __pyx_v_self->curr_state = __pyx_t_2;
 
-  /* "cython/tree_explorer.pyx":131
+  /* "cython/tree_explorer.pyx":132
  *         self.set_next_state(idx_gen)
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen             # <<<<<<<<<<<<<<
  *         if self.level == -1:
  *             self.words[0] = self.generators[idx_gen]
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_idx_gen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_idx_gen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = (__pyx_v_self->level + 1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_t_6, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0))) __PYX_ERR(0, 131, __pyx_L1_error)
+  __pyx_t_3 = (__pyx_v_self->level + 1);
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_t_3, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 0) < 0))) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cython/tree_explorer.pyx":132
+  /* "cython/tree_explorer.pyx":133
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:             # <<<<<<<<<<<<<<
  *             self.words[0] = self.generators[idx_gen]
  *         else:
  */
-  __pyx_t_7 = (__pyx_v_self->level == -1L);
-  if (__pyx_t_7) {
+  __pyx_t_4 = (__pyx_v_self->level == -1L);
+  if (__pyx_t_4) {
 
-    /* "cython/tree_explorer.pyx":133
+    /* "cython/tree_explorer.pyx":134
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:
  *             self.words[0] = self.generators[idx_gen]             # <<<<<<<<<<<<<<
  *         else:
  *             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
  */
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 133, __pyx_L1_error)
+    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 134, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "cython/tree_explorer.pyx":132
+    /* "cython/tree_explorer.pyx":133
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:             # <<<<<<<<<<<<<<
@@ -8396,7 +6935,7 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward
     goto __pyx_L3;
   }
 
-  /* "cython/tree_explorer.pyx":135
+  /* "cython/tree_explorer.pyx":136
  *             self.words[0] = self.generators[idx_gen]
  *         else:
  *             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])             # <<<<<<<<<<<<<<
@@ -8404,58 +6943,58 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward
  *         self.level += 1
  */
   /*else*/ {
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_matmul); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 135, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 136, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_matmul); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 136, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 136, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_7 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 136, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_8 = NULL;
-    __pyx_t_5 = 0;
+    __pyx_t_2 = 0;
     #if CYTHON_UNPACK_METHODS
-    if (unlikely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_3);
+    if (unlikely(PyMethod_Check(__pyx_t_6))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_6);
       if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
         __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-        __pyx_t_5 = 1;
+        __Pyx_DECREF_SET(__pyx_t_6, function);
+        __pyx_t_2 = 1;
       }
     }
     #endif
     {
-      PyObject *__pyx_callargs[3] = {__pyx_t_8, __pyx_t_2, __pyx_t_4};
-      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 2+__pyx_t_5);
+      PyObject *__pyx_callargs[3] = {__pyx_t_8, __pyx_t_5, __pyx_t_7};
+      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_2, 2+__pyx_t_2);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
-    __pyx_t_6 = (__pyx_v_self->level + 1);
-    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), __pyx_t_6, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0))) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_3 = (__pyx_v_self->level + 1);
+    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), __pyx_t_3, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 0) < 0))) __PYX_ERR(0, 136, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
   __pyx_L3:;
 
-  /* "cython/tree_explorer.pyx":137
+  /* "cython/tree_explorer.pyx":138
  *             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
  * 
  *         self.level += 1             # <<<<<<<<<<<<<<
  * 
- *     cpdef void forward_move(self):
+ *     cdef void forward_move(self):
  */
   __pyx_v_self->level = (__pyx_v_self->level + 1);
 
-  /* "cython/tree_explorer.pyx":126
+  /* "cython/tree_explorer.pyx":127
  *             return 1
  * 
- *     cpdef void turn_forward_move(self):             # <<<<<<<<<<<<<<
+ *     cdef void turn_forward_move(self):             # <<<<<<<<<<<<<<
  *         self.curr_state = self.state[self.level]
  *         cdef int idx_gen = self.get_left_gen()
  */
@@ -8464,9 +7003,9 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.turn_forward_move", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
@@ -8474,232 +7013,101 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward
   __Pyx_RefNannyFinishContext();
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_19turn_forward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_19turn_forward_move = {"turn_forward_move", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_19turn_forward_move, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_19turn_forward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("turn_forward_move (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  if (unlikely(__pyx_nargs > 0)) {
-    __Pyx_RaiseArgtupleInvalid("turn_forward_move", 1, 0, 0, __pyx_nargs); return NULL;}
-  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "turn_forward_move", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_18turn_forward_move(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_18turn_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__16)
-  __Pyx_RefNannySetupContext("turn_forward_move", 1);
-  __Pyx_TraceCall("turn_forward_move (wrapper)", __pyx_f[0], 126, 0, __PYX_ERR(0, 126, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward_move(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 126, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 126, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.turn_forward_move", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":139
+/* "cython/tree_explorer.pyx":140
  *         self.level += 1
  * 
- *     cpdef void forward_move(self):             # <<<<<<<<<<<<<<
+ *     cdef void forward_move(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = self.get_right_gen()
  * 
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_21forward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_skip_dispatch) {
+static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   int __pyx_v_idx_gen;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_1;
+  long __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
-  long __pyx_t_6;
-  int __pyx_t_7;
+  int __pyx_t_4;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__17)
   __Pyx_RefNannySetupContext("forward_move", 1);
-  __Pyx_TraceCall("forward_move", __pyx_f[0], 139, 0, __PYX_ERR(0, 139, __pyx_L1_error));
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_forward_move); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_21forward_move)) {
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        __pyx_t_5 = 0;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_5 = 1;
-          }
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_TraceCall("forward_move", __pyx_f[0], 140, 0, __PYX_ERR(0, 140, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":140
+  /* "cython/tree_explorer.pyx":141
  * 
- *     cpdef void forward_move(self):
+ *     cdef void forward_move(self):
  *         cdef int idx_gen = self.get_right_gen()             # <<<<<<<<<<<<<<
  * 
  *         self.set_next_state(idx_gen)
  */
-  __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_right_gen(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 140, __pyx_L1_error)
-  __pyx_v_idx_gen = __pyx_t_5;
+  __pyx_t_1 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->get_right_gen(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_v_idx_gen = __pyx_t_1;
 
-  /* "cython/tree_explorer.pyx":142
+  /* "cython/tree_explorer.pyx":143
  *         cdef int idx_gen = self.get_right_gen()
  * 
  *         self.set_next_state(idx_gen)             # <<<<<<<<<<<<<<
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen
  */
-  ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->set_next_state(__pyx_v_self, __pyx_v_idx_gen, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 142, __pyx_L1_error)
+  ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->set_next_state(__pyx_v_self, __pyx_v_idx_gen); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
 
-  /* "cython/tree_explorer.pyx":143
+  /* "cython/tree_explorer.pyx":144
  * 
  *         self.set_next_state(idx_gen)
  *         self.curr_state = self.state[self.level + 1]             # <<<<<<<<<<<<<<
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:
  */
-  __pyx_t_6 = (__pyx_v_self->level + 1);
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_6, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_self->curr_state = __pyx_t_5;
+  __pyx_t_2 = (__pyx_v_self->level + 1);
+  __pyx_t_3 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->state), __pyx_t_2, long, 1, __Pyx_PyInt_From_long, 0, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_self->curr_state = __pyx_t_1;
 
-  /* "cython/tree_explorer.pyx":144
+  /* "cython/tree_explorer.pyx":145
  *         self.set_next_state(idx_gen)
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen             # <<<<<<<<<<<<<<
  *         if self.level == -1:
  *             self.words[0] = self.generators[idx_gen]
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_idx_gen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = (__pyx_v_self->level + 1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_t_6, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0))) __PYX_ERR(0, 144, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_idx_gen); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = (__pyx_v_self->level + 1);
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), __pyx_t_2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 0, 1, 0) < 0))) __PYX_ERR(0, 145, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "cython/tree_explorer.pyx":145
+  /* "cython/tree_explorer.pyx":146
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:             # <<<<<<<<<<<<<<
  *             self.words[0] = self.generators[idx_gen]
  *         else:
  */
-  __pyx_t_7 = (__pyx_v_self->level == -1L);
-  if (__pyx_t_7) {
+  __pyx_t_4 = (__pyx_v_self->level == -1L);
+  if (__pyx_t_4) {
 
-    /* "cython/tree_explorer.pyx":146
+    /* "cython/tree_explorer.pyx":147
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:
  *             self.words[0] = self.generators[idx_gen]             # <<<<<<<<<<<<<<
  *         else:
  *             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
  */
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 146, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_3 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 147, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 147, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "cython/tree_explorer.pyx":145
+    /* "cython/tree_explorer.pyx":146
  *         self.curr_state = self.state[self.level + 1]
  *         self.tag[self.level + 1] = idx_gen
  *         if self.level == -1:             # <<<<<<<<<<<<<<
@@ -8709,7 +7117,7 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move
     goto __pyx_L3;
   }
 
-  /* "cython/tree_explorer.pyx":148
+  /* "cython/tree_explorer.pyx":149
  *             self.words[0] = self.generators[idx_gen]
  *         else:
  *             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])             # <<<<<<<<<<<<<<
@@ -8717,46 +7125,46 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move
  *         self.level += 1
  */
   /*else*/ {
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_matmul); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 148, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 149, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_matmul); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->words), __pyx_v_self->level, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 149, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_7 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), __pyx_v_idx_gen, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 149, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_8 = NULL;
-    __pyx_t_5 = 0;
+    __pyx_t_1 = 0;
     #if CYTHON_UNPACK_METHODS
-    if (unlikely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_3);
+    if (unlikely(PyMethod_Check(__pyx_t_6))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_6);
       if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
         __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-        __pyx_t_5 = 1;
+        __Pyx_DECREF_SET(__pyx_t_6, function);
+        __pyx_t_1 = 1;
       }
     }
     #endif
     {
-      PyObject *__pyx_callargs[3] = {__pyx_t_8, __pyx_t_2, __pyx_t_4};
-      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 2+__pyx_t_5);
+      PyObject *__pyx_callargs[3] = {__pyx_t_8, __pyx_t_5, __pyx_t_7};
+      __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_1, 2+__pyx_t_1);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
-    __pyx_t_6 = (__pyx_v_self->level + 1);
-    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), __pyx_t_6, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 1, 1) < 0))) __PYX_ERR(0, 148, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_2 = (__pyx_v_self->level + 1);
+    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), __pyx_t_2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 0, 1, 0) < 0))) __PYX_ERR(0, 149, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
   __pyx_L3:;
 
-  /* "cython/tree_explorer.pyx":150
+  /* "cython/tree_explorer.pyx":151
  *             self.words[self.level + 1] = np.matmul(self.words[self.level], self.generators[idx_gen])
  * 
  *         self.level += 1             # <<<<<<<<<<<<<<
@@ -8765,10 +7173,10 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move
  */
   __pyx_v_self->level = (__pyx_v_self->level + 1);
 
-  /* "cython/tree_explorer.pyx":139
+  /* "cython/tree_explorer.pyx":140
  *         self.level += 1
  * 
- *     cpdef void forward_move(self):             # <<<<<<<<<<<<<<
+ *     cdef void forward_move(self):             # <<<<<<<<<<<<<<
  *         cdef int idx_gen = self.get_right_gen()
  * 
  */
@@ -8776,10 +7184,10 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move
   /* function exit code */
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.forward_move", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
@@ -8787,79 +7195,7 @@ static void __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move
   __Pyx_RefNannyFinishContext();
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_21forward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_21forward_move = {"forward_move", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_21forward_move, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_21forward_move(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("forward_move (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_MACROS
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  if (unlikely(__pyx_nargs > 0)) {
-    __Pyx_RaiseArgtupleInvalid("forward_move", 1, 0, 0, __pyx_nargs); return NULL;}
-  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "forward_move", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_20forward_move(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_20forward_move(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__17)
-  __Pyx_RefNannySetupContext("forward_move", 1);
-  __Pyx_TraceCall("forward_move (wrapper)", __pyx_f[0], 139, 0, __PYX_ERR(0, 139, __pyx_L1_error));
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("klein_compute.tree_explorer.tree_explorer.forward_move", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_TraceReturn(__pyx_r, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cython/tree_explorer.pyx":152
+/* "cython/tree_explorer.pyx":153
  *         self.level += 1
  * 
  *     cpdef tuple compute_tree(self):             # <<<<<<<<<<<<<<
@@ -8867,7 +7203,7 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_20forw
  *         self.tag[0] = 0
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_23compute_tree(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3compute_tree(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -8888,9 +7224,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__18)
+  __Pyx_TraceFrameInit(__pyx_codeobj__4)
   __Pyx_RefNannySetupContext("compute_tree", 1);
-  __Pyx_TraceCall("compute_tree", __pyx_f[0], 152, 0, __PYX_ERR(0, 152, __pyx_L1_error));
+  __Pyx_TraceCall("compute_tree", __pyx_f[0], 153, 0, __PYX_ERR(0, 153, __pyx_L1_error));
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
@@ -8900,9 +7236,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_compute_tree); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_compute_tree); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_23compute_tree)) {
+      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3compute_tree)) {
         __Pyx_XDECREF(__pyx_r);
         __Pyx_INCREF(__pyx_t_1);
         __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
@@ -8923,11 +7259,11 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
           PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
           __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         }
-        if (!(likely(PyTuple_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_2))) __PYX_ERR(0, 152, __pyx_L1_error)
+        if (!(likely(PyTuple_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_2))) __PYX_ERR(0, 153, __pyx_L1_error)
         __pyx_r = ((PyObject*)__pyx_t_2);
         __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -8946,37 +7282,37 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
     #endif
   }
 
-  /* "cython/tree_explorer.pyx":153
+  /* "cython/tree_explorer.pyx":154
  * 
  *     cpdef tuple compute_tree(self):
  *         self.words[0] = self.generators[0]             # <<<<<<<<<<<<<<
  *         self.tag[0] = 0
  *         self.state[0] = 1
  */
-  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->generators), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cython/tree_explorer.pyx":154
+  /* "cython/tree_explorer.pyx":155
  *     cpdef tuple compute_tree(self):
  *         self.words[0] = self.generators[0]
  *         self.tag[0] = 0             # <<<<<<<<<<<<<<
  *         self.state[0] = 1
  *         self.precomputing = 0
  */
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), 0, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 154, __pyx_L1_error)
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), 0, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 155, __pyx_L1_error)
 
-  /* "cython/tree_explorer.pyx":155
+  /* "cython/tree_explorer.pyx":156
  *         self.words[0] = self.generators[0]
  *         self.tag[0] = 0
  *         self.state[0] = 1             # <<<<<<<<<<<<<<
  *         self.precomputing = 0
  *         while not (self.level == -1 and self.tag[0] == 1):
  */
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->state), 0, __pyx_int_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 155, __pyx_L1_error)
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->state), 0, __pyx_int_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 156, __pyx_L1_error)
 
-  /* "cython/tree_explorer.pyx":156
+  /* "cython/tree_explorer.pyx":157
  *         self.tag[0] = 0
  *         self.state[0] = 1
  *         self.precomputing = 0             # <<<<<<<<<<<<<<
@@ -8985,7 +7321,7 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  */
   __pyx_v_self->precomputing = 0;
 
-  /* "cython/tree_explorer.pyx":157
+  /* "cython/tree_explorer.pyx":158
  *         self.state[0] = 1
  *         self.precomputing = 0
  *         while not (self.level == -1 and self.tag[0] == 1):             # <<<<<<<<<<<<<<
@@ -8999,16 +7335,16 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
       __pyx_t_6 = __pyx_t_7;
       goto __pyx_L5_bool_binop_done;
     }
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = (__Pyx_PyInt_BoolEqObjC(__pyx_t_1, __pyx_int_1, 1, 0)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 157, __pyx_L1_error)
+    __pyx_t_7 = (__Pyx_PyInt_BoolEqObjC(__pyx_t_1, __pyx_int_1, 1, 0)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 158, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_6 = __pyx_t_7;
     __pyx_L5_bool_binop_done:;
     __pyx_t_7 = (!__pyx_t_6);
     if (!__pyx_t_7) break;
 
-    /* "cython/tree_explorer.pyx":158
+    /* "cython/tree_explorer.pyx":159
  *         self.precomputing = 0
  *         while not (self.level == -1 and self.tag[0] == 1):
  *             while self.branch_terminated() == 0:             # <<<<<<<<<<<<<<
@@ -9016,21 +7352,21 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  *             while True:
  */
     while (1) {
-      __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->branch_terminated(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 158, __pyx_L1_error)
+      __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->branch_terminated(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 159, __pyx_L1_error)
       __pyx_t_7 = (__pyx_t_5 == 0);
       if (!__pyx_t_7) break;
 
-      /* "cython/tree_explorer.pyx":159
+      /* "cython/tree_explorer.pyx":160
  *         while not (self.level == -1 and self.tag[0] == 1):
  *             while self.branch_terminated() == 0:
  *                 self.forward_move()             # <<<<<<<<<<<<<<
  *             while True:
  *                 self.backward_move()
  */
-      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->forward_move(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 159, __pyx_L1_error)
+      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->forward_move(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 160, __pyx_L1_error)
     }
 
-    /* "cython/tree_explorer.pyx":160
+    /* "cython/tree_explorer.pyx":161
  *             while self.branch_terminated() == 0:
  *                 self.forward_move()
  *             while True:             # <<<<<<<<<<<<<<
@@ -9039,23 +7375,23 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  */
     while (1) {
 
-      /* "cython/tree_explorer.pyx":161
+      /* "cython/tree_explorer.pyx":162
  *                 self.forward_move()
  *             while True:
  *                 self.backward_move()             # <<<<<<<<<<<<<<
  *                 if self.available_turn() == 1 or self.level == -1:
  *                     break
  */
-      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->backward_move(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 161, __pyx_L1_error)
+      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->backward_move(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 162, __pyx_L1_error)
 
-      /* "cython/tree_explorer.pyx":162
+      /* "cython/tree_explorer.pyx":163
  *             while True:
  *                 self.backward_move()
  *                 if self.available_turn() == 1 or self.level == -1:             # <<<<<<<<<<<<<<
  *                     break
  *             if self.level == -1 and self.tag[0] == 1:
  */
-      __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->available_turn(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 162, __pyx_L1_error)
+      __pyx_t_5 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->available_turn(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 163, __pyx_L1_error)
       __pyx_t_6 = (__pyx_t_5 == 1);
       if (!__pyx_t_6) {
       } else {
@@ -9067,7 +7403,7 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
       __pyx_L12_bool_binop_done:;
       if (__pyx_t_7) {
 
-        /* "cython/tree_explorer.pyx":163
+        /* "cython/tree_explorer.pyx":164
  *                 self.backward_move()
  *                 if self.available_turn() == 1 or self.level == -1:
  *                     break             # <<<<<<<<<<<<<<
@@ -9076,7 +7412,7 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  */
         goto __pyx_L10_break;
 
-        /* "cython/tree_explorer.pyx":162
+        /* "cython/tree_explorer.pyx":163
  *             while True:
  *                 self.backward_move()
  *                 if self.available_turn() == 1 or self.level == -1:             # <<<<<<<<<<<<<<
@@ -9087,7 +7423,7 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
     }
     __pyx_L10_break:;
 
-    /* "cython/tree_explorer.pyx":164
+    /* "cython/tree_explorer.pyx":165
  *                 if self.available_turn() == 1 or self.level == -1:
  *                     break
  *             if self.level == -1 and self.tag[0] == 1:             # <<<<<<<<<<<<<<
@@ -9100,15 +7436,15 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
       __pyx_t_7 = __pyx_t_6;
       goto __pyx_L15_bool_binop_done;
     }
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = (__Pyx_PyInt_BoolEqObjC(__pyx_t_1, __pyx_int_1, 1, 0)); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 164, __pyx_L1_error)
+    __pyx_t_6 = (__Pyx_PyInt_BoolEqObjC(__pyx_t_1, __pyx_int_1, 1, 0)); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_7 = __pyx_t_6;
     __pyx_L15_bool_binop_done:;
     if (__pyx_t_7) {
 
-      /* "cython/tree_explorer.pyx":165
+      /* "cython/tree_explorer.pyx":166
  *                     break
  *             if self.level == -1 and self.tag[0] == 1:
  *                 break             # <<<<<<<<<<<<<<
@@ -9117,7 +7453,7 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  */
       goto __pyx_L4_break;
 
-      /* "cython/tree_explorer.pyx":164
+      /* "cython/tree_explorer.pyx":165
  *                 if self.available_turn() == 1 or self.level == -1:
  *                     break
  *             if self.level == -1 and self.tag[0] == 1:             # <<<<<<<<<<<<<<
@@ -9126,18 +7462,18 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  */
     }
 
-    /* "cython/tree_explorer.pyx":166
+    /* "cython/tree_explorer.pyx":167
  *             if self.level == -1 and self.tag[0] == 1:
  *                 break
  *             self.turn_forward_move()             # <<<<<<<<<<<<<<
  *         self.last_idx_points = 0
  *         self.last_idx  = 0
  */
-    ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->turn_forward_move(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L1_error)
+    ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->turn_forward_move(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 167, __pyx_L1_error)
   }
   __pyx_L4_break:;
 
-  /* "cython/tree_explorer.pyx":167
+  /* "cython/tree_explorer.pyx":168
  *                 break
  *             self.turn_forward_move()
  *         self.last_idx_points = 0             # <<<<<<<<<<<<<<
@@ -9146,7 +7482,7 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  */
   __pyx_v_self->last_idx_points = 0;
 
-  /* "cython/tree_explorer.pyx":168
+  /* "cython/tree_explorer.pyx":169
  *             self.turn_forward_move()
  *         self.last_idx_points = 0
  *         self.last_idx  = 0             # <<<<<<<<<<<<<<
@@ -9155,7 +7491,7 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  */
   __pyx_v_self->last_idx = 0;
 
-  /* "cython/tree_explorer.pyx":169
+  /* "cython/tree_explorer.pyx":170
  *         self.last_idx_points = 0
  *         self.last_idx  = 0
  *         return self.last_words, self.last_state, self.last_tags             # <<<<<<<<<<<<<<
@@ -9163,22 +7499,22 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
  *     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF((PyObject *)__pyx_v_self->last_words);
   __Pyx_GIVEREF((PyObject *)__pyx_v_self->last_words);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self->last_words))) __PYX_ERR(0, 169, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self->last_words))) __PYX_ERR(0, 170, __pyx_L1_error);
   __Pyx_INCREF((PyObject *)__pyx_v_self->last_state);
   __Pyx_GIVEREF((PyObject *)__pyx_v_self->last_state);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, ((PyObject *)__pyx_v_self->last_state))) __PYX_ERR(0, 169, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, ((PyObject *)__pyx_v_self->last_state))) __PYX_ERR(0, 170, __pyx_L1_error);
   __Pyx_INCREF((PyObject *)__pyx_v_self->last_tags);
   __Pyx_GIVEREF((PyObject *)__pyx_v_self->last_tags);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 2, ((PyObject *)__pyx_v_self->last_tags))) __PYX_ERR(0, 169, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 2, ((PyObject *)__pyx_v_self->last_tags))) __PYX_ERR(0, 170, __pyx_L1_error);
   __pyx_r = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cython/tree_explorer.pyx":152
+  /* "cython/tree_explorer.pyx":153
  *         self.level += 1
  * 
  *     cpdef tuple compute_tree(self):             # <<<<<<<<<<<<<<
@@ -9202,15 +7538,15 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_23compute_tree(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3compute_tree(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_23compute_tree = {"compute_tree", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_23compute_tree, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_23compute_tree(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_3compute_tree = {"compute_tree", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3compute_tree, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_3compute_tree(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -9235,14 +7571,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("compute_tree", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "compute_tree", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_22compute_tree(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_2compute_tree(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_22compute_tree(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_2compute_tree(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
@@ -9250,11 +7586,11 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_22comp
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__18)
+  __Pyx_TraceFrameInit(__pyx_codeobj__4)
   __Pyx_RefNannySetupContext("compute_tree", 1);
-  __Pyx_TraceCall("compute_tree (wrapper)", __pyx_f[0], 152, 0, __PYX_ERR(0, 152, __pyx_L1_error));
+  __Pyx_TraceCall("compute_tree (wrapper)", __pyx_f[0], 153, 0, __PYX_ERR(0, 153, __pyx_L1_error));
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_tree(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_tree(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -9272,7 +7608,7 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_22comp
   return __pyx_r;
 }
 
-/* "cython/tree_explorer.pyx":171
+/* "cython/tree_explorer.pyx":172
  *         return self.last_words, self.last_state, self.last_tags
  * 
  *     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):             # <<<<<<<<<<<<<<
@@ -9280,7 +7616,7 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_22comp
  *         self.tag[0] = start_tag
  */
 
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_25compute_leaf(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5compute_leaf(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -9304,9 +7640,9 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__19)
+  __Pyx_TraceFrameInit(__pyx_codeobj__5)
   __Pyx_RefNannySetupContext("compute_leaf", 1);
-  __Pyx_TraceCall("compute_leaf", __pyx_f[0], 171, 0, __PYX_ERR(0, 171, __pyx_L1_error));
+  __Pyx_TraceCall("compute_leaf", __pyx_f[0], 172, 0, __PYX_ERR(0, 172, __pyx_L1_error));
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
@@ -9316,15 +7652,15 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_compute_leaf); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_compute_leaf); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_25compute_leaf)) {
+      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void*) __pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5compute_leaf)) {
         __Pyx_XDECREF((PyObject *)__pyx_r);
-        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 171, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 172, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_start_state); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 171, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_start_state); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 172, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_start_level); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 171, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_start_level); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 172, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_INCREF(__pyx_t_1);
         __pyx_t_6 = __pyx_t_1; __pyx_t_7 = NULL;
@@ -9348,11 +7684,11 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
-        if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 171, __pyx_L1_error)
+        if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 172, __pyx_L1_error)
         __pyx_r = ((PyArrayObject *)__pyx_t_2);
         __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9371,40 +7707,40 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
     #endif
   }
 
-  /* "cython/tree_explorer.pyx":172
+  /* "cython/tree_explorer.pyx":173
  * 
  *     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):
  *         self.words[0] = start_word             # <<<<<<<<<<<<<<
  *         self.tag[0] = start_tag
  *         self.state[0] = start_state
  */
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, ((PyObject *)__pyx_v_start_word), long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 172, __pyx_L1_error)
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->words), 0, ((PyObject *)__pyx_v_start_word), long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 173, __pyx_L1_error)
 
-  /* "cython/tree_explorer.pyx":173
+  /* "cython/tree_explorer.pyx":174
  *     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):
  *         self.words[0] = start_word
  *         self.tag[0] = start_tag             # <<<<<<<<<<<<<<
  *         self.state[0] = start_state
  *         while not (self.level == -1 and self.tag[0] == start_tag):
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 173, __pyx_L1_error)
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->tag), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cython/tree_explorer.pyx":174
+  /* "cython/tree_explorer.pyx":175
  *         self.words[0] = start_word
  *         self.tag[0] = start_tag
  *         self.state[0] = start_state             # <<<<<<<<<<<<<<
  *         while not (self.level == -1 and self.tag[0] == start_tag):
  *             while self.branch_terminated() == 0:
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_start_state); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_start_state); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->state), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0))) __PYX_ERR(0, 174, __pyx_L1_error)
+  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_self->state), 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0) < 0))) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cython/tree_explorer.pyx":175
+  /* "cython/tree_explorer.pyx":176
  *         self.tag[0] = start_tag
  *         self.state[0] = start_state
  *         while not (self.level == -1 and self.tag[0] == start_tag):             # <<<<<<<<<<<<<<
@@ -9418,21 +7754,21 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
       __pyx_t_9 = __pyx_t_10;
       goto __pyx_L5_bool_binop_done;
     }
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_6 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 176, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 176, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_9 = __pyx_t_10;
     __pyx_L5_bool_binop_done:;
     __pyx_t_10 = (!__pyx_t_9);
     if (!__pyx_t_10) break;
 
-    /* "cython/tree_explorer.pyx":176
+    /* "cython/tree_explorer.pyx":177
  *         self.state[0] = start_state
  *         while not (self.level == -1 and self.tag[0] == start_tag):
  *             while self.branch_terminated() == 0:             # <<<<<<<<<<<<<<
@@ -9440,21 +7776,21 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
  *             while True:
  */
     while (1) {
-      __pyx_t_8 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->branch_terminated(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L1_error)
+      __pyx_t_8 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->branch_terminated(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L1_error)
       __pyx_t_10 = (__pyx_t_8 == 0);
       if (!__pyx_t_10) break;
 
-      /* "cython/tree_explorer.pyx":177
+      /* "cython/tree_explorer.pyx":178
  *         while not (self.level == -1 and self.tag[0] == start_tag):
  *             while self.branch_terminated() == 0:
  *                 self.forward_move()             # <<<<<<<<<<<<<<
  *             while True:
  *                 self.backward_move()
  */
-      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->forward_move(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L1_error)
+      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->forward_move(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 178, __pyx_L1_error)
     }
 
-    /* "cython/tree_explorer.pyx":178
+    /* "cython/tree_explorer.pyx":179
  *             while self.branch_terminated() == 0:
  *                 self.forward_move()
  *             while True:             # <<<<<<<<<<<<<<
@@ -9463,16 +7799,16 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
  */
     while (1) {
 
-      /* "cython/tree_explorer.pyx":179
+      /* "cython/tree_explorer.pyx":180
  *                 self.forward_move()
  *             while True:
  *                 self.backward_move()             # <<<<<<<<<<<<<<
  *                 if self.level == -1 or self.available_turn():
  *                     break
  */
-      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->backward_move(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 179, __pyx_L1_error)
+      ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->backward_move(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L1_error)
 
-      /* "cython/tree_explorer.pyx":180
+      /* "cython/tree_explorer.pyx":181
  *             while True:
  *                 self.backward_move()
  *                 if self.level == -1 or self.available_turn():             # <<<<<<<<<<<<<<
@@ -9485,13 +7821,13 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
         __pyx_t_10 = __pyx_t_9;
         goto __pyx_L12_bool_binop_done;
       }
-      __pyx_t_8 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->available_turn(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L1_error)
+      __pyx_t_8 = ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->available_turn(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 181, __pyx_L1_error)
       __pyx_t_9 = (__pyx_t_8 != 0);
       __pyx_t_10 = __pyx_t_9;
       __pyx_L12_bool_binop_done:;
       if (__pyx_t_10) {
 
-        /* "cython/tree_explorer.pyx":181
+        /* "cython/tree_explorer.pyx":182
  *                 self.backward_move()
  *                 if self.level == -1 or self.available_turn():
  *                     break             # <<<<<<<<<<<<<<
@@ -9500,7 +7836,7 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
  */
         goto __pyx_L10_break;
 
-        /* "cython/tree_explorer.pyx":180
+        /* "cython/tree_explorer.pyx":181
  *             while True:
  *                 self.backward_move()
  *                 if self.level == -1 or self.available_turn():             # <<<<<<<<<<<<<<
@@ -9511,7 +7847,7 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
     }
     __pyx_L10_break:;
 
-    /* "cython/tree_explorer.pyx":182
+    /* "cython/tree_explorer.pyx":183
  *                 if self.level == -1 or self.available_turn():
  *                     break
  *             if self.level == -1 and self.tag[0] == start_tag:             # <<<<<<<<<<<<<<
@@ -9524,20 +7860,20 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
       __pyx_t_10 = __pyx_t_9;
       goto __pyx_L15_bool_binop_done;
     }
-    __pyx_t_6 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 182, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self->tag), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 183, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_start_tag); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 183, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = PyObject_RichCompare(__pyx_t_6, __pyx_t_2, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+    __pyx_t_1 = PyObject_RichCompare(__pyx_t_6, __pyx_t_2, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_9 < 0))) __PYX_ERR(0, 182, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_9 < 0))) __PYX_ERR(0, 183, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_10 = __pyx_t_9;
     __pyx_L15_bool_binop_done:;
     if (__pyx_t_10) {
 
-      /* "cython/tree_explorer.pyx":183
+      /* "cython/tree_explorer.pyx":184
  *                     break
  *             if self.level == -1 and self.tag[0] == start_tag:
  *                 break             # <<<<<<<<<<<<<<
@@ -9546,7 +7882,7 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
  */
       goto __pyx_L4_break;
 
-      /* "cython/tree_explorer.pyx":182
+      /* "cython/tree_explorer.pyx":183
  *                 if self.level == -1 or self.available_turn():
  *                     break
  *             if self.level == -1 and self.tag[0] == start_tag:             # <<<<<<<<<<<<<<
@@ -9555,17 +7891,17 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
  */
     }
 
-    /* "cython/tree_explorer.pyx":184
+    /* "cython/tree_explorer.pyx":185
  *             if self.level == -1 and self.tag[0] == start_tag:
  *                 break
  *             self.turn_forward_move()             # <<<<<<<<<<<<<<
  *         return self.points
  */
-    ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->turn_forward_move(__pyx_v_self, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+    ((struct __pyx_vtabstruct_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self->__pyx_vtab)->turn_forward_move(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 185, __pyx_L1_error)
   }
   __pyx_L4_break:;
 
-  /* "cython/tree_explorer.pyx":185
+  /* "cython/tree_explorer.pyx":186
  *                 break
  *             self.turn_forward_move()
  *         return self.points             # <<<<<<<<<<<<<<
@@ -9575,7 +7911,7 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
   __pyx_r = __pyx_v_self->points;
   goto __pyx_L0;
 
-  /* "cython/tree_explorer.pyx":171
+  /* "cython/tree_explorer.pyx":172
  *         return self.last_words, self.last_state, self.last_tags
  * 
  *     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):             # <<<<<<<<<<<<<<
@@ -9602,15 +7938,15 @@ static PyArrayObject *__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_co
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_25compute_leaf(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5compute_leaf(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_25compute_leaf = {"compute_leaf", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_25compute_leaf, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_25compute_leaf(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_5compute_leaf = {"compute_leaf", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5compute_leaf, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_5compute_leaf(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -9663,7 +7999,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -9671,9 +8007,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, 1); __PYX_ERR(0, 171, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, 1); __PYX_ERR(0, 172, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -9681,9 +8017,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, 2); __PYX_ERR(0, 171, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, 2); __PYX_ERR(0, 172, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -9691,14 +8027,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[3]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, 3); __PYX_ERR(0, 171, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, 3); __PYX_ERR(0, 172, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "compute_leaf") < 0)) __PYX_ERR(0, 171, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "compute_leaf") < 0)) __PYX_ERR(0, 172, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 4)) {
       goto __pyx_L5_argtuple_error;
@@ -9708,14 +8044,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
       values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
     }
-    __pyx_v_start_tag = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_start_tag == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
-    __pyx_v_start_state = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_start_state == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
-    __pyx_v_start_level = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_start_level == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
+    __pyx_v_start_tag = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_start_tag == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
+    __pyx_v_start_state = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_start_state == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
+    __pyx_v_start_level = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_start_level == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
     __pyx_v_start_word = ((PyArrayObject *)values[3]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, __pyx_nargs); __PYX_ERR(0, 171, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("compute_leaf", 1, 4, 4, __pyx_nargs); __PYX_ERR(0, 172, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -9729,8 +8065,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_start_word), __pyx_ptype_5numpy_ndarray, 1, "start_word", 0))) __PYX_ERR(0, 171, __pyx_L1_error)
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_24compute_leaf(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v_start_tag, __pyx_v_start_state, __pyx_v_start_level, __pyx_v_start_word);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_start_word), __pyx_ptype_5numpy_ndarray, 1, "start_word", 0))) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_4compute_leaf(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v_start_tag, __pyx_v_start_state, __pyx_v_start_level, __pyx_v_start_word);
 
   /* function exit code */
   goto __pyx_L0;
@@ -9747,7 +8083,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_24compute_leaf(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_start_tag, int __pyx_v_start_state, int __pyx_v_start_level, PyArrayObject *__pyx_v_start_word) {
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_4compute_leaf(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, int __pyx_v_start_tag, int __pyx_v_start_state, int __pyx_v_start_level, PyArrayObject *__pyx_v_start_word) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
@@ -9755,11 +8091,11 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_24comp
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__19)
+  __Pyx_TraceFrameInit(__pyx_codeobj__5)
   __Pyx_RefNannySetupContext("compute_leaf", 1);
-  __Pyx_TraceCall("compute_leaf (wrapper)", __pyx_f[0], 171, 0, __PYX_ERR(0, 171, __pyx_L1_error));
+  __Pyx_TraceCall("compute_leaf (wrapper)", __pyx_f[0], 172, 0, __PYX_ERR(0, 172, __pyx_L1_error));
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_leaf(__pyx_v_self, __pyx_v_start_tag, __pyx_v_start_state, __pyx_v_start_level, __pyx_v_start_word, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_leaf(__pyx_v_self, __pyx_v_start_tag, __pyx_v_start_state, __pyx_v_start_level, __pyx_v_start_word, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -9784,15 +8120,15 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_24comp
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_27__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_27__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_27__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_27__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_7__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -9817,14 +8153,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__reduce_cython__", 0))) return NULL;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_26__reduce_cython__(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_6__reduce_cython__(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_26__reduce_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_6__reduce_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self) {
   PyObject *__pyx_v_state = 0;
   PyObject *__pyx_v__dict = 0;
   int __pyx_v_use_setstate;
@@ -9845,7 +8181,7 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_26__re
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__20)
+  __Pyx_TraceFrameInit(__pyx_codeobj__6)
   __Pyx_RefNannySetupContext("__reduce_cython__", 1);
   __Pyx_TraceCall("__reduce_cython__", __pyx_f[2], 1, 0, __PYX_ERR(2, 1, __pyx_L1_error));
 
@@ -10193,15 +8529,15 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_26__re
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_29__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_29__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_29__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_29__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_9__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -10275,7 +8611,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_28__setstate_cython__(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_8__setstate_cython__(((struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   {
@@ -10288,7 +8624,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_28__setstate_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_8__setstate_cython__(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
@@ -10296,7 +8632,7 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer_13tree_explorer_28__se
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__21)
+  __Pyx_TraceFrameInit(__pyx_codeobj__7)
   __Pyx_RefNannySetupContext("__setstate_cython__", 1);
   __Pyx_TraceCall("__setstate_cython__", __pyx_f[2], 16, 0, __PYX_ERR(2, 16, __pyx_L1_error));
 
@@ -10477,7 +8813,7 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer___pyx_unpickle_tree_ex
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__22)
+  __Pyx_TraceFrameInit(__pyx_codeobj__8)
   __Pyx_RefNannySetupContext("__pyx_unpickle_tree_explorer", 1);
   __Pyx_TraceCall("__pyx_unpickle_tree_explorer", __pyx_f[2], 1, 0, __PYX_ERR(2, 1, __pyx_L1_error));
 
@@ -10490,7 +8826,7 @@ static PyObject *__pyx_pf_13klein_compute_13tree_explorer___pyx_unpickle_tree_ex
  */
   __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_1, __pyx_tuple__23, Py_NE)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(2, 4, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_1, __pyx_tuple__9, Py_NE)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(2, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
@@ -10660,7 +8996,6 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
   int __pyx_t_6;
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -10678,9 +9013,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 0)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 0), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 0);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->FSA);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->FSA);
@@ -10690,27 +9025,21 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->curr_state = __pyx_t_2;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->epsilon = __pyx_t_3;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 3), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 3);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->fixed_points);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->fixed_points);
@@ -10720,9 +9049,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 4)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 4), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 4);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->generators);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->generators);
@@ -10732,27 +9061,21 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 5, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 5)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->last_idx = __pyx_t_2;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 6, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 6)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->last_idx_points = __pyx_t_2;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 7)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 7), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 7);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->last_state);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->last_state);
@@ -10762,9 +9085,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 8, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 8)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 8), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 8);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->last_tags);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->last_tags);
@@ -10774,9 +9097,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 9, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 9)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 9), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 9);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->last_words);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->last_words);
@@ -10786,27 +9109,21 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 10, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 10)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->level = __pyx_t_2;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 11, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 11)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->max_depth = __pyx_t_2;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 12, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 12)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 12), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 12);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->points);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->points);
@@ -10816,27 +9133,21 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 13, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 13)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->precomputing = __pyx_t_2;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 14, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 14)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __pyx_v___pyx_result->start_tag = __pyx_t_2;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 15, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 15)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 15), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 15);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->start_word);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->start_word);
@@ -10846,9 +9157,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 16, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 16)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 16), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 16);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->state);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->state);
@@ -10858,9 +9169,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 17, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 17)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 17), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 17);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->tag);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->tag);
@@ -10870,9 +9181,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 18, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 18)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 18), __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 18);
+  __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->words);
   __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->words);
@@ -10915,16 +9226,14 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(2, 14, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 19, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(2, 14, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_9 = NULL;
+    __pyx_t_7 = NULL;
     __pyx_t_2 = 0;
     #if CYTHON_UNPACK_METHODS
     if (likely(PyMethod_Check(__pyx_t_8))) {
-      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_8);
-      if (likely(__pyx_t_9)) {
+      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
+      if (likely(__pyx_t_7)) {
         PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-        __Pyx_INCREF(__pyx_t_9);
+        __Pyx_INCREF(__pyx_t_7);
         __Pyx_INCREF(function);
         __Pyx_DECREF_SET(__pyx_t_8, function);
         __pyx_t_2 = 1;
@@ -10932,10 +9241,9 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_t_7};
+      PyObject *__pyx_callargs[2] = {__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 19)};
       __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_2, 1+__pyx_t_2);
-      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 14, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -10965,7 +9273,6 @@ static PyObject *__pyx_f_13klein_compute_13tree_explorer___pyx_unpickle_tree_exp
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("klein_compute.tree_explorer.__pyx_unpickle_tree_explorer__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -11116,8 +9423,8 @@ static int __pyx_tp_clear_13klein_compute_13tree_explorer_tree_explorer(PyObject
 }
 
 static PyMethodDef __pyx_methods_13klein_compute_13tree_explorer_tree_explorer[] = {
-  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_27__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_29__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_13tree_explorer_13tree_explorer_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
@@ -11240,13 +9547,10 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
     {&__pyx_kp_s_Incompatible_checksums_0x_x_vs_0, __pyx_k_Incompatible_checksums_0x_x_vs_0, sizeof(__pyx_k_Incompatible_checksums_0x_x_vs_0), 0, 0, 1, 0},
     {&__pyx_n_s_PickleError, __pyx_k_PickleError, sizeof(__pyx_k_PickleError), 0, 0, 1, 1},
-    {&__pyx_kp_u__24, __pyx_k__24, sizeof(__pyx_k__24), 0, 1, 0, 0},
-    {&__pyx_n_s__25, __pyx_k__25, sizeof(__pyx_k__25), 0, 0, 1, 1},
-    {&__pyx_n_s__33, __pyx_k__33, sizeof(__pyx_k__33), 0, 0, 1, 1},
+    {&__pyx_kp_u__10, __pyx_k__10, sizeof(__pyx_k__10), 0, 1, 0, 0},
+    {&__pyx_n_s__11, __pyx_k__11, sizeof(__pyx_k__11), 0, 0, 1, 1},
+    {&__pyx_n_s__17, __pyx_k__17, sizeof(__pyx_k__17), 0, 0, 1, 1},
     {&__pyx_n_s_asyncio_coroutines, __pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 0, 1, 1},
-    {&__pyx_n_s_available_turn, __pyx_k_available_turn, sizeof(__pyx_k_available_turn), 0, 0, 1, 1},
-    {&__pyx_n_s_backward_move, __pyx_k_backward_move, sizeof(__pyx_k_backward_move), 0, 0, 1, 1},
-    {&__pyx_n_s_branch_terminated, __pyx_k_branch_terminated, sizeof(__pyx_k_branch_terminated), 0, 0, 1, 1},
     {&__pyx_n_s_class_getitem, __pyx_k_class_getitem, sizeof(__pyx_k_class_getitem), 0, 0, 1, 1},
     {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
     {&__pyx_n_s_compute_leaf, __pyx_k_compute_leaf, sizeof(__pyx_k_compute_leaf), 0, 0, 1, 1},
@@ -11262,16 +9566,11 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
     {&__pyx_n_s_epsilon, __pyx_k_epsilon, sizeof(__pyx_k_epsilon), 0, 0, 1, 1},
     {&__pyx_n_s_fix_pt, __pyx_k_fix_pt, sizeof(__pyx_k_fix_pt), 0, 0, 1, 1},
-    {&__pyx_n_s_forward_move, __pyx_k_forward_move, sizeof(__pyx_k_forward_move), 0, 0, 1, 1},
     {&__pyx_n_s_fsa, __pyx_k_fsa, sizeof(__pyx_k_fsa), 0, 0, 1, 1},
     {&__pyx_kp_u_gc, __pyx_k_gc, sizeof(__pyx_k_gc), 0, 1, 0, 0},
     {&__pyx_n_s_gen, __pyx_k_gen, sizeof(__pyx_k_gen), 0, 0, 1, 1},
     {&__pyx_n_s_getLogger, __pyx_k_getLogger, sizeof(__pyx_k_getLogger), 0, 0, 1, 1},
-    {&__pyx_n_s_get_left_gen, __pyx_k_get_left_gen, sizeof(__pyx_k_get_left_gen), 0, 0, 1, 1},
-    {&__pyx_n_s_get_next_state, __pyx_k_get_next_state, sizeof(__pyx_k_get_next_state), 0, 0, 1, 1},
-    {&__pyx_n_s_get_right_gen, __pyx_k_get_right_gen, sizeof(__pyx_k_get_right_gen), 0, 0, 1, 1},
     {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
-    {&__pyx_n_s_idx_gen, __pyx_k_idx_gen, sizeof(__pyx_k_idx_gen), 0, 0, 1, 1},
     {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
     {&__pyx_n_s_initializing, __pyx_k_initializing, sizeof(__pyx_k_initializing), 0, 0, 1, 1},
     {&__pyx_n_s_is_coroutine, __pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 0, 1, 1},
@@ -11279,11 +9578,9 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_klein_compute_tree_explorer, __pyx_k_klein_compute_tree_explorer, sizeof(__pyx_k_klein_compute_tree_explorer), 0, 0, 1, 1},
     {&__pyx_n_s_logger, __pyx_k_logger, sizeof(__pyx_k_logger), 0, 0, 1, 1},
     {&__pyx_n_s_logging, __pyx_k_logging, sizeof(__pyx_k_logging), 0, 0, 1, 1},
-    {&__pyx_n_s_m, __pyx_k_m, sizeof(__pyx_k_m), 0, 0, 1, 1},
     {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
     {&__pyx_n_s_matmul, __pyx_k_matmul, sizeof(__pyx_k_matmul), 0, 0, 1, 1},
     {&__pyx_n_s_max_d, __pyx_k_max_d, sizeof(__pyx_k_max_d), 0, 0, 1, 1},
-    {&__pyx_n_s_mobius, __pyx_k_mobius, sizeof(__pyx_k_mobius), 0, 0, 1, 1},
     {&__pyx_n_s_multiprocessing, __pyx_k_multiprocessing, sizeof(__pyx_k_multiprocessing), 0, 0, 1, 1},
     {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
     {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
@@ -11304,7 +9601,6 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
     {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
     {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
-    {&__pyx_n_s_set_next_state, __pyx_k_set_next_state, sizeof(__pyx_k_set_next_state), 0, 0, 1, 1},
     {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
     {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
     {&__pyx_n_s_spec, __pyx_k_spec, sizeof(__pyx_k_spec), 0, 0, 1, 1},
@@ -11318,22 +9614,10 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_tree_explorer, __pyx_k_tree_explorer, sizeof(__pyx_k_tree_explorer), 0, 0, 1, 1},
     {&__pyx_n_s_tree_explorer___reduce_cython, __pyx_k_tree_explorer___reduce_cython, sizeof(__pyx_k_tree_explorer___reduce_cython), 0, 0, 1, 1},
     {&__pyx_n_s_tree_explorer___setstate_cython, __pyx_k_tree_explorer___setstate_cython, sizeof(__pyx_k_tree_explorer___setstate_cython), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_available_turn, __pyx_k_tree_explorer_available_turn, sizeof(__pyx_k_tree_explorer_available_turn), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_backward_move, __pyx_k_tree_explorer_backward_move, sizeof(__pyx_k_tree_explorer_backward_move), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_branch_terminated, __pyx_k_tree_explorer_branch_terminated, sizeof(__pyx_k_tree_explorer_branch_terminated), 0, 0, 1, 1},
     {&__pyx_n_s_tree_explorer_compute_leaf, __pyx_k_tree_explorer_compute_leaf, sizeof(__pyx_k_tree_explorer_compute_leaf), 0, 0, 1, 1},
     {&__pyx_n_s_tree_explorer_compute_tree, __pyx_k_tree_explorer_compute_tree, sizeof(__pyx_k_tree_explorer_compute_tree), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_forward_move, __pyx_k_tree_explorer_forward_move, sizeof(__pyx_k_tree_explorer_forward_move), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_get_left_gen, __pyx_k_tree_explorer_get_left_gen, sizeof(__pyx_k_tree_explorer_get_left_gen), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_get_next_state, __pyx_k_tree_explorer_get_next_state, sizeof(__pyx_k_tree_explorer_get_next_state), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_get_right_gen, __pyx_k_tree_explorer_get_right_gen, sizeof(__pyx_k_tree_explorer_get_right_gen), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_mobius, __pyx_k_tree_explorer_mobius, sizeof(__pyx_k_tree_explorer_mobius), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_set_next_state, __pyx_k_tree_explorer_set_next_state, sizeof(__pyx_k_tree_explorer_set_next_state), 0, 0, 1, 1},
-    {&__pyx_n_s_tree_explorer_turn_forward_move, __pyx_k_tree_explorer_turn_forward_move, sizeof(__pyx_k_tree_explorer_turn_forward_move), 0, 0, 1, 1},
-    {&__pyx_n_s_turn_forward_move, __pyx_k_turn_forward_move, sizeof(__pyx_k_turn_forward_move), 0, 0, 1, 1},
     {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
     {&__pyx_n_s_use_setstate, __pyx_k_use_setstate, sizeof(__pyx_k_use_setstate), 0, 0, 1, 1},
-    {&__pyx_n_s_z, __pyx_k_z, sizeof(__pyx_k_z), 0, 0, 1, 1},
     {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
     {0, 0, 0, 0, 0, 0, 0}
   };
@@ -11341,7 +9625,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
 }
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 98, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 984, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -11375,36 +9659,16 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "cython/tree_explorer.pyx":80
- * 
- *     cpdef complex mobius(self, np.ndarray m, complex z):
- *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])             # <<<<<<<<<<<<<<
- * 
- *     cpdef int branch_terminated(self):
- */
-  __pyx_tuple__8 = PyTuple_Pack(2, __pyx_int_0, __pyx_int_0); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__8);
-  __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_tuple__9 = PyTuple_Pack(2, __pyx_int_0, __pyx_int_1); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_tuple__10 = PyTuple_Pack(2, __pyx_int_1, __pyx_int_0); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
-  __pyx_tuple__11 = PyTuple_Pack(2, __pyx_int_1, __pyx_int_1); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
-
-  /* "cython/tree_explorer.pyx":97
+  /* "cython/tree_explorer.pyx":98
  *         self.last_idx_points += 1
  * 
  *         for i, fp in enumerate(self.fixed_points[idx_gen][1:]):             # <<<<<<<<<<<<<<
  *             if p == 0 + 0j:
  *                 return 1
  */
-  __pyx_slice__13 = PySlice_New(__pyx_int_1, Py_None, Py_None); if (unlikely(!__pyx_slice__13)) __PYX_ERR(0, 97, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_slice__13);
-  __Pyx_GIVEREF(__pyx_slice__13);
+  __pyx_slice__3 = PySlice_New(__pyx_int_1, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_slice__3);
+  __Pyx_GIVEREF(__pyx_slice__3);
 
   /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
@@ -11413,139 +9677,43 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         from pickle import PickleError as __pyx_PickleError
  *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x51e0759, 0xea6f3a4, 0xaf31500) = (FSA, curr_state, epsilon, fixed_points, generators, last_idx, last_idx_points, last_state, last_tags, last_words, level, max_depth, points, precomputing, start_tag, start_word, state, tag, words))" % __pyx_checksum
  */
-  __pyx_tuple__23 = PyTuple_Pack(3, __pyx_int_85854041, __pyx_int_245822372, __pyx_int_183702784); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(2, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__23);
-  __Pyx_GIVEREF(__pyx_tuple__23);
+  __pyx_tuple__9 = PyTuple_Pack(3, __pyx_int_85854041, __pyx_int_245822372, __pyx_int_183702784); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
 
-  /* "cython/tree_explorer.pyx":53
- * 
- * 
- *     cpdef void set_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
- *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
- * 
- */
-  __pyx_tuple__26 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_idx_gen); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(0, 53, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
-  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__26, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_set_next_state, 53, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) __PYX_ERR(0, 53, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":56
- *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
- * 
- *     cpdef int get_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
- *         return self.FSA[self.state[self.level]][idx_gen]
- * 
- */
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__26, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_get_next_state, 56, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 56, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":59
- *         return self.FSA[self.state[self.level]][idx_gen]
- * 
- *     cpdef int get_right_gen(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = 0
- *         cdef int i = 1
- */
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_get_right_gen, 59, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 59, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":69
- *         return idx_gen
- * 
- *     cpdef int get_left_gen(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = 0
- *         cdef int i = 1
- */
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_get_left_gen, 69, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 69, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":79
- *         return idx_gen
- * 
- *     cpdef complex mobius(self, np.ndarray m, complex z):             # <<<<<<<<<<<<<<
- *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
- * 
- */
-  __pyx_tuple__28 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_m, __pyx_n_s_z); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(0, 79, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__28);
-  __Pyx_GIVEREF(__pyx_tuple__28);
-  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_mobius, 79, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 79, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":82
- *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
- * 
- *     cpdef int branch_terminated(self):             # <<<<<<<<<<<<<<
- *         if self.level == self.max_depth - 1:
- *             if self.precomputing == 1:
- */
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_branch_terminated, 82, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 82, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":112
- *         return 1
- * 
- *     cpdef void backward_move(self):             # <<<<<<<<<<<<<<
- *         self.level -= 1
- * 
- */
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_backward_move, 112, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 112, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":115
- *         self.level -= 1
- * 
- *     cpdef int available_turn(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = self.get_right_gen()
- *         if self.level == -1:
- */
-  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_available_turn, 115, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 115, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":126
- *             return 1
- * 
- *     cpdef void turn_forward_move(self):             # <<<<<<<<<<<<<<
- *         self.curr_state = self.state[self.level]
- *         cdef int idx_gen = self.get_left_gen()
- */
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_turn_forward_move, 126, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 126, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":139
- *         self.level += 1
- * 
- *     cpdef void forward_move(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = self.get_right_gen()
- * 
- */
-  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_forward_move, 139, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(0, 139, __pyx_L1_error)
-
-  /* "cython/tree_explorer.pyx":152
+  /* "cython/tree_explorer.pyx":153
  *         self.level += 1
  * 
  *     cpdef tuple compute_tree(self):             # <<<<<<<<<<<<<<
  *         self.words[0] = self.generators[0]
  *         self.tag[0] = 0
  */
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_compute_tree, 152, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_compute_tree, 153, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 153, __pyx_L1_error)
 
-  /* "cython/tree_explorer.pyx":171
+  /* "cython/tree_explorer.pyx":172
  *         return self.last_words, self.last_state, self.last_tags
  * 
  *     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):             # <<<<<<<<<<<<<<
  *         self.words[0] = start_word
  *         self.tag[0] = start_tag
  */
-  __pyx_tuple__29 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_start_tag, __pyx_n_s_start_state, __pyx_n_s_start_level, __pyx_n_s_start_word); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 171, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__29);
-  __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_compute_leaf, 171, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_tuple__13 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_start_tag, __pyx_n_s_start_state, __pyx_n_s_start_level, __pyx_n_s_start_word); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__13);
+  __Pyx_GIVEREF(__pyx_tuple__13);
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cython_tree_explorer_pyx, __pyx_n_s_compute_leaf, 172, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 172, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_tuple__30 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_dict_2, __pyx_n_s_use_setstate); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
-  __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_reduce_cython, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_dict_2, __pyx_n_s_use_setstate); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__14);
+  __Pyx_GIVEREF(__pyx_tuple__14);
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_reduce_cython, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(2, 1, __pyx_L1_error)
 
   /* "(tree fragment)":16
  *     else:
@@ -11553,20 +9721,20 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_tree_explorer__set_state(self, __pyx_state)
  */
-  __pyx_tuple__31 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_pyx_state); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(2, 16, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__31);
-  __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(2, 16, __pyx_L1_error)
+  __pyx_tuple__15 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_pyx_state); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(2, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__15);
+  __Pyx_GIVEREF(__pyx_tuple__15);
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(2, 16, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_tree_explorer(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__32 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__32);
-  __Pyx_GIVEREF(__pyx_tuple__32);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_tree_explorer, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_tuple__16 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__16);
+  __Pyx_GIVEREF(__pyx_tuple__16);
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_tree_explorer, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -11664,28 +9832,28 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
   __pyx_vtabptr_13klein_compute_13tree_explorer_tree_explorer = &__pyx_vtable_13klein_compute_13tree_explorer_tree_explorer;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.set_next_state = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_state;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.get_next_state = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_state;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.get_right_gen = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.get_left_gen = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.mobius = (__pyx_t_double_complex (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, PyArrayObject *, __pyx_t_double_complex, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_mobius;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.branch_terminated = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_terminated;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.backward_move = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_move;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.available_turn = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_turn;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.turn_forward_move = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward_move;
-  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.forward_move = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.set_next_state = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_set_next_state;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.get_next_state = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_next_state;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.get_right_gen = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_right_gen;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.get_left_gen = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_get_left_gen;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.mobius = (__pyx_t_double_complex (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, PyArrayObject *, __pyx_t_double_complex))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_mobius;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.branch_terminated = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_branch_terminated;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.backward_move = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_backward_move;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.available_turn = (int (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_available_turn;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.turn_forward_move = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_turn_forward_move;
+  __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.forward_move = (void (*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_forward_move;
   __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.compute_tree = (PyObject *(*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_tree;
   __pyx_vtable_13klein_compute_13tree_explorer_tree_explorer.compute_leaf = (PyArrayObject *(*)(struct __pyx_obj_13klein_compute_13tree_explorer_tree_explorer *, int, int, int, PyArrayObject *, int __pyx_skip_dispatch))__pyx_f_13klein_compute_13tree_explorer_13tree_explorer_compute_leaf;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_13klein_compute_13tree_explorer_tree_explorer_spec, NULL); if (unlikely(!__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer)) __PYX_ERR(0, 11, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_13klein_compute_13tree_explorer_tree_explorer_spec, __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_13klein_compute_13tree_explorer_tree_explorer_spec, NULL); if (unlikely(!__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer)) __PYX_ERR(0, 12, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_13klein_compute_13tree_explorer_tree_explorer_spec, __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   #else
   __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer = &__pyx_type_13klein_compute_13tree_explorer_tree_explorer;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer->tp_print = 0;
@@ -11695,13 +9863,13 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_vtabptr_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_vtabptr_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_MergeVtables(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_tree_explorer, (PyObject *) __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_tree_explorer, (PyObject *) __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_13klein_compute_13tree_explorer_tree_explorer) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   #endif
   __Pyx_RefNannyFinishContext();
   return 0;
@@ -12054,225 +10222,95 @@ if (!__Pyx_RefNanny) {
   #endif
   __Pyx_TraceCall("__Pyx_PyMODINIT_FUNC PyInit_tree_explorer(void)", __pyx_f[0], 1, 0, __PYX_ERR(0, 1, __pyx_L1_error));
 
-  /* "cython/tree_explorer.pyx":5
+  /* "cython/tree_explorer.pyx":6
  * from cython.parallel import prange
  * cimport numpy as np
  * import numpy as np             # <<<<<<<<<<<<<<
  * import logging
  * from multiprocessing import current_process
  */
-  __pyx_t_2 = __Pyx_ImportDottedModule(__pyx_n_s_numpy, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportDottedModule(__pyx_n_s_numpy, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_2) < 0) __PYX_ERR(0, 5, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_2) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cython/tree_explorer.pyx":6
+  /* "cython/tree_explorer.pyx":7
  * cimport numpy as np
  * import numpy as np
  * import logging             # <<<<<<<<<<<<<<
  * from multiprocessing import current_process
  * 
  */
-  __pyx_t_2 = __Pyx_ImportDottedModule(__pyx_n_s_logging, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportDottedModule(__pyx_n_s_logging, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logging, __pyx_t_2) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logging, __pyx_t_2) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cython/tree_explorer.pyx":7
+  /* "cython/tree_explorer.pyx":8
  * import numpy as np
  * import logging
  * from multiprocessing import current_process             # <<<<<<<<<<<<<<
  * 
  * _logger = logging.getLogger(__name__)
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_current_process);
   __Pyx_GIVEREF(__pyx_n_s_current_process);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_current_process)) __PYX_ERR(0, 7, __pyx_L1_error);
-  __pyx_t_3 = __Pyx_Import(__pyx_n_s_multiprocessing, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_current_process)) __PYX_ERR(0, 8, __pyx_L1_error);
+  __pyx_t_3 = __Pyx_Import(__pyx_n_s_multiprocessing, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_current_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_current_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_current_process, __pyx_t_2) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_current_process, __pyx_t_2) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "cython/tree_explorer.pyx":9
+  /* "cython/tree_explorer.pyx":10
  * from multiprocessing import current_process
  * 
  * _logger = logging.getLogger(__name__)             # <<<<<<<<<<<<<<
  * 
  * cdef class tree_explorer:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_logging); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_logging); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_getLogger); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_getLogger); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logger, __pyx_t_4) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logger, __pyx_t_4) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "cython/tree_explorer.pyx":53
- * 
- * 
- *     cpdef void set_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
- *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
- * 
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_3set_next_state, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_set_next_state, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__3)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_set_next_state, __pyx_t_4) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":56
- *         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
- * 
- *     cpdef int get_next_state(self, int idx_gen):             # <<<<<<<<<<<<<<
- *         return self.FSA[self.state[self.level]][idx_gen]
- * 
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_5get_next_state, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_get_next_state, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_get_next_state, __pyx_t_4) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":59
- *         return self.FSA[self.state[self.level]][idx_gen]
- * 
- *     cpdef int get_right_gen(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = 0
- *         cdef int i = 1
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_7get_right_gen, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_get_right_gen, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__5)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_get_right_gen, __pyx_t_4) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":69
- *         return idx_gen
- * 
- *     cpdef int get_left_gen(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = 0
- *         cdef int i = 1
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_9get_left_gen, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_get_left_gen, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 69, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_get_left_gen, __pyx_t_4) < 0) __PYX_ERR(0, 69, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":79
- *         return idx_gen
- * 
- *     cpdef complex mobius(self, np.ndarray m, complex z):             # <<<<<<<<<<<<<<
- *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
- * 
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_11mobius, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_mobius, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 79, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_mobius, __pyx_t_4) < 0) __PYX_ERR(0, 79, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":82
- *         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
- * 
- *     cpdef int branch_terminated(self):             # <<<<<<<<<<<<<<
- *         if self.level == self.max_depth - 1:
- *             if self.precomputing == 1:
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_13branch_terminated, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_branch_terminated, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_branch_terminated, __pyx_t_4) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":112
- *         return 1
- * 
- *     cpdef void backward_move(self):             # <<<<<<<<<<<<<<
- *         self.level -= 1
- * 
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_15backward_move, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_backward_move, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 112, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_backward_move, __pyx_t_4) < 0) __PYX_ERR(0, 112, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":115
- *         self.level -= 1
- * 
- *     cpdef int available_turn(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = self.get_right_gen()
- *         if self.level == -1:
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_17available_turn, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_available_turn, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_available_turn, __pyx_t_4) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":126
- *             return 1
- * 
- *     cpdef void turn_forward_move(self):             # <<<<<<<<<<<<<<
- *         self.curr_state = self.state[self.level]
- *         cdef int idx_gen = self.get_left_gen()
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_19turn_forward_move, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_turn_forward_move, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 126, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_turn_forward_move, __pyx_t_4) < 0) __PYX_ERR(0, 126, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":139
- *         self.level += 1
- * 
- *     cpdef void forward_move(self):             # <<<<<<<<<<<<<<
- *         cdef int idx_gen = self.get_right_gen()
- * 
- */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_21forward_move, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_forward_move, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 139, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_forward_move, __pyx_t_4) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
-
-  /* "cython/tree_explorer.pyx":152
+  /* "cython/tree_explorer.pyx":153
  *         self.level += 1
  * 
  *     cpdef tuple compute_tree(self):             # <<<<<<<<<<<<<<
  *         self.words[0] = self.generators[0]
  *         self.tag[0] = 0
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_23compute_tree, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_compute_tree, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_3compute_tree, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_compute_tree, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_compute_tree, __pyx_t_4) < 0) __PYX_ERR(0, 152, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_compute_tree, __pyx_t_4) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
 
-  /* "cython/tree_explorer.pyx":171
+  /* "cython/tree_explorer.pyx":172
  *         return self.last_words, self.last_state, self.last_tags
  * 
  *     cpdef np.ndarray compute_leaf(self, int start_tag, int start_state, int start_level, np.ndarray start_word):             # <<<<<<<<<<<<<<
  *         self.words[0] = start_word
  *         self.tag[0] = start_tag
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_25compute_leaf, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_compute_leaf, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_5compute_leaf, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer_compute_leaf, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__5)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_compute_leaf, __pyx_t_4) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_compute_leaf, __pyx_t_4) < 0) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   PyType_Modified(__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer);
 
@@ -12281,7 +10319,7 @@ if (!__Pyx_RefNanny) {
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_27__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer___reduce_cython, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer___reduce_cython, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_reduce_cython, __pyx_t_4) < 0) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -12293,7 +10331,7 @@ if (!__Pyx_RefNanny) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_tree_explorer__set_state(self, __pyx_state)
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_29__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer___setstate_cython, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 16, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_13tree_explorer_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_tree_explorer___setstate_cython, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_13klein_compute_13tree_explorer_tree_explorer, __pyx_n_s_setstate_cython, __pyx_t_4) < 0) __PYX_ERR(2, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -12304,15 +10342,15 @@ if (!__Pyx_RefNanny) {
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_1__pyx_unpickle_tree_explorer, 0, __pyx_n_s_pyx_unpickle_tree_explorer, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_13klein_compute_13tree_explorer_1__pyx_unpickle_tree_explorer, 0, __pyx_n_s_pyx_unpickle_tree_explorer, NULL, __pyx_n_s_klein_compute_tree_explorer, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_tree_explorer, __pyx_t_4) < 0) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "cython/tree_explorer.pyx":1
  * # cython: profile=True             # <<<<<<<<<<<<<<
+ * #cython: boundscheck=False
  * import cython
- * from cython.parallel import prange
  */
   __pyx_t_4 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -14237,82 +12275,576 @@ static PyObject* __Pyx_PyInt_RemainderObjC(PyObject *op1, PyObject *op2, long in
 }
 #endif
 
-/* KeywordStringCheck */
-static int __Pyx_CheckKeywordStrings(
-    PyObject *kw,
-    const char* function_name,
-    int kw_allowed)
+/* IsLittleEndian */
+static CYTHON_INLINE int __Pyx_Is_Little_Endian(void)
 {
-    PyObject* key = 0;
-    Py_ssize_t pos = 0;
-#if CYTHON_COMPILING_IN_PYPY
-    if (!kw_allowed && PyDict_Next(kw, &pos, &key, 0))
-        goto invalid_keyword;
-    return 1;
-#else
-    if (CYTHON_METH_FASTCALL && likely(PyTuple_Check(kw))) {
-        Py_ssize_t kwsize;
-#if CYTHON_ASSUME_SAFE_MACROS
-        kwsize = PyTuple_GET_SIZE(kw);
-#else
-        kwsize = PyTuple_Size(kw);
-        if (kwsize < 0) return 0;
-#endif
-        if (unlikely(kwsize == 0))
-            return 1;
-        if (!kw_allowed) {
-#if CYTHON_ASSUME_SAFE_MACROS
-            key = PyTuple_GET_ITEM(kw, 0);
-#else
-            key = PyTuple_GetItem(kw, pos);
-            if (!key) return 0;
-#endif
-            goto invalid_keyword;
+  union {
+    uint32_t u32;
+    uint8_t u8[4];
+  } S;
+  S.u32 = 0x01020304;
+  return S.u8[0] == 4;
+}
+
+/* BufferFormatCheck */
+static void __Pyx_BufFmt_Init(__Pyx_BufFmt_Context* ctx,
+                              __Pyx_BufFmt_StackElem* stack,
+                              __Pyx_TypeInfo* type) {
+  stack[0].field = &ctx->root;
+  stack[0].parent_offset = 0;
+  ctx->root.type = type;
+  ctx->root.name = "buffer dtype";
+  ctx->root.offset = 0;
+  ctx->head = stack;
+  ctx->head->field = &ctx->root;
+  ctx->fmt_offset = 0;
+  ctx->head->parent_offset = 0;
+  ctx->new_packmode = '@';
+  ctx->enc_packmode = '@';
+  ctx->new_count = 1;
+  ctx->enc_count = 0;
+  ctx->enc_type = 0;
+  ctx->is_complex = 0;
+  ctx->is_valid_array = 0;
+  ctx->struct_alignment = 0;
+  while (type->typegroup == 'S') {
+    ++ctx->head;
+    ctx->head->field = type->fields;
+    ctx->head->parent_offset = 0;
+    type = type->fields->type;
+  }
+}
+static int __Pyx_BufFmt_ParseNumber(const char** ts) {
+    int count;
+    const char* t = *ts;
+    if (*t < '0' || *t > '9') {
+      return -1;
+    } else {
+        count = *t++ - '0';
+        while (*t >= '0' && *t <= '9') {
+            count *= 10;
+            count += *t++ - '0';
         }
-#if PY_VERSION_HEX < 0x03090000
-        for (pos = 0; pos < kwsize; pos++) {
-#if CYTHON_ASSUME_SAFE_MACROS
-            key = PyTuple_GET_ITEM(kw, pos);
-#else
-            key = PyTuple_GetItem(kw, pos);
-            if (!key) return 0;
-#endif
-            if (unlikely(!PyUnicode_Check(key)))
-                goto invalid_keyword_type;
-        }
-#endif
-        return 1;
     }
-    while (PyDict_Next(kw, &pos, &key, 0)) {
-        #if PY_MAJOR_VERSION < 3
-        if (unlikely(!PyString_Check(key)))
-        #endif
-            if (unlikely(!PyUnicode_Check(key)))
-                goto invalid_keyword_type;
+    *ts = t;
+    return count;
+}
+static int __Pyx_BufFmt_ExpectNumber(const char **ts) {
+    int number = __Pyx_BufFmt_ParseNumber(ts);
+    if (number == -1)
+        PyErr_Format(PyExc_ValueError,\
+                     "Does not understand character buffer dtype format string ('%c')", **ts);
+    return number;
+}
+static void __Pyx_BufFmt_RaiseUnexpectedChar(char ch) {
+  PyErr_Format(PyExc_ValueError,
+               "Unexpected format string character: '%c'", ch);
+}
+static const char* __Pyx_BufFmt_DescribeTypeChar(char ch, int is_complex) {
+  switch (ch) {
+    case '?': return "'bool'";
+    case 'c': return "'char'";
+    case 'b': return "'signed char'";
+    case 'B': return "'unsigned char'";
+    case 'h': return "'short'";
+    case 'H': return "'unsigned short'";
+    case 'i': return "'int'";
+    case 'I': return "'unsigned int'";
+    case 'l': return "'long'";
+    case 'L': return "'unsigned long'";
+    case 'q': return "'long long'";
+    case 'Q': return "'unsigned long long'";
+    case 'f': return (is_complex ? "'complex float'" : "'float'");
+    case 'd': return (is_complex ? "'complex double'" : "'double'");
+    case 'g': return (is_complex ? "'complex long double'" : "'long double'");
+    case 'T': return "a struct";
+    case 'O': return "Python object";
+    case 'P': return "a pointer";
+    case 's': case 'p': return "a string";
+    case 0: return "end";
+    default: return "unparsable format string";
+  }
+}
+static size_t __Pyx_BufFmt_TypeCharToStandardSize(char ch, int is_complex) {
+  switch (ch) {
+    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return 2;
+    case 'i': case 'I': case 'l': case 'L': return 4;
+    case 'q': case 'Q': return 8;
+    case 'f': return (is_complex ? 8 : 4);
+    case 'd': return (is_complex ? 16 : 8);
+    case 'g': {
+      PyErr_SetString(PyExc_ValueError, "Python does not define a standard format string size for long double ('g')..");
+      return 0;
     }
-    if (!kw_allowed && unlikely(key))
-        goto invalid_keyword;
-    return 1;
-invalid_keyword_type:
-    PyErr_Format(PyExc_TypeError,
-        "%.200s() keywords must be strings", function_name);
-    return 0;
-#endif
-invalid_keyword:
-    #if PY_MAJOR_VERSION < 3
-    PyErr_Format(PyExc_TypeError,
-        "%.200s() got an unexpected keyword argument '%.200s'",
-        function_name, PyString_AsString(key));
-    #else
-    PyErr_Format(PyExc_TypeError,
-        "%s() got an unexpected keyword argument '%U'",
-        function_name, key);
+    case 'O': case 'P': return sizeof(void*);
+    default:
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+}
+static size_t __Pyx_BufFmt_TypeCharToNativeSize(char ch, int is_complex) {
+  switch (ch) {
+    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return sizeof(short);
+    case 'i': case 'I': return sizeof(int);
+    case 'l': case 'L': return sizeof(long);
+    #ifdef HAVE_LONG_LONG
+    case 'q': case 'Q': return sizeof(PY_LONG_LONG);
     #endif
+    case 'f': return sizeof(float) * (is_complex ? 2 : 1);
+    case 'd': return sizeof(double) * (is_complex ? 2 : 1);
+    case 'g': return sizeof(long double) * (is_complex ? 2 : 1);
+    case 'O': case 'P': return sizeof(void*);
+    default: {
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+  }
+}
+typedef struct { char c; short x; } __Pyx_st_short;
+typedef struct { char c; int x; } __Pyx_st_int;
+typedef struct { char c; long x; } __Pyx_st_long;
+typedef struct { char c; float x; } __Pyx_st_float;
+typedef struct { char c; double x; } __Pyx_st_double;
+typedef struct { char c; long double x; } __Pyx_st_longdouble;
+typedef struct { char c; void *x; } __Pyx_st_void_p;
+#ifdef HAVE_LONG_LONG
+typedef struct { char c; PY_LONG_LONG x; } __Pyx_st_longlong;
+#endif
+static size_t __Pyx_BufFmt_TypeCharToAlignment(char ch, int is_complex) {
+  CYTHON_UNUSED_VAR(is_complex);
+  switch (ch) {
+    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return sizeof(__Pyx_st_short) - sizeof(short);
+    case 'i': case 'I': return sizeof(__Pyx_st_int) - sizeof(int);
+    case 'l': case 'L': return sizeof(__Pyx_st_long) - sizeof(long);
+#ifdef HAVE_LONG_LONG
+    case 'q': case 'Q': return sizeof(__Pyx_st_longlong) - sizeof(PY_LONG_LONG);
+#endif
+    case 'f': return sizeof(__Pyx_st_float) - sizeof(float);
+    case 'd': return sizeof(__Pyx_st_double) - sizeof(double);
+    case 'g': return sizeof(__Pyx_st_longdouble) - sizeof(long double);
+    case 'P': case 'O': return sizeof(__Pyx_st_void_p) - sizeof(void*);
+    default:
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+}
+/* These are for computing the padding at the end of the struct to align
+   on the first member of the struct. This will probably the same as above,
+   but we don't have any guarantees.
+ */
+typedef struct { short x; char c; } __Pyx_pad_short;
+typedef struct { int x; char c; } __Pyx_pad_int;
+typedef struct { long x; char c; } __Pyx_pad_long;
+typedef struct { float x; char c; } __Pyx_pad_float;
+typedef struct { double x; char c; } __Pyx_pad_double;
+typedef struct { long double x; char c; } __Pyx_pad_longdouble;
+typedef struct { void *x; char c; } __Pyx_pad_void_p;
+#ifdef HAVE_LONG_LONG
+typedef struct { PY_LONG_LONG x; char c; } __Pyx_pad_longlong;
+#endif
+static size_t __Pyx_BufFmt_TypeCharToPadding(char ch, int is_complex) {
+  CYTHON_UNUSED_VAR(is_complex);
+  switch (ch) {
+    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return sizeof(__Pyx_pad_short) - sizeof(short);
+    case 'i': case 'I': return sizeof(__Pyx_pad_int) - sizeof(int);
+    case 'l': case 'L': return sizeof(__Pyx_pad_long) - sizeof(long);
+#ifdef HAVE_LONG_LONG
+    case 'q': case 'Q': return sizeof(__Pyx_pad_longlong) - sizeof(PY_LONG_LONG);
+#endif
+    case 'f': return sizeof(__Pyx_pad_float) - sizeof(float);
+    case 'd': return sizeof(__Pyx_pad_double) - sizeof(double);
+    case 'g': return sizeof(__Pyx_pad_longdouble) - sizeof(long double);
+    case 'P': case 'O': return sizeof(__Pyx_pad_void_p) - sizeof(void*);
+    default:
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+}
+static char __Pyx_BufFmt_TypeCharToGroup(char ch, int is_complex) {
+  switch (ch) {
+    case 'c':
+        return 'H';
+    case 'b': case 'h': case 'i':
+    case 'l': case 'q': case 's': case 'p':
+        return 'I';
+    case '?': case 'B': case 'H': case 'I': case 'L': case 'Q':
+        return 'U';
+    case 'f': case 'd': case 'g':
+        return (is_complex ? 'C' : 'R');
+    case 'O':
+        return 'O';
+    case 'P':
+        return 'P';
+    default: {
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+  }
+}
+static void __Pyx_BufFmt_RaiseExpected(__Pyx_BufFmt_Context* ctx) {
+  if (ctx->head == NULL || ctx->head->field == &ctx->root) {
+    const char* expected;
+    const char* quote;
+    if (ctx->head == NULL) {
+      expected = "end";
+      quote = "";
+    } else {
+      expected = ctx->head->field->type->name;
+      quote = "'";
+    }
+    PyErr_Format(PyExc_ValueError,
+                 "Buffer dtype mismatch, expected %s%s%s but got %s",
+                 quote, expected, quote,
+                 __Pyx_BufFmt_DescribeTypeChar(ctx->enc_type, ctx->is_complex));
+  } else {
+    __Pyx_StructField* field = ctx->head->field;
+    __Pyx_StructField* parent = (ctx->head - 1)->field;
+    PyErr_Format(PyExc_ValueError,
+                 "Buffer dtype mismatch, expected '%s' but got %s in '%s.%s'",
+                 field->type->name, __Pyx_BufFmt_DescribeTypeChar(ctx->enc_type, ctx->is_complex),
+                 parent->type->name, field->name);
+  }
+}
+static int __Pyx_BufFmt_ProcessTypeChunk(__Pyx_BufFmt_Context* ctx) {
+  char group;
+  size_t size, offset, arraysize = 1;
+  if (ctx->enc_type == 0) return 0;
+  if (ctx->head->field->type->arraysize[0]) {
+    int i, ndim = 0;
+    if (ctx->enc_type == 's' || ctx->enc_type == 'p') {
+        ctx->is_valid_array = ctx->head->field->type->ndim == 1;
+        ndim = 1;
+        if (ctx->enc_count != ctx->head->field->type->arraysize[0]) {
+            PyErr_Format(PyExc_ValueError,
+                         "Expected a dimension of size %zu, got %zu",
+                         ctx->head->field->type->arraysize[0], ctx->enc_count);
+            return -1;
+        }
+    }
+    if (!ctx->is_valid_array) {
+      PyErr_Format(PyExc_ValueError, "Expected %d dimensions, got %d",
+                   ctx->head->field->type->ndim, ndim);
+      return -1;
+    }
+    for (i = 0; i < ctx->head->field->type->ndim; i++) {
+      arraysize *= ctx->head->field->type->arraysize[i];
+    }
+    ctx->is_valid_array = 0;
+    ctx->enc_count = 1;
+  }
+  group = __Pyx_BufFmt_TypeCharToGroup(ctx->enc_type, ctx->is_complex);
+  do {
+    __Pyx_StructField* field = ctx->head->field;
+    __Pyx_TypeInfo* type = field->type;
+    if (ctx->enc_packmode == '@' || ctx->enc_packmode == '^') {
+      size = __Pyx_BufFmt_TypeCharToNativeSize(ctx->enc_type, ctx->is_complex);
+    } else {
+      size = __Pyx_BufFmt_TypeCharToStandardSize(ctx->enc_type, ctx->is_complex);
+    }
+    if (ctx->enc_packmode == '@') {
+      size_t align_at = __Pyx_BufFmt_TypeCharToAlignment(ctx->enc_type, ctx->is_complex);
+      size_t align_mod_offset;
+      if (align_at == 0) return -1;
+      align_mod_offset = ctx->fmt_offset % align_at;
+      if (align_mod_offset > 0) ctx->fmt_offset += align_at - align_mod_offset;
+      if (ctx->struct_alignment == 0)
+          ctx->struct_alignment = __Pyx_BufFmt_TypeCharToPadding(ctx->enc_type,
+                                                                 ctx->is_complex);
+    }
+    if (type->size != size || type->typegroup != group) {
+      if (type->typegroup == 'C' && type->fields != NULL) {
+        size_t parent_offset = ctx->head->parent_offset + field->offset;
+        ++ctx->head;
+        ctx->head->field = type->fields;
+        ctx->head->parent_offset = parent_offset;
+        continue;
+      }
+      if ((type->typegroup == 'H' || group == 'H') && type->size == size) {
+      } else {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return -1;
+      }
+    }
+    offset = ctx->head->parent_offset + field->offset;
+    if (ctx->fmt_offset != offset) {
+      PyErr_Format(PyExc_ValueError,
+                   "Buffer dtype mismatch; next field is at offset %" CYTHON_FORMAT_SSIZE_T "d but %" CYTHON_FORMAT_SSIZE_T "d expected",
+                   (Py_ssize_t)ctx->fmt_offset, (Py_ssize_t)offset);
+      return -1;
+    }
+    ctx->fmt_offset += size;
+    if (arraysize)
+      ctx->fmt_offset += (arraysize - 1) * size;
+    --ctx->enc_count;
+    while (1) {
+      if (field == &ctx->root) {
+        ctx->head = NULL;
+        if (ctx->enc_count != 0) {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return -1;
+        }
+        break;
+      }
+      ctx->head->field = ++field;
+      if (field->type == NULL) {
+        --ctx->head;
+        field = ctx->head->field;
+        continue;
+      } else if (field->type->typegroup == 'S') {
+        size_t parent_offset = ctx->head->parent_offset + field->offset;
+        if (field->type->fields->type == NULL) continue;
+        field = field->type->fields;
+        ++ctx->head;
+        ctx->head->field = field;
+        ctx->head->parent_offset = parent_offset;
+        break;
+      } else {
+        break;
+      }
+    }
+  } while (ctx->enc_count);
+  ctx->enc_type = 0;
+  ctx->is_complex = 0;
+  return 0;
+}
+static int
+__pyx_buffmt_parse_array(__Pyx_BufFmt_Context* ctx, const char** tsp)
+{
+    const char *ts = *tsp;
+    int i = 0, number, ndim;
+    ++ts;
+    if (ctx->new_count != 1) {
+        PyErr_SetString(PyExc_ValueError,
+                        "Cannot handle repeated arrays in format string");
+        return -1;
+    }
+    if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return -1;
+    ndim = ctx->head->field->type->ndim;
+    while (*ts && *ts != ')') {
+        switch (*ts) {
+            case ' ': case '\f': case '\r': case '\n': case '\t': case '\v':  continue;
+            default:  break;
+        }
+        number = __Pyx_BufFmt_ExpectNumber(&ts);
+        if (number == -1) return -1;
+        if (i < ndim && (size_t) number != ctx->head->field->type->arraysize[i]) {
+            PyErr_Format(PyExc_ValueError,
+                        "Expected a dimension of size %zu, got %d",
+                        ctx->head->field->type->arraysize[i], number);
+            return -1;
+        }
+        if (*ts != ',' && *ts != ')') {
+            PyErr_Format(PyExc_ValueError,
+                                "Expected a comma in format string, got '%c'", *ts);
+            return -1;
+        }
+        if (*ts == ',') ts++;
+        i++;
+    }
+    if (i != ndim) {
+        PyErr_Format(PyExc_ValueError, "Expected %d dimension(s), got %d",
+                            ctx->head->field->type->ndim, i);
+        return -1;
+    }
+    if (!*ts) {
+        PyErr_SetString(PyExc_ValueError,
+                        "Unexpected end of format string, expected ')'");
+        return -1;
+    }
+    ctx->is_valid_array = 1;
+    ctx->new_count = 1;
+    *tsp = ++ts;
     return 0;
+}
+static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const char* ts) {
+  int got_Z = 0;
+  while (1) {
+    switch(*ts) {
+      case 0:
+        if (ctx->enc_type != 0 && ctx->head == NULL) {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return NULL;
+        }
+        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+        if (ctx->head != NULL) {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return NULL;
+        }
+        return ts;
+      case ' ':
+      case '\r':
+      case '\n':
+        ++ts;
+        break;
+      case '<':
+        if (!__Pyx_Is_Little_Endian()) {
+          PyErr_SetString(PyExc_ValueError, "Little-endian buffer not supported on big-endian compiler");
+          return NULL;
+        }
+        ctx->new_packmode = '=';
+        ++ts;
+        break;
+      case '>':
+      case '!':
+        if (__Pyx_Is_Little_Endian()) {
+          PyErr_SetString(PyExc_ValueError, "Big-endian buffer not supported on little-endian compiler");
+          return NULL;
+        }
+        ctx->new_packmode = '=';
+        ++ts;
+        break;
+      case '=':
+      case '@':
+      case '^':
+        ctx->new_packmode = *ts++;
+        break;
+      case 'T':
+        {
+          const char* ts_after_sub;
+          size_t i, struct_count = ctx->new_count;
+          size_t struct_alignment = ctx->struct_alignment;
+          ctx->new_count = 1;
+          ++ts;
+          if (*ts != '{') {
+            PyErr_SetString(PyExc_ValueError, "Buffer acquisition: Expected '{' after 'T'");
+            return NULL;
+          }
+          if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+          ctx->enc_type = 0;
+          ctx->enc_count = 0;
+          ctx->struct_alignment = 0;
+          ++ts;
+          ts_after_sub = ts;
+          for (i = 0; i != struct_count; ++i) {
+            ts_after_sub = __Pyx_BufFmt_CheckString(ctx, ts);
+            if (!ts_after_sub) return NULL;
+          }
+          ts = ts_after_sub;
+          if (struct_alignment) ctx->struct_alignment = struct_alignment;
+        }
+        break;
+      case '}':
+        {
+          size_t alignment = ctx->struct_alignment;
+          ++ts;
+          if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+          ctx->enc_type = 0;
+          if (alignment && ctx->fmt_offset % alignment) {
+            ctx->fmt_offset += alignment - (ctx->fmt_offset % alignment);
+          }
+        }
+        return ts;
+      case 'x':
+        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+        ctx->fmt_offset += ctx->new_count;
+        ctx->new_count = 1;
+        ctx->enc_count = 0;
+        ctx->enc_type = 0;
+        ctx->enc_packmode = ctx->new_packmode;
+        ++ts;
+        break;
+      case 'Z':
+        got_Z = 1;
+        ++ts;
+        if (*ts != 'f' && *ts != 'd' && *ts != 'g') {
+          __Pyx_BufFmt_RaiseUnexpectedChar('Z');
+          return NULL;
+        }
+        CYTHON_FALLTHROUGH;
+      case '?': case 'c': case 'b': case 'B': case 'h': case 'H': case 'i': case 'I':
+      case 'l': case 'L': case 'q': case 'Q':
+      case 'f': case 'd': case 'g':
+      case 'O': case 'p':
+        if ((ctx->enc_type == *ts) && (got_Z == ctx->is_complex) &&
+            (ctx->enc_packmode == ctx->new_packmode) && (!ctx->is_valid_array)) {
+          ctx->enc_count += ctx->new_count;
+          ctx->new_count = 1;
+          got_Z = 0;
+          ++ts;
+          break;
+        }
+        CYTHON_FALLTHROUGH;
+      case 's':
+        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+        ctx->enc_count = ctx->new_count;
+        ctx->enc_packmode = ctx->new_packmode;
+        ctx->enc_type = *ts;
+        ctx->is_complex = got_Z;
+        ++ts;
+        ctx->new_count = 1;
+        got_Z = 0;
+        break;
+      case ':':
+        ++ts;
+        while(*ts != ':') ++ts;
+        ++ts;
+        break;
+      case '(':
+        if (__pyx_buffmt_parse_array(ctx, &ts) < 0) return NULL;
+        break;
+      default:
+        {
+          int number = __Pyx_BufFmt_ExpectNumber(&ts);
+          if (number == -1) return NULL;
+          ctx->new_count = (size_t)number;
+        }
+    }
+  }
+}
+
+/* BufferGetAndValidate */
+  static CYTHON_INLINE void __Pyx_SafeReleaseBuffer(Py_buffer* info) {
+  if (unlikely(info->buf == NULL)) return;
+  if (info->suboffsets == __Pyx_minusones) info->suboffsets = NULL;
+  __Pyx_ReleaseBuffer(info);
+}
+static void __Pyx_ZeroBuffer(Py_buffer* buf) {
+  buf->buf = NULL;
+  buf->obj = NULL;
+  buf->strides = __Pyx_zeros;
+  buf->shape = __Pyx_zeros;
+  buf->suboffsets = __Pyx_minusones;
+}
+static int __Pyx__GetBufferAndValidate(
+        Py_buffer* buf, PyObject* obj,  __Pyx_TypeInfo* dtype, int flags,
+        int nd, int cast, __Pyx_BufFmt_StackElem* stack)
+{
+  buf->buf = NULL;
+  if (unlikely(__Pyx_GetBuffer(obj, buf, flags) == -1)) {
+    __Pyx_ZeroBuffer(buf);
+    return -1;
+  }
+  if (unlikely(buf->ndim != nd)) {
+    PyErr_Format(PyExc_ValueError,
+                 "Buffer has wrong number of dimensions (expected %d, got %d)",
+                 nd, buf->ndim);
+    goto fail;
+  }
+  if (!cast) {
+    __Pyx_BufFmt_Context ctx;
+    __Pyx_BufFmt_Init(&ctx, stack, dtype);
+    if (!__Pyx_BufFmt_CheckString(&ctx, buf->format)) goto fail;
+  }
+  if (unlikely((size_t)buf->itemsize != dtype->size)) {
+    PyErr_Format(PyExc_ValueError,
+      "Item size of buffer (%" CYTHON_FORMAT_SSIZE_T "d byte%s) does not match size of '%s' (%" CYTHON_FORMAT_SSIZE_T "d byte%s)",
+      buf->itemsize, (buf->itemsize > 1) ? "s" : "",
+      dtype->name, (Py_ssize_t)dtype->size, (dtype->size > 1) ? "s" : "");
+    goto fail;
+  }
+  if (buf->suboffsets == NULL) buf->suboffsets = __Pyx_minusones;
+  return 0;
+fail:;
+  __Pyx_SafeReleaseBuffer(buf);
+  return -1;
 }
 
 /* SliceObject */
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetSlice(PyObject* obj,
+  static CYTHON_INLINE PyObject* __Pyx_PyObject_GetSlice(PyObject* obj,
         Py_ssize_t cstart, Py_ssize_t cstop,
         PyObject** _py_start, PyObject** _py_stop, PyObject** _py_slice,
         int has_cstart, int has_cstop, int wraparound) {
@@ -14416,7 +12948,7 @@ bad:
 }
 
 /* PyIntBinop */
-#if !CYTHON_COMPILING_IN_PYPY
+  #if !CYTHON_COMPILING_IN_PYPY
 static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check) {
     CYTHON_MAYBE_UNUSED_VAR(intval);
     CYTHON_MAYBE_UNUSED_VAR(inplace);
@@ -14549,7 +13081,7 @@ static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, long intval, 
 #endif
 
 /* PyIntCompare */
-static CYTHON_INLINE int __Pyx_PyInt_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace) {
+  static CYTHON_INLINE int __Pyx_PyInt_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace) {
     CYTHON_MAYBE_UNUSED_VAR(intval);
     CYTHON_UNUSED_VAR(inplace);
     if (op1 == op2) {
@@ -14621,7 +13153,7 @@ static CYTHON_INLINE int __Pyx_PyInt_BoolEqObjC(PyObject *op1, PyObject *op2, lo
 }
 
 /* RaiseUnexpectedTypeError */
-static int
+  static int
 __Pyx_RaiseUnexpectedTypeError(const char *expected, PyObject *obj)
 {
     __Pyx_TypeName obj_type_name = __Pyx_PyType_GetName(Py_TYPE(obj));
@@ -14631,8 +13163,82 @@ __Pyx_RaiseUnexpectedTypeError(const char *expected, PyObject *obj)
     return 0;
 }
 
+/* KeywordStringCheck */
+  static int __Pyx_CheckKeywordStrings(
+    PyObject *kw,
+    const char* function_name,
+    int kw_allowed)
+{
+    PyObject* key = 0;
+    Py_ssize_t pos = 0;
+#if CYTHON_COMPILING_IN_PYPY
+    if (!kw_allowed && PyDict_Next(kw, &pos, &key, 0))
+        goto invalid_keyword;
+    return 1;
+#else
+    if (CYTHON_METH_FASTCALL && likely(PyTuple_Check(kw))) {
+        Py_ssize_t kwsize;
+#if CYTHON_ASSUME_SAFE_MACROS
+        kwsize = PyTuple_GET_SIZE(kw);
+#else
+        kwsize = PyTuple_Size(kw);
+        if (kwsize < 0) return 0;
+#endif
+        if (unlikely(kwsize == 0))
+            return 1;
+        if (!kw_allowed) {
+#if CYTHON_ASSUME_SAFE_MACROS
+            key = PyTuple_GET_ITEM(kw, 0);
+#else
+            key = PyTuple_GetItem(kw, pos);
+            if (!key) return 0;
+#endif
+            goto invalid_keyword;
+        }
+#if PY_VERSION_HEX < 0x03090000
+        for (pos = 0; pos < kwsize; pos++) {
+#if CYTHON_ASSUME_SAFE_MACROS
+            key = PyTuple_GET_ITEM(kw, pos);
+#else
+            key = PyTuple_GetItem(kw, pos);
+            if (!key) return 0;
+#endif
+            if (unlikely(!PyUnicode_Check(key)))
+                goto invalid_keyword_type;
+        }
+#endif
+        return 1;
+    }
+    while (PyDict_Next(kw, &pos, &key, 0)) {
+        #if PY_MAJOR_VERSION < 3
+        if (unlikely(!PyString_Check(key)))
+        #endif
+            if (unlikely(!PyUnicode_Check(key)))
+                goto invalid_keyword_type;
+    }
+    if (!kw_allowed && unlikely(key))
+        goto invalid_keyword;
+    return 1;
+invalid_keyword_type:
+    PyErr_Format(PyExc_TypeError,
+        "%.200s() keywords must be strings", function_name);
+    return 0;
+#endif
+invalid_keyword:
+    #if PY_MAJOR_VERSION < 3
+    PyErr_Format(PyExc_TypeError,
+        "%.200s() got an unexpected keyword argument '%.200s'",
+        function_name, PyString_AsString(key));
+    #else
+    PyErr_Format(PyExc_TypeError,
+        "%s() got an unexpected keyword argument '%U'",
+        function_name, key);
+    #endif
+    return 0;
+}
+
 /* GetAttr3 */
-#if __PYX_LIMITED_VERSION_HEX < 0x030d00A1
+  #if __PYX_LIMITED_VERSION_HEX < 0x030d00A1
 static PyObject *__Pyx_GetAttr3Default(PyObject *d) {
     __Pyx_PyThreadState_declare
     __Pyx_PyThreadState_assign
@@ -14664,7 +13270,7 @@ static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *o, PyObject *n, PyObject
 }
 
 /* Import */
-static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
+  static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
     PyObject *module = 0;
     PyObject *empty_dict = 0;
     PyObject *empty_list = 0;
@@ -14722,7 +13328,7 @@ bad:
 }
 
 /* ImportFrom */
-static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
+  static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
     PyObject* value = __Pyx_PyObject_GetAttrStr(module, name);
     if (unlikely(!value) && PyErr_ExceptionMatches(PyExc_AttributeError)) {
         const char* module_name_str = 0;
@@ -14734,7 +13340,7 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
         if (unlikely(!module_name_str)) { goto modbad; }
         module_name = PyUnicode_FromString(module_name_str);
         if (unlikely(!module_name)) { goto modbad; }
-        module_dot = PyUnicode_Concat(module_name, __pyx_kp_u__24);
+        module_dot = PyUnicode_Concat(module_name, __pyx_kp_u__10);
         if (unlikely(!module_dot)) { goto modbad; }
         full_name = PyUnicode_Concat(module_dot, name);
         if (unlikely(!full_name)) { goto modbad; }
@@ -14765,7 +13371,7 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
 }
 
 /* GetAttr */
-static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
+  static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
 #if CYTHON_USE_TYPE_SLOTS
 #if PY_MAJOR_VERSION >= 3
     if (likely(PyUnicode_Check(n)))
@@ -14778,7 +13384,7 @@ static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
 }
 
 /* HasAttr */
-#if __PYX_LIMITED_VERSION_HEX < 0x030d00A1
+  #if __PYX_LIMITED_VERSION_HEX < 0x030d00A1
 static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
     PyObject *r;
     if (unlikely(!__Pyx_PyBaseString_Check(n))) {
@@ -14798,7 +13404,7 @@ static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
 #endif
 
 /* FixUpExtensionType */
-#if CYTHON_USE_TYPE_SPECS
+  #if CYTHON_USE_TYPE_SPECS
 static int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject *type) {
 #if PY_VERSION_HEX > 0x030900B1 || CYTHON_COMPILING_IN_LIMITED_API
     CYTHON_UNUSED_VAR(spec);
@@ -14871,13 +13477,13 @@ static int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject
 #endif
 
 /* PyObjectCallNoArg */
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+  static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
     PyObject *arg[2] = {NULL, NULL};
     return __Pyx_PyObject_FastCall(func, arg + 1, 0 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET);
 }
 
 /* PyObjectGetMethod */
-static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method) {
+  static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method) {
     PyObject *attr;
 #if CYTHON_UNPACK_METHODS && CYTHON_COMPILING_IN_CPYTHON && CYTHON_USE_PYTYPE_LOOKUP
     __Pyx_TypeName type_name;
@@ -14978,7 +13584,7 @@ try_unpack:
 }
 
 /* PyObjectCallMethod0 */
-static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name) {
+  static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name) {
     PyObject *method = NULL, *result = NULL;
     int is_method = __Pyx_PyObject_GetMethod(obj, method_name, &method);
     if (likely(is_method)) {
@@ -14994,7 +13600,7 @@ bad:
 }
 
 /* ValidateBasesTuple */
-#if CYTHON_COMPILING_IN_CPYTHON || CYTHON_COMPILING_IN_LIMITED_API || CYTHON_USE_TYPE_SPECS
+  #if CYTHON_COMPILING_IN_CPYTHON || CYTHON_COMPILING_IN_LIMITED_API || CYTHON_USE_TYPE_SPECS
 static int __Pyx_validate_bases_tuple(const char *type_name, Py_ssize_t dictoffset, PyObject *bases) {
     Py_ssize_t i, n;
 #if CYTHON_ASSUME_SAFE_MACROS
@@ -15079,7 +13685,7 @@ static int __Pyx_validate_bases_tuple(const char *type_name, Py_ssize_t dictoffs
 #endif
 
 /* PyType_Ready */
-static int __Pyx_PyType_Ready(PyTypeObject *t) {
+  static int __Pyx_PyType_Ready(PyTypeObject *t) {
 #if CYTHON_USE_TYPE_SPECS || !(CYTHON_COMPILING_IN_CPYTHON || CYTHON_COMPILING_IN_LIMITED_API) || defined(PYSTON_MAJOR_VERSION)
     (void)__Pyx_PyObject_CallMethod0;
 #if CYTHON_USE_TYPE_SPECS
@@ -15161,7 +13767,7 @@ static int __Pyx_PyType_Ready(PyTypeObject *t) {
 }
 
 /* PyObject_GenericGetAttrNoDict */
-#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
+  #if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
 static PyObject *__Pyx_RaiseGenericGetAttributeError(PyTypeObject *tp, PyObject *attr_name) {
     __Pyx_TypeName type_name = __Pyx_PyType_GetName(tp);
     PyErr_Format(PyExc_AttributeError,
@@ -15203,7 +13809,7 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GenericGetAttrNoDict(PyObject* obj
 #endif
 
 /* PyObject_GenericGetAttr */
-#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
+  #if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
 static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_name) {
     if (unlikely(Py_TYPE(obj)->tp_dictoffset)) {
         return PyObject_GenericGetAttr(obj, attr_name);
@@ -15213,7 +13819,7 @@ static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_nam
 #endif
 
 /* SetVTable */
-static int __Pyx_SetVtable(PyTypeObject *type, void *vtable) {
+  static int __Pyx_SetVtable(PyTypeObject *type, void *vtable) {
     PyObject *ob = PyCapsule_New(vtable, 0, 0);
     if (unlikely(!ob))
         goto bad;
@@ -15231,7 +13837,7 @@ bad:
 }
 
 /* GetVTable */
-static void* __Pyx_GetVtable(PyTypeObject *type) {
+  static void* __Pyx_GetVtable(PyTypeObject *type) {
     void* ptr;
 #if CYTHON_COMPILING_IN_LIMITED_API
     PyObject *ob = PyObject_GetAttr((PyObject *)type, __pyx_n_s_pyx_vtable);
@@ -15251,7 +13857,7 @@ bad:
 }
 
 /* MergeVTables */
-#if !CYTHON_COMPILING_IN_LIMITED_API
+  #if !CYTHON_COMPILING_IN_LIMITED_API
 static int __Pyx_MergeVtables(PyTypeObject *type) {
     int i;
     void** base_vtables;
@@ -15304,7 +13910,7 @@ bad:
 #endif
 
 /* SetupReduce */
-#if !CYTHON_COMPILING_IN_LIMITED_API
+  #if !CYTHON_COMPILING_IN_LIMITED_API
 static int __Pyx_setup_reduce_is_named(PyObject* meth, PyObject* name) {
   int ret;
   PyObject *name_attr;
@@ -15415,7 +14021,7 @@ __PYX_GOOD:
 #endif
 
 /* TypeImport */
-#ifndef __PYX_HAVE_RT_ImportType_3_0_10
+  #ifndef __PYX_HAVE_RT_ImportType_3_0_10
 #define __PYX_HAVE_RT_ImportType_3_0_10
 static PyTypeObject *__Pyx_ImportType_3_0_10(PyObject *module, const char *module_name, const char *class_name,
     size_t size, size_t alignment, enum __Pyx_ImportType_CheckSize_3_0_10 check_size)
@@ -15495,7 +14101,7 @@ bad:
 #endif
 
 /* ImportDottedModule */
-#if PY_MAJOR_VERSION >= 3
+  #if PY_MAJOR_VERSION >= 3
 static PyObject *__Pyx__ImportDottedModule_Error(PyObject *name, PyObject *parts_tuple, Py_ssize_t count) {
     PyObject *partial_name = NULL, *slice = NULL, *sep = NULL;
     if (unlikely(PyErr_Occurred())) {
@@ -15572,7 +14178,7 @@ static PyObject *__Pyx_ImportDottedModule_WalkParts(PyObject *module, PyObject *
 #endif
 static PyObject *__Pyx__ImportDottedModule(PyObject *name, PyObject *parts_tuple) {
 #if PY_MAJOR_VERSION < 3
-    PyObject *module, *from_list, *star = __pyx_n_s__25;
+    PyObject *module, *from_list, *star = __pyx_n_s__11;
     CYTHON_UNUSED_VAR(parts_tuple);
     from_list = PyList_New(1);
     if (unlikely(!from_list))
@@ -15623,12 +14229,12 @@ static PyObject *__Pyx_ImportDottedModule(PyObject *name, PyObject *parts_tuple)
 }
 
 /* FetchSharedCythonModule */
-static PyObject *__Pyx_FetchSharedCythonABIModule(void) {
+  static PyObject *__Pyx_FetchSharedCythonABIModule(void) {
     return __Pyx_PyImport_AddModuleRef((char*) __PYX_ABI_MODULE_NAME);
 }
 
 /* FetchCommonType */
-static int __Pyx_VerifyCachedType(PyObject *cached_type,
+  static int __Pyx_VerifyCachedType(PyObject *cached_type,
                                const char *name,
                                Py_ssize_t basicsize,
                                Py_ssize_t expected_basicsize) {
@@ -15729,7 +14335,7 @@ bad:
 #endif
 
 /* PyVectorcallFastCallDict */
-#if CYTHON_METH_FASTCALL
+  #if CYTHON_METH_FASTCALL
 static PyObject *__Pyx_PyVectorcall_FastCallDict_kw(PyObject *func, __pyx_vectorcallfunc vc, PyObject *const *args, size_t nargs, PyObject *kw)
 {
     PyObject *res = NULL;
@@ -15785,7 +14391,7 @@ static CYTHON_INLINE PyObject *__Pyx_PyVectorcall_FastCallDict(PyObject *func, _
 #endif
 
 /* CythonFunctionShared */
-#if CYTHON_COMPILING_IN_LIMITED_API
+  #if CYTHON_COMPILING_IN_LIMITED_API
 static CYTHON_INLINE int __Pyx__IsSameCyOrCFunction(PyObject *func, void *cfunc) {
     if (__Pyx_CyFunction_Check(func)) {
         return PyCFunction_GetFunction(((__pyx_CyFunctionObject*)func)->func) == (PyCFunction) cfunc;
@@ -16787,7 +15393,7 @@ static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *func, Py
 }
 
 /* CythonFunction */
-static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml, int flags, PyObject* qualname,
+  static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml, int flags, PyObject* qualname,
                                       PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
     PyObject *op = __Pyx_CyFunction_Init(
         PyObject_GC_New(__pyx_CyFunctionObject, __pyx_CyFunctionType),
@@ -16800,7 +15406,7 @@ static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml, int flags, PyObject* qual
 }
 
 /* CLineInTraceback */
-#ifndef CYTHON_CLINE_IN_TRACEBACK
+  #ifndef CYTHON_CLINE_IN_TRACEBACK
 static int __Pyx_CLineForTraceback(PyThreadState *tstate, int c_line) {
     PyObject *use_cline;
     PyObject *ptype, *pvalue, *ptraceback;
@@ -16843,7 +15449,7 @@ static int __Pyx_CLineForTraceback(PyThreadState *tstate, int c_line) {
 #endif
 
 /* CodeObjectCache */
-#if !CYTHON_COMPILING_IN_LIMITED_API
+  #if !CYTHON_COMPILING_IN_LIMITED_API
 static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
     int start = 0, mid = 0, end = count - 1;
     if (end >= 0 && code_line > entries[end].code_line) {
@@ -16925,7 +15531,7 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object) {
 #endif
 
 /* AddTraceback */
-#include "compile.h"
+  #include "compile.h"
 #include "frameobject.h"
 #include "traceback.h"
 #if PY_VERSION_HEX >= 0x030b00a6 && !CYTHON_COMPILING_IN_LIMITED_API
@@ -17117,7 +15723,7 @@ bad:
 #endif
 
 /* Declarations */
-#if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
+  #if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
   #ifdef __cplusplus
     static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(double x, double y) {
       return ::std::complex< double >(x, y);
@@ -17137,7 +15743,7 @@ bad:
 #endif
 
 /* Arithmetic */
-#if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
+  #if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
 #else
     static CYTHON_INLINE int __Pyx_c_eq_double(__pyx_t_double_complex a, __pyx_t_double_complex b) {
        return (a.real == b.real) && (a.imag == b.imag);
@@ -17271,7 +15877,7 @@ bad:
 #endif
 
 /* CIntFromPyVerify */
-#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+  #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
 #define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
@@ -17292,8 +15898,33 @@ bad:
         return (target_type) value;\
     }
 
-/* FromPy */
-static __pyx_t_double_complex __Pyx_PyComplex_As___pyx_t_double_complex(PyObject* o) {
+#if PY_MAJOR_VERSION < 3
+static int __Pyx_GetBuffer(PyObject *obj, Py_buffer *view, int flags) {
+    __Pyx_TypeName obj_type_name;
+    if (PyObject_CheckBuffer(obj)) return PyObject_GetBuffer(obj, view, flags);
+    obj_type_name = __Pyx_PyType_GetName(Py_TYPE(obj));
+    PyErr_Format(PyExc_TypeError,
+                 "'" __Pyx_FMT_TYPENAME "' does not have the buffer interface",
+                 obj_type_name);
+    __Pyx_DECREF_TypeName(obj_type_name);
+    return -1;
+}
+static void __Pyx_ReleaseBuffer(Py_buffer *view) {
+    PyObject *obj = view->obj;
+    if (!obj) return;
+    if (PyObject_CheckBuffer(obj)) {
+        PyBuffer_Release(view);
+        return;
+    }
+    if ((0)) {}
+    view->obj = NULL;
+    Py_DECREF(obj);
+}
+#endif
+
+
+  /* FromPy */
+  static __pyx_t_double_complex __Pyx_PyComplex_As___pyx_t_double_complex(PyObject* o) {
     Py_complex cval;
 #if !CYTHON_COMPILING_IN_PYPY
     if (PyComplex_CheckExact(o))
@@ -17307,7 +15938,7 @@ static __pyx_t_double_complex __Pyx_PyComplex_As___pyx_t_double_complex(PyObject
 }
 
 /* Declarations */
-#if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
+  #if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
   #ifdef __cplusplus
     static CYTHON_INLINE __pyx_t_float_complex __pyx_t_float_complex_from_parts(float x, float y) {
       return ::std::complex< float >(x, y);
@@ -17327,7 +15958,7 @@ static __pyx_t_double_complex __Pyx_PyComplex_As___pyx_t_double_complex(PyObject
 #endif
 
 /* Arithmetic */
-#if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
+  #if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
 #else
     static CYTHON_INLINE int __Pyx_c_eq_float(__pyx_t_float_complex a, __pyx_t_float_complex b) {
        return (a.real == b.real) && (a.imag == b.imag);
@@ -17461,7 +16092,7 @@ static __pyx_t_double_complex __Pyx_PyComplex_As___pyx_t_double_complex(PyObject
 #endif
 
 /* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -17525,7 +16156,7 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
 }
 
 /* CIntFromPy */
-static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
+  static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -17798,7 +16429,7 @@ raise_neg_overflow:
 }
 
 /* CIntFromPy */
-static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
+  static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -18071,7 +16702,7 @@ raise_neg_overflow:
 }
 
 /* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -18135,7 +16766,7 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
 }
 
 /* FormatTypeName */
-#if CYTHON_COMPILING_IN_LIMITED_API
+  #if CYTHON_COMPILING_IN_LIMITED_API
 static __Pyx_TypeName
 __Pyx_PyType_GetName(PyTypeObject* tp)
 {
@@ -18144,14 +16775,14 @@ __Pyx_PyType_GetName(PyTypeObject* tp)
     if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) {
         PyErr_Clear();
         Py_XDECREF(name);
-        name = __Pyx_NewRef(__pyx_n_s__33);
+        name = __Pyx_NewRef(__pyx_n_s__17);
     }
     return name;
 }
 #endif
 
 /* FastTypeChecks */
-#if CYTHON_COMPILING_IN_CPYTHON
+  #if CYTHON_COMPILING_IN_CPYTHON
 static int __Pyx_InBases(PyTypeObject *a, PyTypeObject *b) {
     while (a) {
         a = __Pyx_PyType_GetSlot(a, tp_base, PyTypeObject*);
@@ -18267,7 +16898,7 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 #endif
 
 /* CheckBinaryVersion */
-static unsigned long __Pyx_get_runtime_version(void) {
+  static unsigned long __Pyx_get_runtime_version(void) {
 #if __PYX_LIMITED_VERSION_HEX >= 0x030B00A4
     return Py_Version & ~0xFFUL;
 #else
@@ -18314,7 +16945,7 @@ static int __Pyx_check_binary_version(unsigned long ct_version, unsigned long rt
 }
 
 /* InitStrings */
-#if PY_MAJOR_VERSION >= 3
+  #if PY_MAJOR_VERSION >= 3
 static int __Pyx_InitString(__Pyx_StringTabEntry t, PyObject **str) {
     if (t.is_unicode | t.is_str) {
         if (t.intern) {

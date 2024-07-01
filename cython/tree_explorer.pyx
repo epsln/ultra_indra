@@ -1,4 +1,5 @@
 # cython: profile=True
+#cython: boundscheck=False
 import cython 
 from cython.parallel import prange
 cimport numpy as np
@@ -50,13 +51,13 @@ cdef class tree_explorer:
         self.last_idx_points = 0
 
 
-    cpdef void set_next_state(self, int idx_gen):
+    cdef void set_next_state(self, int idx_gen):
         self.state[self.level + 1] = self.FSA[self.state[self.level]][idx_gen]
 
-    cpdef int get_next_state(self, int idx_gen):
+    cdef int get_next_state(self, int idx_gen):
         return self.FSA[self.state[self.level]][idx_gen]
 
-    cpdef int get_right_gen(self):
+    cdef int get_right_gen(self):
         cdef int idx_gen = 0
         cdef int i = 1
         while True:
@@ -66,7 +67,7 @@ cdef class tree_explorer:
                 break
         return idx_gen
 
-    cpdef int get_left_gen(self):
+    cdef int get_left_gen(self):
         cdef int idx_gen = 0
         cdef int i = 1
         while True:
@@ -76,10 +77,10 @@ cdef class tree_explorer:
                 break
         return idx_gen
 
-    cpdef complex mobius(self, np.ndarray m, complex z):
+    cdef complex mobius(self, np.ndarray[np.complex128_t, ndim = 2] m, np.complex128_t z):
         return (m[0, 0] * z + m[0, 1])/(m[1, 0] * z + m[1, 1])
 
-    cpdef int branch_terminated(self):
+    cdef int branch_terminated(self):
         if self.level == self.max_depth - 1:
             if self.precomputing == 1:
                 self.last_words[self.last_idx] = self.words[self.level]
@@ -89,8 +90,8 @@ cdef class tree_explorer:
             return 1 
 
         cdef int idx_gen = self.tag[self.level]
-        cdef complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
-        cdef complex old_p = p
+        cdef cython.complex p = self.mobius(self.words[self.level], self.fixed_points[idx_gen][0])
+        cdef cython.complex old_p = p
         self.points[self.last_idx] = p
         self.last_idx_points += 1
 
@@ -109,10 +110,10 @@ cdef class tree_explorer:
 
         return 1 
 
-    cpdef void backward_move(self):
+    cdef void backward_move(self):
         self.level -= 1
 
-    cpdef int available_turn(self):
+    cdef int available_turn(self):
         cdef int idx_gen = self.get_right_gen() 
         if self.level == -1:
             return 1 
@@ -123,7 +124,7 @@ cdef class tree_explorer:
         else:
             return 1 
 
-    cpdef void turn_forward_move(self):
+    cdef void turn_forward_move(self):
         self.curr_state = self.state[self.level]
         cdef int idx_gen = self.get_left_gen()
         self.set_next_state(idx_gen)
@@ -136,7 +137,7 @@ cdef class tree_explorer:
             
         self.level += 1
 
-    cpdef void forward_move(self):
+    cdef void forward_move(self):
         cdef int idx_gen = self.get_right_gen()
 
         self.set_next_state(idx_gen)
