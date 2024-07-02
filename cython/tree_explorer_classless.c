@@ -3302,18 +3302,6 @@ static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds__
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds___pyx_t_float_complex(PyObject *, int writable_flag);
 
-/* ToPy.proto */
-#define __pyx_PyComplex_FromComplex(z)\
-        PyComplex_FromDoubles((double)__Pyx_CREAL(z),\
-                              (double)__Pyx_CIMAG(z))
-
-/* FromPy.proto */
-static __pyx_t_float_complex __Pyx_PyComplex_As___pyx_t_float_complex(PyObject*);
-
-/* MemviewDtypeToObject.proto */
-static CYTHON_INLINE PyObject *__pyx_memview_get___pyx_t_float_complex(const char *itemp);
-static CYTHON_INLINE int __pyx_memview_set___pyx_t_float_complex(const char *itemp, PyObject *obj);
-
 /* MemviewSliceCopyTemplate.proto */
 static __Pyx_memviewslice
 __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
@@ -3354,6 +3342,9 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_int32(npy_int32 value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
@@ -21874,7 +21865,7 @@ static PyObject *__pyx_f_13klein_compute_8tree_exp_compute_start_points(int __py
  *     while not (p_level[0] == -1 and p_tag[0] == 1):
  *         while branch_terminated(p_tag, p_state, p_fsa, p_words, p_fix_pt, p_fix_pt_shape, p_img, p_bounds, p_level, epsilon, max_depth) == 0:             # <<<<<<<<<<<<<<
  *             forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
- *         last_points.append((p_tag[level[0]], p_state[level[0]], p_words[level[0], :, :]))
+ *         last_points.append((tag[level[0]], state[level[0]], words[level[0], :, :]))
  */
     while (1) {
       __pyx_t_21 = (__pyx_f_13klein_compute_8tree_exp_branch_terminated(__pyx_v_p_tag, __pyx_v_p_state, __pyx_v_p_fsa, __pyx_v_p_words, __pyx_v_p_fix_pt, __pyx_v_p_fix_pt_shape, __pyx_v_p_img, __pyx_v_p_bounds, __pyx_v_p_level, __pyx_v_epsilon, __pyx_v_max_depth) == 0);
@@ -21884,7 +21875,7 @@ static PyObject *__pyx_f_13klein_compute_8tree_exp_compute_start_points(int __py
  *     while not (p_level[0] == -1 and p_tag[0] == 1):
  *         while branch_terminated(p_tag, p_state, p_fsa, p_words, p_fix_pt, p_fix_pt_shape, p_img, p_bounds, p_level, epsilon, max_depth) == 0:
  *             forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)             # <<<<<<<<<<<<<<
- *         last_points.append((p_tag[level[0]], p_state[level[0]], p_words[level[0], :, :]))
+ *         last_points.append((tag[level[0]], state[level[0]], words[level[0], :, :]))
  *         while True:
  */
       __pyx_f_13klein_compute_8tree_exp_forward_move(__pyx_v_p_tag, __pyx_v_p_state, __pyx_v_p_fsa, __pyx_v_p_words, __pyx_v_p_generators, __pyx_v_p_level, __pyx_v_epsilon, __pyx_v_max_depth);
@@ -21893,40 +21884,35 @@ static PyObject *__pyx_f_13klein_compute_8tree_exp_compute_start_points(int __py
     /* "cython/tree_explorer_classless.pyx":169
  *         while branch_terminated(p_tag, p_state, p_fsa, p_words, p_fix_pt, p_fix_pt_shape, p_img, p_bounds, p_level, epsilon, max_depth) == 0:
  *             forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
- *         last_points.append((p_tag[level[0]], p_state[level[0]], p_words[level[0], :, :]))             # <<<<<<<<<<<<<<
+ *         last_points.append((tag[level[0]], state[level[0]], words[level[0], :, :]))             # <<<<<<<<<<<<<<
  *         while True:
  *             backward_move(p_level)
  */
     __pyx_t_13 = 0;
     __pyx_t_22 = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_level.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_level.diminfo[0].strides));
-    __pyx_t_4 = __Pyx_PyInt_From_int((*((int *) ( /* dim=0 */ (__pyx_v_p_tag.data + __pyx_t_22 * __pyx_v_p_tag.strides[0]) )))); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 169, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_npy_int32((*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_tag.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_tag.diminfo[0].strides))); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 169, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_13 = 0;
     __pyx_t_22 = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_level.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_level.diminfo[0].strides));
-    __pyx_t_1 = __Pyx_PyInt_From_int((*((int *) ( /* dim=0 */ (__pyx_v_p_state.data + __pyx_t_22 * __pyx_v_p_state.strides[0]) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 169, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_From_npy_int32((*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_state.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_state.diminfo[0].strides))); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 169, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_13 = 0;
-    __pyx_t_18.data = __pyx_v_p_words.data;
-    __pyx_t_18.memview = __pyx_v_p_words.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_18, 1);
-    {
-    Py_ssize_t __pyx_tmp_idx = (*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_level.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_level.diminfo[0].strides));
-    Py_ssize_t __pyx_tmp_stride = __pyx_v_p_words.strides[0];
-        __pyx_t_18.data += __pyx_tmp_idx * __pyx_tmp_stride;
-}
-
-__pyx_t_18.shape[0] = __pyx_v_p_words.shape[1];
-__pyx_t_18.strides[0] = __pyx_v_p_words.strides[1];
-    __pyx_t_18.suboffsets[0] = -1;
-
-__pyx_t_18.shape[1] = __pyx_v_p_words.shape[2];
-__pyx_t_18.strides[1] = __pyx_v_p_words.strides[2];
-    __pyx_t_18.suboffsets[1] = -1;
-
-__pyx_t_2 = __pyx_memoryview_fromslice(__pyx_t_18, 2, (PyObject *(*)(char *)) __pyx_memview_get___pyx_t_float_complex, (int (*)(char *, PyObject *)) __pyx_memview_set___pyx_t_float_complex, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 169, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_npy_int32((*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_level.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_level.diminfo[0].strides))); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 169, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __PYX_XCLEAR_MEMVIEW(&__pyx_t_18, 1);
-    __pyx_t_18.memview = NULL; __pyx_t_18.data = NULL;
+    __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 169, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_2);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2)) __PYX_ERR(1, 169, __pyx_L1_error);
+    __Pyx_INCREF(__pyx_slice__5);
+    __Pyx_GIVEREF(__pyx_slice__5);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_slice__5)) __PYX_ERR(1, 169, __pyx_L1_error);
+    __Pyx_INCREF(__pyx_slice__5);
+    __Pyx_GIVEREF(__pyx_slice__5);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_slice__5)) __PYX_ERR(1, 169, __pyx_L1_error);
+    __pyx_t_2 = 0;
+    __pyx_t_2 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_words), __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 169, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 169, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_4);
@@ -21943,7 +21929,7 @@ __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_t_18, 2, (PyObject *(*)(char *)) __
 
     /* "cython/tree_explorer_classless.pyx":170
  *             forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
- *         last_points.append((p_tag[level[0]], p_state[level[0]], p_words[level[0], :, :]))
+ *         last_points.append((tag[level[0]], state[level[0]], words[level[0], :, :]))
  *         while True:             # <<<<<<<<<<<<<<
  *             backward_move(p_level)
  *             if available_turn(p_tag, p_state, p_fsa, p_words, p_level, epsilon) == 1 or p_level[0] == -1:
@@ -21951,7 +21937,7 @@ __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_t_18, 2, (PyObject *(*)(char *)) __
     while (1) {
 
       /* "cython/tree_explorer_classless.pyx":171
- *         last_points.append((p_tag[level[0]], p_state[level[0]], p_words[level[0], :, :]))
+ *         last_points.append((tag[level[0]], state[level[0]], words[level[0], :, :]))
  *         while True:
  *             backward_move(p_level)             # <<<<<<<<<<<<<<
  *             if available_turn(p_tag, p_state, p_fsa, p_words, p_level, epsilon) == 1 or p_level[0] == -1:
@@ -32200,32 +32186,6 @@ __pyx_fail:
     return result;
 }
 
-/* FromPy */
-  static __pyx_t_float_complex __Pyx_PyComplex_As___pyx_t_float_complex(PyObject* o) {
-    Py_complex cval;
-#if !CYTHON_COMPILING_IN_PYPY
-    if (PyComplex_CheckExact(o))
-        cval = ((PyComplexObject *)o)->cval;
-    else
-#endif
-        cval = PyComplex_AsCComplex(o);
-    return __pyx_t_float_complex_from_parts(
-               (float)cval.real,
-               (float)cval.imag);
-}
-
-/* MemviewDtypeToObject */
-  static CYTHON_INLINE PyObject *__pyx_memview_get___pyx_t_float_complex(const char *itemp) {
-    return (PyObject *) __pyx_PyComplex_FromComplex(*(__pyx_t_float_complex *) itemp);
-}
-static CYTHON_INLINE int __pyx_memview_set___pyx_t_float_complex(const char *itemp, PyObject *obj) {
-    __pyx_t_float_complex value = __Pyx_PyComplex_As___pyx_t_float_complex(obj);
-    if (unlikely(PyErr_Occurred()))
-        return 0;
-    *(__pyx_t_float_complex *) itemp = value;
-    return 1;
-}
-
 /* MemviewSliceCopyTemplate */
   static __Pyx_memviewslice
 __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
@@ -32807,6 +32767,70 @@ raise_neg_overflow:
         from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
         if (!from_bytes) return NULL;
         py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        arg_tuple = PyTuple_Pack(2, py_bytes, order_str);
+        if (!arg_tuple) goto limited_bad;
+        if (!is_unsigned) {
+            kwds = PyDict_New();
+            if (!kwds) goto limited_bad;
+            if (PyDict_SetItemString(kwds, "signed", __Pyx_NewRef(Py_True))) goto limited_bad;
+        }
+        result = PyObject_Call(from_bytes, arg_tuple, kwds);
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(arg_tuple);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
+}
+
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_int32(npy_int32 value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const npy_int32 neg_one = (npy_int32) -1, const_zero = (npy_int32) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(npy_int32) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(npy_int32) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_int32) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(npy_int32) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_int32) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        return _PyLong_FromByteArray(bytes, sizeof(npy_int32),
+                                     little, !is_unsigned);
+#else
+        PyObject *from_bytes, *result = NULL;
+        PyObject *py_bytes = NULL, *arg_tuple = NULL, *kwds = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(npy_int32));
         if (!py_bytes) goto limited_bad;
         order_str = PyUnicode_FromString(little ? "little" : "big");
         if (!order_str) goto limited_bad;

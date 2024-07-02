@@ -166,7 +166,7 @@ cpdef list compute_start_points(int max_depth, float epsilon, np.ndarray generat
     while not (p_level[0] == -1 and p_tag[0] == 1):
         while branch_terminated(p_tag, p_state, p_fsa, p_words, p_fix_pt, p_fix_pt_shape, p_img, p_bounds, p_level, epsilon, max_depth) == 0:
             forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
-        last_points.append((p_tag[level[0]], p_state[level[0]], p_words[level[0], :, :]))
+        last_points.append((tag[level[0]], state[level[0]], words[level[0], :, :]))
         while True:
             backward_move(p_level) 
             if available_turn(p_tag, p_state, p_fsa, p_words, p_level, epsilon) == 1 or p_level[0] == -1:
