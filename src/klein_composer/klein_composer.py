@@ -1,4 +1,5 @@
 from klein_compute.tree_explorer import tree_explorer
+from klein_compute.tree_exp import compute_start_points, compute_tree
 
 import numpy as np
 from multiprocessing import Pool
@@ -36,33 +37,25 @@ class KleinComposer:
             return np.floor(np.log(num_threads - 4) / np.log(3))
 
     def compute_start_points(self):
-        tree_exp = tree_explorer(
+        return compute_start_points(
             self.start_depth,
             self.cm.epsilon,
             self.fm.generators,
             self.fm.FSA,
             self.fm.fixed_points,
+            self.fm.fixed_points_shape,
         )
-        return tree_exp.compute_tree()
 
     def compute_thread(self):
-        tree_explorator = tree_explorer(
-            self.max_depth,
-            self.cm.epsilon,
-            self.fm.generators,
-            self.fm.FSA,
-            self.fm.fixed_points,
-        )
-        start_points, start_states, start_tags = self.compute_start_points()
+        start_elements = self.compute_start_points()
+        img = np.zeros((1080, 1080))
         arguments = [
-            (st, ss, self.start_depth, sp)
-            for sp, ss, st in zip(start_points, start_states, start_tags)
+            (e[0], e[1], e[2], self.cm.max_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points, self.fm.fixed_points_shape, img)
+            for e in start_elements 
         ]
 
+
         with self.pool as p:
-            output = p.starmap(tree_explorator.compute_leaf, arguments)
+            output = p.starmap(compute_tree, arguments)
 
-        out = np.concatenate(output).ravel()
-        out = out[out != 0 + 0j]
-
-        return out
+        return output
