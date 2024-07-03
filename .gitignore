@@ -2,4 +2,5 @@
 *.swo
 build/
 .coverage
+output/
 __pycache__/
