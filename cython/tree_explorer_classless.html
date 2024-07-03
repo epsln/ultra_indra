@@ -1948,8 +1948,8 @@ static PyObject *__pyx_pf_13klein_compute_8tree_exp_compute_start_points(CYTHON_
   __pyx_r = __pyx_v_last_points;
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">178</span>: </pre>
-<pre class="cython line score-265" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">179</span>: cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_word, int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape, np.ndarray img):</pre>
-<pre class='cython code score-265 '>static PyObject *__pyx_pw_13klein_compute_8tree_exp_3compute_tree(PyObject *__pyx_self, 
+<pre class="cython line score-264" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">179</span>: cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_word, int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape, np.ndarray img):</pre>
+<pre class='cython code score-264 '>static PyObject *__pyx_pw_13klein_compute_8tree_exp_3compute_tree(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -2008,8 +2008,6 @@ static PyArrayObject *__pyx_f_13klein_compute_8tree_exp_compute_tree(int __pyx_v
   __pyx_pybuffernd_bounds.rcbuffer = &amp;__pyx_pybuffer_bounds;
 /* … */
   /* function exit code */
-  __pyx_r = ((PyArrayObject *)Py_None); <span class='pyx_macro_api'>__Pyx_INCREF</span>(Py_None);
-  goto __pyx_L0;
   __pyx_L1_error:;
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_1);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_2);
@@ -2893,4 +2891,10 @@ static PyObject *__pyx_pf_13klein_compute_8tree_exp_2compute_tree(CYTHON_UNUSED 
 <pre class='cython code score-0 '>    __pyx_f_13klein_compute_8tree_exp_turn_forward_move(__pyx_v_p_tag, __pyx_v_p_state, __pyx_v_p_fsa, __pyx_v_p_words, __pyx_v_p_generators, __pyx_v_p_level, __pyx_v_epsilon, __pyx_v_max_depth);
   }
   __pyx_L4_break:;
+</pre><pre class="cython line score-0">&#xA0;<span class="">218</span>: </pre>
+<pre class="cython line score-2" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">219</span>:     return img</pre>
+<pre class='cython code score-2 '>  <span class='pyx_macro_api'>__Pyx_XDECREF</span>((PyObject *)__pyx_r);
+  <span class='pyx_macro_api'>__Pyx_INCREF</span>((PyObject *)__pyx_v_img);
+  __pyx_r = __pyx_v_img;
+  goto __pyx_L0;
 </pre></div></body></html>

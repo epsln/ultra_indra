@@ -215,3 +215,5 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
         if p_level[0] == -1 and p_tag[0] == 1:
             break
         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
+
+    return img

@@ -23184,6 +23184,7 @@ static PyArrayObject *__pyx_f_13klein_compute_8tree_exp_compute_tree(int __pyx_v
  *         if p_level[0] == -1 and p_tag[0] == 1:
  *             break             # <<<<<<<<<<<<<<
  *         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
+ * 
  */
       goto __pyx_L4_break;
 
@@ -23200,10 +23201,22 @@ static PyArrayObject *__pyx_f_13klein_compute_8tree_exp_compute_tree(int __pyx_v
  *         if p_level[0] == -1 and p_tag[0] == 1:
  *             break
  *         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)             # <<<<<<<<<<<<<<
+ * 
+ *     return img
  */
     __pyx_f_13klein_compute_8tree_exp_turn_forward_move(__pyx_v_p_tag, __pyx_v_p_state, __pyx_v_p_fsa, __pyx_v_p_words, __pyx_v_p_generators, __pyx_v_p_level, __pyx_v_epsilon, __pyx_v_max_depth);
   }
   __pyx_L4_break:;
+
+  /* "cython/tree_explorer_classless.pyx":219
+ *         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
+ * 
+ *     return img             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF((PyObject *)__pyx_r);
+  __Pyx_INCREF((PyObject *)__pyx_v_img);
+  __pyx_r = __pyx_v_img;
+  goto __pyx_L0;
 
   /* "cython/tree_explorer_classless.pyx":179
  *     return last_points
@@ -23214,8 +23227,6 @@ static PyArrayObject *__pyx_f_13klein_compute_8tree_exp_compute_tree(int __pyx_v
  */
 
   /* function exit code */
-  __pyx_r = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
