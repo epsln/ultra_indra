@@ -16,6 +16,6 @@ def test_save_image(output_manager_fixture):
     with tempfile.TemporaryDirectory() as tmpdirname:
         om = output_manager_fixture 
         for i in range(10):
-            image =  np.random.uniform(-1, 1, 100) + 1.j * np.random.uniform(-1, 1, 100)
+            image =  np.random.uniform(size = (1080, 1080))
             om.save(image)
             assert os.path.isfile(os.path.join(om.output_dir, om.filename))
