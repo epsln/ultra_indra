@@ -54,8 +54,10 @@ class KleinComposer:
             for e in start_elements 
         ]
 
-
         with self.pool as p:
             output = p.starmap(compute_tree, arguments)
 
-        return output
+        for o in output:
+            img = np.add(img, o)
+        
+        return img 
