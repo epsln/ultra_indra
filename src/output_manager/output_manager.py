@@ -17,7 +17,6 @@ class OutputManager:
         self.file_type = output_model.file_type
 
         if not os.path.isdir(self.output_dir):
-            _logger.debug(f"Creating output folder : {self.output_dir}")
             os.mkdir(self.output_dir)
 
     def process_points(self, list_points):
@@ -57,5 +56,4 @@ class OutputManager:
         self.image_count += 1
 
     def _image_saver(self, image):
-        _logger.debug(f"Saving file at : {self.filename}")
         cv2.imwrite(self.filename, image)
