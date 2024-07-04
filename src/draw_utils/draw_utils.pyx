@@ -28,6 +28,8 @@ cpdef void line(cython.floatcomplex p0, cython.floatcomplex p1, int[:, :] img, c
     cdef float y0 = (p0.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
     cdef float x1 = (p1.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real) 
     cdef float y1 = (p1.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
+    print(f"p0: {p0:.2f} = ({x0:.2f}, {y0:.2f})")
+    print(f"p1: {p1:.2f} = ({x1:.2f}, {y1:.2f})\n")
 
     cdef float x = x0
     cdef float y = y0

@@ -83,12 +83,7 @@ cdef int branch_terminated(int[:] tag, int[:] state, int[:, :] FSA, cython.float
         p = mobius(words[level[0]], fp)
         comp_p = mobius(words[level[0]], comp_fp)
 
-        x0 = (p.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real) 
-        y0 = (p.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
-        x1 = (comp_p.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real) 
-        y1 = (comp_p.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
-        img[int(x0), int(y0)] = 255 
-        img[int(x1), int(y1)] = 255 
+        line(p, comp_p, img, bounds)
 
     return 1 
 

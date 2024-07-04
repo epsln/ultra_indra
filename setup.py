@@ -1,7 +1,6 @@
 from distutils.core import setup
 from distutils.extension import Extension
 import Cython.Compiler.Options
-Cython.Compiler.Options.annotate = True
 
 try:
     from Cython.Distutils import build_ext
