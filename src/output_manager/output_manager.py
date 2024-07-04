@@ -45,7 +45,7 @@ class OutputManager:
         return np.moveaxis(img_arr, 0, 1)
 
     def save(self, image):
-        #postprocessed_img = self.process_points(image)
+        # postprocessed_img = self.process_points(image)
         self._get_filename()
         self._image_saver(image)
 

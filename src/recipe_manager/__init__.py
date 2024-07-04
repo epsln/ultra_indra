@@ -1,1 +1,1 @@
-from .recipe_manager import RecipeManager #noqa
+from .recipe_manager import RecipeManager  # noqa

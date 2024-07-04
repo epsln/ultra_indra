@@ -51,7 +51,7 @@ class FractalModel:
 
     def _compute_fixed_points(self):
         fix_pts = [[] for i in range(4)]
-        self.fixed_points_shape = np.array([0, 0, 0, 0]) 
+        self.fixed_points_shape = np.array([0, 0, 0, 0])
         cleaned_spe_w = []
         for spe_w in [self.special_word, [0, 1, 2, 3]]:
             for perm in set(permutations(spe_w)):
@@ -60,14 +60,14 @@ class FractalModel:
                     if (curr_e + 2) % 4 == next_e:
                         valid = False
                         break
-                if valid: 
+                if valid:
                     cleaned_spe_w.append(perm)
-        
+
         for perm in cleaned_spe_w:
-            word     = self.generators[perm[0]]
+            word = self.generators[perm[0]]
             word_inv = self.generators[(perm[0] + 2) % 4]
             for p in perm[1:]:
-                word     = np.matmul(word, self.generators[p])
+                word = np.matmul(word, self.generators[p])
                 word_inv = np.matmul(word_inv, self.generators[(p + 2) % 4])
 
             idx_gen = perm[-1]
