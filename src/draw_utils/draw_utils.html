@@ -304,16 +304,15 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">03</span>: #cython: cdivision=True</pre>
 <pre class="cython line score-0">&#xA0;<span class="">04</span>: #cython: nonecheck=False</pre>
 <pre class="cython line score-0">&#xA0;<span class="">05</span>: </pre>
-<pre class="cython line score-0">&#xA0;<span class="">06</span>: </pre>
-<pre class="cython line score-0">&#xA0;<span class="">07</span>: import cython</pre>
-<pre class="cython line score-8" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">08</span>: import numpy as np</pre>
-<pre class='cython code score-8 '>  __pyx_t_7 = <span class='pyx_c_api'>__Pyx_ImportDottedModule</span>(__pyx_n_s_numpy, NULL);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 8, __pyx_L1_error)</span>
+<pre class="cython line score-0">&#xA0;<span class="">06</span>: import cython</pre>
+<pre class="cython line score-8" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">07</span>: import numpy as np</pre>
+<pre class='cython code score-8 '>  __pyx_t_7 = <span class='pyx_c_api'>__Pyx_ImportDottedModule</span>(__pyx_n_s_numpy, NULL);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 7, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
-  if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_d, __pyx_n_s_np, __pyx_t_7) &lt; 0) <span class='error_goto'>__PYX_ERR(1, 8, __pyx_L1_error)</span>
+  if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_d, __pyx_n_s_np, __pyx_t_7) &lt; 0) <span class='error_goto'>__PYX_ERR(1, 7, __pyx_L1_error)</span>
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">09</span>: cimport numpy as np</pre>
-<pre class="cython line score-0">&#xA0;<span class="">10</span>: </pre>
-<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">11</span>: cdef int bounds_check(float x, float y, cython.floatcomplex[:] bounds):</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">08</span>: cimport numpy as np</pre>
+<pre class="cython line score-0">&#xA0;<span class="">09</span>: </pre>
+<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">10</span>: cdef int bounds_check(float x, float y, cython.floatcomplex[:] bounds):</pre>
 <pre class='cython code score-0 '>static int __pyx_f_13klein_compute_10draw_utils_bounds_check(float __pyx_v_x, float __pyx_v_y, __Pyx_memviewslice __pyx_v_bounds) {
   int __pyx_r;
 /* … */
@@ -321,7 +320,7 @@ body.cython { font-family: courier; font-size: 12; }
   __pyx_L0:;
   return __pyx_r;
 }
-</pre><pre class="cython line score-2" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">12</span>:     if x &gt;= 0 and y &gt;= 0 and x &lt; bounds[2].real and y &lt; bounds[2].imag:</pre>
+</pre><pre class="cython line score-2" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">11</span>:     if x &gt;= 0 and y &gt;= 0 and x &lt; bounds[2].real and y &lt; bounds[2].imag:</pre>
 <pre class='cython code score-2 '>  __pyx_t_2 = (__pyx_v_x &gt;= 0.0);
   if (__pyx_t_2) {
   } else {
@@ -348,17 +347,17 @@ body.cython { font-family: courier; font-size: 12; }
   if (__pyx_t_1) {
 /* … */
   }
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">13</span>:         return 1</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">12</span>:         return 1</pre>
 <pre class='cython code score-0 '>    __pyx_r = 1;
     goto __pyx_L0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">14</span>:     else:</pre>
-<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">15</span>:         return 0</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">13</span>:     else:</pre>
+<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">14</span>:         return 0</pre>
 <pre class='cython code score-0 '>  /*else*/ {
     __pyx_r = 0;
     goto __pyx_L0;
   }
-</pre><pre class="cython line score-0">&#xA0;<span class="">16</span>: </pre>
-<pre class="cython line score-2" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">17</span>: cdef void point(float x, float y, float c, int[:, :] img, cython.floatcomplex[:] bounds):</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">15</span>: </pre>
+<pre class="cython line score-2" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">16</span>: cdef void point(float x, float y, float c, int[:, :] img, cython.floatcomplex[:] bounds):</pre>
 <pre class='cython code score-2 '>static void __pyx_f_13klein_compute_10draw_utils_point(float __pyx_v_x, float __pyx_v_y, float __pyx_v_c, __Pyx_memviewslice __pyx_v_img, __Pyx_memviewslice __pyx_v_bounds) {
 /* … */
   /* function exit code */
@@ -367,18 +366,18 @@ body.cython { font-family: courier; font-size: 12; }
   <span class='pyx_c_api'>__Pyx_AddTraceback</span>("klein_compute.draw_utils.point", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
 }
-</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">18</span>:     if bounds_check(x, y, bounds) == 1:</pre>
-<pre class='cython code score-5 '>  __pyx_t_1 = __pyx_f_13klein_compute_10draw_utils_bounds_check(__pyx_v_x, __pyx_v_y, __pyx_v_bounds); if (unlikely(__pyx_t_1 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 18, __pyx_L1_error)</span>
+</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">17</span>:     if bounds_check(x, y, bounds) == 1:</pre>
+<pre class='cython code score-5 '>  __pyx_t_1 = __pyx_f_13klein_compute_10draw_utils_bounds_check(__pyx_v_x, __pyx_v_y, __pyx_v_bounds); if (unlikely(__pyx_t_1 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 17, __pyx_L1_error)</span>
   __pyx_t_2 = (__pyx_t_1 == 1);
   if (__pyx_t_2) {
 /* … */
   }
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">19</span>:         img[int(x), int(y)] = int(c * 255)</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">18</span>:         img[int(x), int(y)] = int(c * 255)</pre>
 <pre class='cython code score-0 '>    __pyx_t_3 = ((Py_ssize_t)__pyx_v_x);
     __pyx_t_4 = ((Py_ssize_t)__pyx_v_y);
     *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_img.data + __pyx_t_3 * __pyx_v_img.strides[0]) ) + __pyx_t_4 * __pyx_v_img.strides[1]) )) = ((int)(__pyx_v_c * 255.0));
-</pre><pre class="cython line score-0">&#xA0;<span class="">20</span>: </pre>
-<pre class="cython line score-6" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">21</span>: cdef float intensifyColor(float d):</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">19</span>: </pre>
+<pre class="cython line score-6" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">20</span>: cdef float intensifyColor(float d):</pre>
 <pre class='cython code score-6 '>static float __pyx_f_13klein_compute_10draw_utils_intensifyColor(float __pyx_v_d) {
   float __pyx_r;
 /* … */
@@ -394,13 +393,13 @@ body.cython { font-family: courier; font-size: 12; }
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
-</pre><pre class="cython line score-39" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">22</span>:     return 1 - np.power(d * 2/3., 2)</pre>
-<pre class='cython code score-39 '>  <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_2, __pyx_n_s_np);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 22, __pyx_L1_error)</span>
+</pre><pre class="cython line score-39" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">21</span>:     return 1 - np.power(d * 2/3., 2)</pre>
+<pre class='cython code score-39 '>  <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_2, __pyx_n_s_np);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 21, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_2, __pyx_n_s_power);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 22, __pyx_L1_error)</span>
+  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_2, __pyx_n_s_power);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 21, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = <span class='py_c_api'>PyFloat_FromDouble</span>((((double)(__pyx_v_d * 2.0)) / 3.));<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 22, __pyx_L1_error)</span>
+  __pyx_t_2 = <span class='py_c_api'>PyFloat_FromDouble</span>((((double)(__pyx_v_d * 2.0)) / 3.));<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 21, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -421,20 +420,27 @@ body.cython { font-family: courier; font-size: 12; }
     __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 2+__pyx_t_5);
     <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) <span class='error_goto'>__PYX_ERR(1, 22, __pyx_L1_error)</span>
+    if (unlikely(!__pyx_t_1)) <span class='error_goto'>__PYX_ERR(1, 21, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
   }
-  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyInt_SubtractCObj</span>(__pyx_int_1, __pyx_t_1, 1, 0, 0);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 22, __pyx_L1_error)</span>
+  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyInt_SubtractCObj</span>(__pyx_int_1, __pyx_t_1, 1, 0, 0);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 21, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_t_3); if (unlikely((__pyx_t_6 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 22, __pyx_L1_error)</span>
+  __pyx_t_6 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_t_3); if (unlikely((__pyx_t_6 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 21, __pyx_L1_error)</span>
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_6;
   goto __pyx_L0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">23</span>: </pre>
-<pre class="cython line score-6" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">24</span>: cdef void line(cython.floatcomplex p0, cython.floatcomplex p1, int[:, :] img, cython.floatcomplex[:] bounds):</pre>
-<pre class='cython code score-6 '>static void __pyx_f_13klein_compute_10draw_utils_line(__pyx_t_float_complex __pyx_v_p0, __pyx_t_float_complex __pyx_v_p1, __Pyx_memviewslice __pyx_v_img, __Pyx_memviewslice __pyx_v_bounds) {
+</pre><pre class="cython line score-0">&#xA0;<span class="">22</span>: </pre>
+<pre class="cython line score-113" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">23</span>: cpdef void line(cython.floatcomplex p0, cython.floatcomplex p1, int[:, :] img, cython.floatcomplex[:] bounds):</pre>
+<pre class='cython code score-113 '>static PyObject *__pyx_pw_13klein_compute_10draw_utils_1line(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static void __pyx_f_13klein_compute_10draw_utils_line(__pyx_t_float_complex __pyx_v_p0, __pyx_t_float_complex __pyx_v_p1, __Pyx_memviewslice __pyx_v_img, __Pyx_memviewslice __pyx_v_bounds, CYTHON_UNUSED int __pyx_skip_dispatch) {
   float __pyx_v_x0;
   float __pyx_v_y0;
   float __pyx_v_x1;
@@ -460,55 +466,232 @@ body.cython { font-family: courier; font-size: 12; }
   __pyx_L0:;
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
 }
-</pre><pre class="cython line score-0">&#xA0;<span class="">25</span>:     # Gupta Sprull algo for antialiased line drawing</pre>
-<pre class="cython line score-0">&#xA0;<span class="">26</span>:     # Lifted from https://en.wikipedia.org/wiki/Line_drawing_algorithm#Gupta_and_Sproull_algorithm</pre>
-<pre class="cython line score-0">&#xA0;<span class="">27</span>: </pre>
-<pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">28</span>:     cdef float x0 = (p0.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real)</pre>
+
+/* Python wrapper */
+static PyObject *__pyx_pw_13klein_compute_10draw_utils_1line(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_13klein_compute_10draw_utils_1line = {"line", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_13klein_compute_10draw_utils_1line, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_13klein_compute_10draw_utils_1line(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  __pyx_t_float_complex __pyx_v_p0;
+  __pyx_t_float_complex __pyx_v_p1;
+  __Pyx_memviewslice __pyx_v_img = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_bounds = { 0, 0, { 0 }, { 0 }, { 0 } };
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
+  <span class='refnanny'>__Pyx_RefNannySetupContext</span>("line (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = <span class='py_macro_api'>PyTuple_GET_SIZE</span>(__pyx_args);
+  #else
+  __pyx_nargs = <span class='py_c_api'>PyTuple_Size</span>(__pyx_args); if (unlikely(__pyx_nargs &lt; 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_FASTCALL</span>(__pyx_args, __pyx_nargs);
+  {
+    PyObject **__pyx_pyargnames[] = {&amp;__pyx_n_s_p0,&amp;__pyx_n_s_p1,&amp;__pyx_n_s_img,&amp;__pyx_n_s_bounds,0};
+  PyObject* values[4] = {0,0,0,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  4: values[3] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = <span class='pyx_c_api'>__Pyx_NumKwargs_FASTCALL</span>(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = <span class='pyx_c_api'>__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_p0)) != 0)) {
+          (void)<span class='pyx_c_api'>__Pyx_Arg_NewRef_FASTCALL</span>(values[0]);
+          kw_args--;
+        }
+        else if (unlikely(<span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = <span class='pyx_c_api'>__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_p1)) != 0)) {
+          (void)<span class='pyx_c_api'>__Pyx_Arg_NewRef_FASTCALL</span>(values[1]);
+          kw_args--;
+        }
+        else if (unlikely(<span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+        else {
+          <span class='pyx_c_api'>__Pyx_RaiseArgtupleInvalid</span>("line", 1, 4, 4, 1); <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = <span class='pyx_c_api'>__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_img)) != 0)) {
+          (void)<span class='pyx_c_api'>__Pyx_Arg_NewRef_FASTCALL</span>(values[2]);
+          kw_args--;
+        }
+        else if (unlikely(<span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+        else {
+          <span class='pyx_c_api'>__Pyx_RaiseArgtupleInvalid</span>("line", 1, 4, 4, 2); <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = <span class='pyx_c_api'>__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_bounds)) != 0)) {
+          (void)<span class='pyx_c_api'>__Pyx_Arg_NewRef_FASTCALL</span>(values[3]);
+          kw_args--;
+        }
+        else if (unlikely(<span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+        else {
+          <span class='pyx_c_api'>__Pyx_RaiseArgtupleInvalid</span>("line", 1, 4, 4, 3); <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+        }
+      }
+      if (unlikely(kw_args &gt; 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(<span class='pyx_c_api'>__Pyx_ParseOptionalKeywords</span>(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "line") &lt; 0)) <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+      }
+    } else if (unlikely(__pyx_nargs != 4)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 0);
+      values[1] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 1);
+      values[2] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 2);
+      values[3] = <span class='pyx_c_api'>__Pyx_Arg_FASTCALL</span>(__pyx_args, 3);
+    }
+    __pyx_v_p0 = <span class='pyx_c_api'>__Pyx_PyComplex_As___pyx_t_float_complex</span>(values[0]);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 23, __pyx_L3_error)</span>
+    __pyx_v_p1 = <span class='pyx_c_api'>__Pyx_PyComplex_As___pyx_t_float_complex</span>(values[1]);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 23, __pyx_L3_error)</span>
+    __pyx_v_img = <span class='pyx_c_api'>__Pyx_PyObject_to_MemoryviewSlice_dsds_int</span>(values[2], PyBUF_WRITABLE);<span class='error_goto'> if (unlikely(!__pyx_v_img.memview)) __PYX_ERR(1, 23, __pyx_L3_error)</span>
+    __pyx_v_bounds = <span class='pyx_c_api'>__Pyx_PyObject_to_MemoryviewSlice_ds___pyx_t_float_complex</span>(values[3], PyBUF_WRITABLE);<span class='error_goto'> if (unlikely(!__pyx_v_bounds.memview)) __PYX_ERR(1, 23, __pyx_L3_error)</span>
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  <span class='pyx_c_api'>__Pyx_RaiseArgtupleInvalid</span>("line", 1, 4, 4, __pyx_nargs); <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L3_error)</span>
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      <span class='pyx_c_api'>__Pyx_Arg_XDECREF_FASTCALL</span>(values[__pyx_temp]);
+    }
+  }
+  __PYX_XCLEAR_MEMVIEW(&amp;__pyx_v_img, 1);
+  __PYX_XCLEAR_MEMVIEW(&amp;__pyx_v_bounds, 1);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("klein_compute.draw_utils.line", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_13klein_compute_10draw_utils_line(__pyx_self, __pyx_v_p0, __pyx_v_p1, __pyx_v_img, __pyx_v_bounds);
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+
+  /* function exit code */
+  __PYX_XCLEAR_MEMVIEW(&amp;__pyx_v_img, 1);
+  __PYX_XCLEAR_MEMVIEW(&amp;__pyx_v_bounds, 1);
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      <span class='pyx_c_api'>__Pyx_Arg_XDECREF_FASTCALL</span>(values[__pyx_temp]);
+    }
+  }
+  <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_13klein_compute_10draw_utils_line(CYTHON_UNUSED PyObject *__pyx_self, __pyx_t_float_complex __pyx_v_p0, __pyx_t_float_complex __pyx_v_p1, __Pyx_memviewslice __pyx_v_img, __Pyx_memviewslice __pyx_v_bounds) {
+  PyObject *__pyx_r = NULL;
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
+  if (unlikely(!__pyx_v_img.memview)) { <span class='pyx_c_api'>__Pyx_RaiseUnboundLocalError</span>("img"); <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L1_error)</span> }
+  if (unlikely(!__pyx_v_bounds.memview)) { <span class='pyx_c_api'>__Pyx_RaiseUnboundLocalError</span>("bounds"); <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L1_error)</span> }
+  __pyx_f_13klein_compute_10draw_utils_line(__pyx_v_p0, __pyx_v_p1, __pyx_v_img, __pyx_v_bounds, 0);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 23, __pyx_L1_error)</span>
+  __pyx_t_1 = __Pyx_void_to_None(NULL);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 23, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_1);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("klein_compute.draw_utils.line", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
+  <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
+  return __pyx_r;
+}
+/* … */
+  __pyx_tuple__22 = <span class='py_c_api'>PyTuple_Pack</span>(4, __pyx_n_s_p0, __pyx_n_s_p1, __pyx_n_s_img, __pyx_n_s_bounds);<span class='error_goto'> if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 23, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_tuple__22);
+  <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_tuple__22);
+/* … */
+  __pyx_t_7 = <span class='pyx_c_api'>__Pyx_CyFunction_New</span>(&amp;__pyx_mdef_13klein_compute_10draw_utils_1line, 0, __pyx_n_s_line, NULL, __pyx_n_s_klein_compute_draw_utils, __pyx_d, ((PyObject *)__pyx_codeobj__23));<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 23, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
+  if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_d, __pyx_n_s_line, __pyx_t_7) &lt; 0) <span class='error_goto'>__PYX_ERR(1, 23, __pyx_L1_error)</span>
+  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
+</pre><pre class="cython line score-0">&#xA0;<span class="">24</span>:     # Gupta Sprull algo for antialiased line drawing</pre>
+<pre class="cython line score-0">&#xA0;<span class="">25</span>:     # Lifted from https://en.wikipedia.org/wiki/Line_drawing_algorithm#Gupta_and_Sproull_algorithm</pre>
+<pre class="cython line score-0">&#xA0;<span class="">26</span>: </pre>
+<pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">27</span>:     cdef float x0 = (p0.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real)</pre>
 <pre class='cython code score-5 '>  __pyx_t_1 = 0;
   __pyx_t_2 = 1;
   __pyx_t_3 = 0;
   __pyx_t_4 = 2;
   __pyx_v_x0 = (((<span class='pyx_macro_api'>__Pyx_CREAL</span>(__pyx_v_p0) - <span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_1 * __pyx_v_bounds.strides[0]) ))))) / (<span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_2 * __pyx_v_bounds.strides[0]) )))) - <span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_3 * __pyx_v_bounds.strides[0]) )))))) * <span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_4 * __pyx_v_bounds.strides[0]) )))));
-</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">29</span>:     cdef float y0 = (p0.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag)</pre>
+</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">28</span>:     cdef float y0 = (p0.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag)</pre>
 <pre class='cython code score-5 '>  __pyx_t_4 = 0;
   __pyx_t_3 = 1;
   __pyx_t_2 = 0;
   __pyx_t_1 = 2;
   __pyx_v_y0 = (((<span class='pyx_macro_api'>__Pyx_CIMAG</span>(__pyx_v_p0) - <span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_4 * __pyx_v_bounds.strides[0]) ))))) / (<span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_3 * __pyx_v_bounds.strides[0]) )))) - <span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_2 * __pyx_v_bounds.strides[0]) )))))) * <span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_1 * __pyx_v_bounds.strides[0]) )))));
-</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">30</span>:     cdef float x1 = (p1.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real)</pre>
+</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">29</span>:     cdef float x1 = (p1.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real)</pre>
 <pre class='cython code score-5 '>  __pyx_t_1 = 0;
   __pyx_t_2 = 1;
   __pyx_t_3 = 0;
   __pyx_t_4 = 2;
   __pyx_v_x1 = (((<span class='pyx_macro_api'>__Pyx_CREAL</span>(__pyx_v_p1) - <span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_1 * __pyx_v_bounds.strides[0]) ))))) / (<span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_2 * __pyx_v_bounds.strides[0]) )))) - <span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_3 * __pyx_v_bounds.strides[0]) )))))) * <span class='pyx_macro_api'>__Pyx_CREAL</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_4 * __pyx_v_bounds.strides[0]) )))));
-</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">31</span>:     cdef float y1 = (p1.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag)</pre>
+</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">30</span>:     cdef float y1 = (p1.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag)</pre>
 <pre class='cython code score-5 '>  __pyx_t_4 = 0;
   __pyx_t_3 = 1;
   __pyx_t_2 = 0;
   __pyx_t_1 = 2;
   __pyx_v_y1 = (((<span class='pyx_macro_api'>__Pyx_CIMAG</span>(__pyx_v_p1) - <span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_4 * __pyx_v_bounds.strides[0]) ))))) / (<span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_3 * __pyx_v_bounds.strides[0]) )))) - <span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_2 * __pyx_v_bounds.strides[0]) )))))) * <span class='pyx_macro_api'>__Pyx_CIMAG</span>((*((__pyx_t_float_complex *) ( /* dim=0 */ (__pyx_v_bounds.data + __pyx_t_1 * __pyx_v_bounds.strides[0]) )))));
-</pre><pre class="cython line score-0">&#xA0;<span class="">32</span>: </pre>
-<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">33</span>:     cdef float x = x0</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">31</span>: </pre>
+<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">32</span>:     cdef float x = x0</pre>
 <pre class='cython code score-0 '>  __pyx_v_x = __pyx_v_x0;
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">34</span>:     cdef float y = y0</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">33</span>:     cdef float y = y0</pre>
 <pre class='cython code score-0 '>  __pyx_v_y = __pyx_v_y0;
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">35</span>:     cdef float dx = x1 - x0</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">34</span>:     cdef float dx = x1 - x0</pre>
 <pre class='cython code score-0 '>  __pyx_v_dx = (__pyx_v_x1 - __pyx_v_x0);
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">36</span>:     cdef float dy = y1 - y0</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">35</span>:     cdef float dy = y1 - y0</pre>
 <pre class='cython code score-0 '>  __pyx_v_dy = (__pyx_v_y1 - __pyx_v_y0);
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">37</span>:     cdef float d = 2 * dy - dx</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">36</span>:     cdef float d = 2 * dy - dx</pre>
 <pre class='cython code score-0 '>  __pyx_v_d = ((2.0 * __pyx_v_dy) - __pyx_v_dx);
-</pre><pre class="cython line score-0">&#xA0;<span class="">38</span>: </pre>
-<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">39</span>:     cdef float D = 0</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">37</span>: </pre>
+<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">38</span>:     cdef float D = 0</pre>
 <pre class='cython code score-0 '>  __pyx_v_D = 0.0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">40</span>: </pre>
-<pre class="cython line score-36" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">41</span>:     cdef float length = np.sqrt(dx * dx + dy * dy)</pre>
-<pre class='cython code score-36 '>  <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_6, __pyx_n_s_np);<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 41, __pyx_L1_error)</span>
+</pre><pre class="cython line score-0">&#xA0;<span class="">39</span>: </pre>
+<pre class="cython line score-36" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">40</span>:     cdef float length = np.sqrt(dx * dx + dy * dy)</pre>
+<pre class='cython code score-36 '>  <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_6, __pyx_n_s_np);<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 40, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_6);
-  __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_6, __pyx_n_s_sqrt);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 41, __pyx_L1_error)</span>
+  __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_6, __pyx_n_s_sqrt);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 40, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = <span class='py_c_api'>PyFloat_FromDouble</span>(((__pyx_v_dx * __pyx_v_dx) + (__pyx_v_dy * __pyx_v_dy)));<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 41, __pyx_L1_error)</span>
+  __pyx_t_6 = <span class='py_c_api'>PyFloat_FromDouble</span>(((__pyx_v_dx * __pyx_v_dx) + (__pyx_v_dy * __pyx_v_dy)));<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 40, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_6);
   __pyx_t_8 = NULL;
   __pyx_t_9 = 0;
@@ -529,50 +712,50 @@ body.cython { font-family: courier; font-size: 12; }
     __pyx_t_5 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>(__pyx_t_7, __pyx_callargs+1-__pyx_t_9, 1+__pyx_t_9);
     <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_8); __pyx_t_8 = 0;
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_5)) <span class='error_goto'>__PYX_ERR(1, 41, __pyx_L1_error)</span>
+    if (unlikely(!__pyx_t_5)) <span class='error_goto'>__PYX_ERR(1, 40, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_5);
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
   }
-  __pyx_t_10 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_t_5); if (unlikely((__pyx_t_10 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 41, __pyx_L1_error)</span>
+  __pyx_t_10 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_t_5); if (unlikely((__pyx_t_10 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 40, __pyx_L1_error)</span>
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_length = __pyx_t_10;
-</pre><pre class="cython line score-0">&#xA0;<span class="">42</span>: </pre>
-<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">43</span>:     cdef float sin = dx / length</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">41</span>: </pre>
+<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">42</span>:     cdef float sin = dx / length</pre>
 <pre class='cython code score-0 '>  __pyx_v_sin = (__pyx_v_dx / __pyx_v_length);
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">44</span>:     cdef float cos = dy / length</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">43</span>:     cdef float cos = dy / length</pre>
 <pre class='cython code score-0 '>  __pyx_v_cos = (__pyx_v_dy / __pyx_v_length);
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">45</span>:     while (x &lt;= x1):</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">44</span>:     while (x &lt;= x1):</pre>
 <pre class='cython code score-0 '>  while (1) {
     __pyx_t_11 = (__pyx_v_x &lt;= __pyx_v_x1);
     if (!__pyx_t_11) break;
-</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">46</span>:         point(x, y - 1, intensifyColor(D + cos), img, bounds)</pre>
-<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_f_13klein_compute_10draw_utils_intensifyColor((__pyx_v_D + __pyx_v_cos)); if (unlikely(__pyx_t_10 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 46, __pyx_L1_error)</span>
-    __pyx_f_13klein_compute_10draw_utils_point(__pyx_v_x, (__pyx_v_y - 1.0), __pyx_t_10, __pyx_v_img, __pyx_v_bounds);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 46, __pyx_L1_error)</span>
-</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">47</span>:         point(x, y, intensifyColor(D), img, bounds)</pre>
-<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_f_13klein_compute_10draw_utils_intensifyColor(__pyx_v_D); if (unlikely(__pyx_t_10 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 47, __pyx_L1_error)</span>
-    __pyx_f_13klein_compute_10draw_utils_point(__pyx_v_x, __pyx_v_y, __pyx_t_10, __pyx_v_img, __pyx_v_bounds);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 47, __pyx_L1_error)</span>
-</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">48</span>:         point(x, y + 1, intensifyColor(D - cos), img, bounds)</pre>
-<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_f_13klein_compute_10draw_utils_intensifyColor((__pyx_v_D - __pyx_v_cos)); if (unlikely(__pyx_t_10 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 48, __pyx_L1_error)</span>
-    __pyx_f_13klein_compute_10draw_utils_point(__pyx_v_x, (__pyx_v_y + 1.0), __pyx_t_10, __pyx_v_img, __pyx_v_bounds);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 48, __pyx_L1_error)</span>
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">49</span>:         x = x + 1</pre>
+</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">45</span>:         point(x, y - 1, intensifyColor(D + cos), img, bounds)</pre>
+<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_f_13klein_compute_10draw_utils_intensifyColor((__pyx_v_D + __pyx_v_cos)); if (unlikely(__pyx_t_10 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 45, __pyx_L1_error)</span>
+    __pyx_f_13klein_compute_10draw_utils_point(__pyx_v_x, (__pyx_v_y - 1.0), __pyx_t_10, __pyx_v_img, __pyx_v_bounds);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 45, __pyx_L1_error)</span>
+</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">46</span>:         point(x, y, intensifyColor(D), img, bounds)</pre>
+<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_f_13klein_compute_10draw_utils_intensifyColor(__pyx_v_D); if (unlikely(__pyx_t_10 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 46, __pyx_L1_error)</span>
+    __pyx_f_13klein_compute_10draw_utils_point(__pyx_v_x, __pyx_v_y, __pyx_t_10, __pyx_v_img, __pyx_v_bounds);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 46, __pyx_L1_error)</span>
+</pre><pre class="cython line score-5" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">47</span>:         point(x, y + 1, intensifyColor(D - cos), img, bounds)</pre>
+<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_f_13klein_compute_10draw_utils_intensifyColor((__pyx_v_D - __pyx_v_cos)); if (unlikely(__pyx_t_10 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(1, 47, __pyx_L1_error)</span>
+    __pyx_f_13klein_compute_10draw_utils_point(__pyx_v_x, (__pyx_v_y + 1.0), __pyx_t_10, __pyx_v_img, __pyx_v_bounds);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 47, __pyx_L1_error)</span>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">48</span>:         x = x + 1</pre>
 <pre class='cython code score-0 '>    __pyx_v_x = (__pyx_v_x + 1.0);
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">50</span>:         if (d &lt;= 0):</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">49</span>:         if (d &lt;= 0):</pre>
 <pre class='cython code score-0 '>    __pyx_t_11 = (__pyx_v_d &lt;= 0.0);
     if (__pyx_t_11) {
 /* … */
       goto __pyx_L5;
     }
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">51</span>:             D = D + sin</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">50</span>:             D = D + sin</pre>
 <pre class='cython code score-0 '>      __pyx_v_D = (__pyx_v_D + __pyx_v_sin);
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">52</span>:             d = d + 2 * dy</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">51</span>:             d = d + 2 * dy</pre>
 <pre class='cython code score-0 '>      __pyx_v_d = (__pyx_v_d + (2.0 * __pyx_v_dy));
-</pre><pre class="cython line score-0">&#xA0;<span class="">53</span>:         else:</pre>
-<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">54</span>:             D = D + sin - cos</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">52</span>:         else:</pre>
+<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">53</span>:             D = D + sin - cos</pre>
 <pre class='cython code score-0 '>    /*else*/ {
       __pyx_v_D = ((__pyx_v_D + __pyx_v_sin) - __pyx_v_cos);
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">55</span>:             d = d + 2 * (dy - dx)</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">54</span>:             d = d + 2 * (dy - dx)</pre>
 <pre class='cython code score-0 '>      __pyx_v_d = (__pyx_v_d + (2.0 * (__pyx_v_dy - __pyx_v_dx)));
-</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">56</span>:             y = y + 1</pre>
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">55</span>:             y = y + 1</pre>
 <pre class='cython code score-0 '>      __pyx_v_y = (__pyx_v_y + 1.0);
     }
     __pyx_L5:;

@@ -3,7 +3,6 @@
 #cython: cdivision=True 
 #cython: nonecheck=False
 
-
 import cython
 import numpy as np
 cimport numpy as np
@@ -21,7 +20,7 @@ cdef void point(float x, float y, float c, int[:, :] img, cython.floatcomplex[:]
 cdef float intensifyColor(float d):
     return 1 - np.power(d * 2/3., 2)
 
-cdef void line(cython.floatcomplex p0, cython.floatcomplex p1, int[:, :] img, cython.floatcomplex[:] bounds):
+cpdef void line(cython.floatcomplex p0, cython.floatcomplex p1, int[:, :] img, cython.floatcomplex[:] bounds):
     # Gupta Sprull algo for antialiased line drawing
     # Lifted from https://en.wikipedia.org/wiki/Line_drawing_algorithm#Gupta_and_Sproull_algorithm
 

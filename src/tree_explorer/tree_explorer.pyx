@@ -4,12 +4,11 @@
 #cython: cdivision=True 
 #cython: nonecheck=False
 
-foo = 'fuck'
-
 import cython 
 from cython.parallel import prange
 import numpy as np
 cimport numpy as np
+from klein_compute.draw_utils import line
 
 cdef int mod(int a, int b):
     cdef int r = a % b;
