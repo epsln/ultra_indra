@@ -40,3 +40,22 @@ def test_grandma():
     with pytest.raises(ValueError):
         rm.generate(0, 0) 
     output = rm.generate(ta, tb) 
+
+def test_grandma_special():
+    ta = 2
+    tb = 2
+    tab = -1 
+    rm = RecipeManager("grandma_special_recipe")
+    with pytest.raises(ValueError):
+        rm.generate(0, 0, -2) 
+    with pytest.raises(ValueError):
+        rm.generate(3, 1, 2) 
+    output = rm.generate(ta, tb, tab) 
+
+def test_jorgensen():
+    ta = 2
+    tb = 2
+    rm = RecipeManager("jorgensen")
+    with pytest.raises(ValueError):
+        rm.generate(0, 0) 
+    output = rm.generate(ta, tb) 
