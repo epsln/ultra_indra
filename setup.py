@@ -16,7 +16,6 @@ ext_modules = []
 if use_cython:
     ext_modules += [
         Extension("klein_compute.tree_explorer", ["cython/tree_explorer.pyx"]),
-        Extension("klein_compute.tree_exp", ["cython/tree_explorer_classless.pyx"]),
     ]
     cmdclass.update({'build_ext': build_ext})
 else:
