@@ -15,12 +15,14 @@ ext_modules = []
 
 if use_cython:
     ext_modules += [
-        Extension("klein_compute.tree_explorer", ["cython/tree_explorer.pyx"]),
+        Extension("klein_compute.tree_explorer", ["src/tree_explorer/tree_explorer.pyx"]),
+        Extension("klein_compute.draw_utils", ["src/draw_utils/draw_utils.pyx"]),
     ]
     cmdclass.update({'build_ext': build_ext})
 else:
     ext_modules += [
-        Extension("klein_compute.tree_explorer", ["cython/tree_explorer.c"]),
+        Extension("klein_compute.tree_explorer", ["src/tree_explorer/tree_explorer.c"]),
+        Extension("klein_compute.draw_utils", ["src/draw_utils/draw_utils.c"]),
     ]
 
 setup(
