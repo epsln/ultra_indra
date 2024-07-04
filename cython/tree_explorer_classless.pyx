@@ -74,11 +74,18 @@ cdef int branch_terminated(int[:] tag, int[:] state, int[:, :] FSA, cython.float
         if abs(p - comp_p) > epsilon:
             return 0 
         
+    for i from 0 <= i < num_fp:
+        #TODO: Memoization
+        #TODO: Line tracing
+        fp = fixed_points[idx_gen, i]
+        comp_fp = fixed_points[idx_gen, i + 1]
+        p = mobius(words[level[0]], fp)
+        comp_p = mobius(words[level[0]], comp_fp)
+
         x0 = (p.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real) 
         y0 = (p.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
-        x1 = (p.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real) 
-        y1 = (p.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
-
+        x1 = (comp_p.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real) 
+        y1 = (comp_p.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
         img[int(x0), int(y0)] = 1
         img[int(x1), int(y1)] = 1
 
@@ -136,7 +143,7 @@ cpdef list compute_start_points(int max_depth, float epsilon, np.ndarray generat
     cdef np.ndarray[np.int32_t, ndim = 1] state = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] level = np.zeros((1), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 2] img = np.zeros((1080, 1080), dtype=np.int32)
-    cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((2), dtype=np.complex64)
+    cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((4), dtype=np.complex64)
 
     bounds[0] = -1 - 1j
     bounds[1] = +1 + 1j
@@ -181,7 +188,7 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
     cdef np.ndarray[np.int32_t, ndim = 1] tag   = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] state = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] level = np.zeros((1), dtype=np.int32)
-    cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((2), dtype=np.complex64)
+    cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((3), dtype=np.complex64)
 
     bounds[0] = -1 - 1j
     bounds[1] = +1 + 1j
@@ -215,5 +222,4 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
         if p_level[0] == -1 and p_tag[0] == 1:
             break
         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
-
     return img
