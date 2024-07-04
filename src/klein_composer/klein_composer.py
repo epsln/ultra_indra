@@ -37,14 +37,13 @@ class KleinComposer:
             return np.floor(np.log(num_threads - 4) / np.log(3))
 
     def compute_start_points(self):
-        return compute_start_points(
-            self.start_depth,
-            self.cm.epsilon,
-            self.fm.generators,
-            self.fm.FSA,
-            self.fm.fixed_points,
-            self.fm.fixed_points_shape,
-        )
+        #TODO: Use the cython function
+        #This is a bodge in the meantime
+        output = []
+        for i, g in enumerate(self.fm.generators):
+            output.append((i, i + 1, g))
+
+        return output
 
     def compute_thread(self):
         start_elements = self.compute_start_points()
@@ -53,11 +52,11 @@ class KleinComposer:
             (e[0], e[1], e[2], self.cm.max_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points, self.fm.fixed_points_shape, img)
             for e in start_elements 
         ]
+        print(start_elements)
 
         with self.pool as p:
             output = p.starmap(compute_tree, arguments)
 
         for o in output:
             img = np.add(img, o)
-        
         return img 
