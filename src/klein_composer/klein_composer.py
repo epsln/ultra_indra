@@ -52,7 +52,6 @@ class KleinComposer:
             (e[0], e[1], e[2], self.cm.max_depth, self.cm.epsilon, self.fm.generators, self.fm.FSA, self.fm.fixed_points, self.fm.fixed_points_shape, img)
             for e in start_elements 
         ]
-        print(start_elements)
 
         with self.pool as p:
             output = p.starmap(compute_tree, arguments)
