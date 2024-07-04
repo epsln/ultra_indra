@@ -104,7 +104,7 @@ class RecipeManager:
         return np.array([gen_a, gen_b, np.linalg.inv(gen_a), np.linalg.inv(gen_b)])
 
     @staticmethod
-    def jorgensen_recipe(ta, tb, tab = None):
+    def jorgensen_recipe(ta, tb, tab=None):
         if ta == 0 and tb == 0:
             raise ValueError("ta and tb cannot be 0 ! Crashing")
         z = 0.5 * np.sqrt(complex(ta * ta * tb * tb - 4 * ta * ta - 4 * tb * tb))
