@@ -86,8 +86,8 @@ cdef int branch_terminated(int[:] tag, int[:] state, int[:, :] FSA, cython.float
         y0 = (p.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
         x1 = (comp_p.real - bounds[0].real)/(bounds[1].real - bounds[0].real) * (bounds[2].real) 
         y1 = (comp_p.imag - bounds[0].imag)/(bounds[1].imag - bounds[0].imag) * (bounds[2].imag) 
-        img[int(x0), int(y0)] = 1
-        img[int(x1), int(y1)] = 1
+        img[int(x0), int(y0)] = 255 
+        img[int(x1), int(y1)] = 255 
 
     return 1 
 
@@ -183,11 +183,12 @@ cpdef list compute_start_points(int max_depth, float epsilon, np.ndarray generat
         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
     return last_points 
 
-cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_word, int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape, np.ndarray img):
+cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_word, int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape, np.ndarray img_):
     cdef np.ndarray[np.complex64_t, ndim = 3] words = np.zeros((max_depth, 2, 2), dtype=np.complex64)
     cdef np.ndarray[np.int32_t, ndim = 1] tag   = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] state = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] level = np.zeros((1), dtype=np.int32)
+    cdef np.ndarray[np.int32_t, ndim = 2] img = np.zeros((1080, 1080), dtype=np.int32)
     cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((3), dtype=np.complex64)
 
     bounds[0] = -1 - 1j
@@ -208,18 +209,18 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
     cdef int[:, :] p_img = img.astype(np.intc)
     cdef cython.floatcomplex[:] p_bounds = bounds.astype(np.complex64)
     cdef cython.floatcomplex [:, :] p_fix_pt   = fix_pt.astype(np.complex64)
-    p_tag[0] = 0 
-    p_state[0] = 1 
 
-    
-    while not (p_level[0] == -1 and p_tag[0] == 1):
+    while not (p_level[0] == -1 and p_tag[0] == start_tag):
         while branch_terminated(p_tag, p_state, p_fsa, p_words, p_fix_pt, p_fix_pt_shape, p_img, p_bounds, p_level, epsilon, max_depth) == 0:
             forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
         while True:
             backward_move(p_level) 
             if available_turn(p_tag, p_state, p_fsa, p_words, p_level, epsilon) == 1 or p_level[0] == -1:
                 break
-        if p_level[0] == -1 and p_tag[0] == 1:
+        if p_level[0] == -1 and p_tag[0] == start_tag:
             break
         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
-    return img
+    
+    print(tag)
+    print(np.count_nonzero(np.asarray(p_img)))
+    return np.asarray(p_img) 
