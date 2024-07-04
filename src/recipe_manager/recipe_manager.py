@@ -75,7 +75,7 @@ class RecipeManager:
     def grandma_special_recipe(ta, tb, tab):
         if ta == 0 and tb == 0:
             raise ValueError("ta and tb cannot be 0 ! Crashing")
-        elif cabs(tab) == 2:
+        elif abs(tab) == 2:
             raise ValueError("taB cannot be +/-2 ! Crashing")
 
         tc = complex(ta * ta + tb * tb + tab * tab - ta * tb * tab - 2)
@@ -86,20 +86,20 @@ class RecipeManager:
         else:
             R = -np.sqrt(tc + 2)
 
-        z0 = ((tab - 2) * (tb + R)) / (tb * tab - 2 * ta + I * Q * tab)
+        z0 = ((tab - 2) * (tb + R)) / (tb * tab - 2 * ta + 1j * Q * tab)
 
         gen_a = np.zeros((2, 2), dtype=complex)
         gen_b = np.zeros((2, 2), dtype=complex)
 
         gen_a[0, 0] = ta / 2
-        gen_a[0, 1] = (ta * tab - 2 * tb + 2 * I * Q) / (z0 * (2 * tab + 4))
-        gen_a[1, 0] = (z0 * (ta * tab - 2 * tb - 2 * I * Q)) / (2 * tab - 4)
+        gen_a[0, 1] = (ta * tab - 2 * tb + 2 * 1j * Q) / (z0 * (2 * tab + 4))
+        gen_a[1, 0] = (z0 * (ta * tab - 2 * tb - 2 * 1j * Q)) / (2 * tab - 4)
         gen_a[1, 1] = ta / 2
 
-        gen_b[0, 0] = (tb - I * Q) / 2
-        gen_b[0, 1] = (tb * tab - 2 * ta - I * Q * tab) / (z0 * (2 * tab + 4))
-        gen_b[1, 0] = (z0 * (tb * tab - 2 * ta + I * Q * tab)) / (2 * tab + 4)
-        gen_b[1, 1] = (tb + I * Q) / 2
+        gen_b[0, 0] = (tb - 1j * Q) / 2
+        gen_b[0, 1] = (tb * tab - 2 * ta - 1j * Q * tab) / (z0 * (2 * tab + 4))
+        gen_b[1, 0] = (z0 * (tb * tab - 2 * ta + 1j * Q * tab)) / (2 * tab + 4)
+        gen_b[1, 1] = (tb + 1j * Q) / 2
 
         return np.array([gen_a, gen_b, np.linalg.inv(gen_a), np.linalg.inv(gen_b)])
 
