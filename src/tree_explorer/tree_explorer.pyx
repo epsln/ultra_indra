@@ -222,6 +222,4 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
             break
         turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
     
-    print(tag)
-    print(np.count_nonzero(np.asarray(p_img)))
     return np.asarray(p_img) 
