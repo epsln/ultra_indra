@@ -1,4 +1,4 @@
-from src.utils import pad_to_dense
+from src.utils import pad_to_dense, cyclic_permutation
 
 import numpy as np
 from fractions import Fraction
@@ -14,7 +14,7 @@ class FractalModel:
     def __init__(
         self,
         generators: np.ndarray,
-        special_fract: Fraction = Fraction(1, 2),
+        special_fract: Fraction = Fraction(0, 1),
         FSA: Optional[np.ndarray] = DEFAULT_FSA,
     ):
         self.generators: np.ndarray = generators
@@ -52,9 +52,11 @@ class FractalModel:
     def _compute_fixed_points(self):
         fix_pts = [[] for i in range(4)]
         self.fixed_points_shape = np.array([0, 0, 0, 0])
+        special_word_inv = [(i + 2) % 4 for i in self.special_word]
         cleaned_spe_w = []
-        for spe_w in [self.special_word, [0, 1, 2, 3]]:
-            for perm in set(permutations(spe_w)):
+
+        for w in [[0, 1, 2, 3], self.special_word, special_word_inv, [1, 0, 3, 2]]: 
+            for perm in cyclic_permutation(w):
                 valid = True
                 for curr_e, next_e in zip(perm, perm[1:]):
                     if (curr_e + 2) % 4 == next_e:
@@ -62,19 +64,14 @@ class FractalModel:
                         break
                 if valid:
                     cleaned_spe_w.append(perm)
-
+                    
         for perm in cleaned_spe_w:
             word = self.generators[perm[0]]
-            word_inv = self.generators[(perm[0] + 2) % 4]
             for p in perm[1:]:
                 word = np.matmul(word, self.generators[p])
-                word_inv = np.matmul(word_inv, self.generators[(p + 2) % 4])
 
             idx_gen = perm[-1]
             for w in self._mobius_fixed_point(word).flatten().tolist():
-                fix_pts[idx_gen].append(w)
-
-            for w in self._mobius_fixed_point(word_inv).flatten().tolist():
                 fix_pts[idx_gen].append(w)
 
         for idx_gen, f in enumerate(fix_pts):
