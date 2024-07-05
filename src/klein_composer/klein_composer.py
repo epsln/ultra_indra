@@ -1,4 +1,4 @@
-from klein_compute.tree_explorer import compute_tree
+from src.tree_explorer.tree_explorer import compute_tree
 
 import numpy as np
 from multiprocessing import Pool
