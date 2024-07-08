@@ -18,7 +18,6 @@ class KleinComposer:
         self.max_depth = compute_model.max_depth
         self.special_fract = fractal_model.special_fract
         self.word_length = 0
-        self.special_word = [0]
         self.fix_pts = fractal_model.fixed_points
         self.start_depth = self.compute_start_depth(self.num_threads)
 
