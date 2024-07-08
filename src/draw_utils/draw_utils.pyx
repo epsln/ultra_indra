@@ -16,10 +16,8 @@ cdef int bounds_check(float x, float y, ImageDataclass img):
         return 0
 
 cdef void point(float x, float y, float c, ImageDataclass img):
-    cdef float i = map(x, img.z_min.real, img.z_max.real, 0, img.width)
-    cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)
-    if bounds_check(i, j, img) == 1:
-        img.image_array[int(i), int(j)] = int(c * 255)
+    if bounds_check(x, y, img) == 1:
+        img.image_array[int(x), int(y)] = int(c * 255)
 
 cdef float intensifyColor(float d):
     return 1 - np.power(d * 2/3., 2)
@@ -33,13 +31,13 @@ cdef void line(cython.floatcomplex p0, cython.floatcomplex p1, ImageDataclass im
     
     #If the two points are very close, just draw a point
     if abs(p0 - p1) <= 1e-6:
-        point(p0.real, p0.imag, 1, img)
+  #      point(p0.real, p0.imag, 1, img)
         return
 
-    cdef float x0 = p0.real 
-    cdef float y0 = p0.imag 
-    cdef float x1 = p1.real
-    cdef float y1 = p1.imag 
+    cdef float x0 = map(p0.real, img.z_min.real, img.z_max.real, 0, img.width)
+    cdef float y0 = map(p0.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
+    cdef float x1 = map(p1.real, img.z_min.real, img.z_max.real, 0, img.width)
+    cdef float y1 = map(p1.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
 
     cdef float x = x0
     cdef float y = y0

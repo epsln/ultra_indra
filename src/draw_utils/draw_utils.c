@@ -1908,8 +1908,8 @@ typedef npy_cdouble __pyx_t_5numpy_complex_t;
  * import cython
  * 
  * cdef class ImageDataclass:             # <<<<<<<<<<<<<<
- *     # fields can be declared using annotations
  *     cdef int width
+ *     cdef int height
  */
 struct __pyx_obj_3src_4data_15image_dataclass_ImageDataclass {
   PyObject_HEAD
@@ -19063,18 +19063,15 @@ static int __pyx_f_3src_10draw_utils_10draw_utils_bounds_check(float __pyx_v_x, 
  *         return 0
  * 
  * cdef void point(float x, float y, float c, ImageDataclass img):             # <<<<<<<<<<<<<<
- *     cdef float i = map(x, img.z_min.real, img.z_max.real, 0, img.width)
- *     cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)
+ *     if bounds_check(x, y, img) == 1:
+ *         img.image_array[int(x), int(y)] = int(c * 255)
  */
 
 static void __pyx_f_3src_10draw_utils_10draw_utils_point(float __pyx_v_x, float __pyx_v_y, float __pyx_v_c, struct __pyx_obj_3src_4data_15image_dataclass_ImageDataclass *__pyx_v_img) {
-  float __pyx_v_i;
-  float __pyx_v_j;
-  float __pyx_t_1;
+  int __pyx_t_1;
   int __pyx_t_2;
-  int __pyx_t_3;
+  Py_ssize_t __pyx_t_3;
   Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -19082,51 +19079,31 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_point(float __pyx_v_x, float 
   /* "src/draw_utils/draw_utils.pyx":19
  * 
  * cdef void point(float x, float y, float c, ImageDataclass img):
- *     cdef float i = map(x, img.z_min.real, img.z_max.real, 0, img.width)             # <<<<<<<<<<<<<<
- *     cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)
- *     if bounds_check(i, j, img) == 1:
- */
-  __pyx_t_1 = __pyx_f_3src_10draw_utils_10draw_utils_map(__pyx_v_x, __Pyx_CREAL(__pyx_v_img->z_min), __Pyx_CREAL(__pyx_v_img->z_max), 0.0, __pyx_v_img->width); if (unlikely(__pyx_t_1 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L1_error)
-  __pyx_v_i = __pyx_t_1;
-
-  /* "src/draw_utils/draw_utils.pyx":20
- * cdef void point(float x, float y, float c, ImageDataclass img):
- *     cdef float i = map(x, img.z_min.real, img.z_max.real, 0, img.width)
- *     cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)             # <<<<<<<<<<<<<<
- *     if bounds_check(i, j, img) == 1:
- *         img.image_array[int(i), int(j)] = int(c * 255)
- */
-  __pyx_t_1 = __pyx_f_3src_10draw_utils_10draw_utils_map(__pyx_v_y, __Pyx_CIMAG(__pyx_v_img->z_min), __Pyx_CIMAG(__pyx_v_img->z_max), 0.0, __pyx_v_img->height); if (unlikely(__pyx_t_1 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 20, __pyx_L1_error)
-  __pyx_v_j = __pyx_t_1;
-
-  /* "src/draw_utils/draw_utils.pyx":21
- *     cdef float i = map(x, img.z_min.real, img.z_max.real, 0, img.width)
- *     cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)
- *     if bounds_check(i, j, img) == 1:             # <<<<<<<<<<<<<<
- *         img.image_array[int(i), int(j)] = int(c * 255)
+ *     if bounds_check(x, y, img) == 1:             # <<<<<<<<<<<<<<
+ *         img.image_array[int(x), int(y)] = int(c * 255)
  * 
  */
-  __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_bounds_check(__pyx_v_i, __pyx_v_j, __pyx_v_img); if (unlikely(__pyx_t_2 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(1, 21, __pyx_L1_error)
-  __pyx_t_3 = (__pyx_t_2 == 1);
-  if (__pyx_t_3) {
+  __pyx_t_1 = __pyx_f_3src_10draw_utils_10draw_utils_bounds_check(__pyx_v_x, __pyx_v_y, __pyx_v_img); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L1_error)
+  __pyx_t_2 = (__pyx_t_1 == 1);
+  if (__pyx_t_2) {
 
-    /* "src/draw_utils/draw_utils.pyx":22
- *     cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)
- *     if bounds_check(i, j, img) == 1:
- *         img.image_array[int(i), int(j)] = int(c * 255)             # <<<<<<<<<<<<<<
+    /* "src/draw_utils/draw_utils.pyx":20
+ * cdef void point(float x, float y, float c, ImageDataclass img):
+ *     if bounds_check(x, y, img) == 1:
+ *         img.image_array[int(x), int(y)] = int(c * 255)             # <<<<<<<<<<<<<<
  * 
  * cdef float intensifyColor(float d):
  */
-    if (unlikely(!__pyx_v_img->image_array.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(1, 22, __pyx_L1_error)}
-    __pyx_t_4 = ((Py_ssize_t)__pyx_v_i);
-    __pyx_t_5 = ((Py_ssize_t)__pyx_v_j);
-    *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_img->image_array.data + __pyx_t_4 * __pyx_v_img->image_array.strides[0]) ) + __pyx_t_5 * __pyx_v_img->image_array.strides[1]) )) = ((int)(__pyx_v_c * 255.0));
+    if (unlikely(!__pyx_v_img->image_array.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(1, 20, __pyx_L1_error)}
+    __pyx_t_3 = ((Py_ssize_t)__pyx_v_x);
+    __pyx_t_4 = ((Py_ssize_t)__pyx_v_y);
+    *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_img->image_array.data + __pyx_t_3 * __pyx_v_img->image_array.strides[0]) ) + __pyx_t_4 * __pyx_v_img->image_array.strides[1]) )) = ((int)(__pyx_v_c * 255.0));
 
-    /* "src/draw_utils/draw_utils.pyx":21
- *     cdef float i = map(x, img.z_min.real, img.z_max.real, 0, img.width)
- *     cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)
- *     if bounds_check(i, j, img) == 1:             # <<<<<<<<<<<<<<
- *         img.image_array[int(i), int(j)] = int(c * 255)
+    /* "src/draw_utils/draw_utils.pyx":19
+ * 
+ * cdef void point(float x, float y, float c, ImageDataclass img):
+ *     if bounds_check(x, y, img) == 1:             # <<<<<<<<<<<<<<
+ *         img.image_array[int(x), int(y)] = int(c * 255)
  * 
  */
   }
@@ -19135,8 +19112,8 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_point(float __pyx_v_x, float 
  *         return 0
  * 
  * cdef void point(float x, float y, float c, ImageDataclass img):             # <<<<<<<<<<<<<<
- *     cdef float i = map(x, img.z_min.real, img.z_max.real, 0, img.width)
- *     cdef float j = map(y, img.z_min.imag, img.z_max.imag, 0, img.height)
+ *     if bounds_check(x, y, img) == 1:
+ *         img.image_array[int(x), int(y)] = int(c * 255)
  */
 
   /* function exit code */
@@ -19146,8 +19123,8 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_point(float __pyx_v_x, float 
   __pyx_L0:;
 }
 
-/* "src/draw_utils/draw_utils.pyx":24
- *         img.image_array[int(i), int(j)] = int(c * 255)
+/* "src/draw_utils/draw_utils.pyx":22
+ *         img.image_array[int(x), int(y)] = int(c * 255)
  * 
  * cdef float intensifyColor(float d):             # <<<<<<<<<<<<<<
  *     return 1 - np.power(d * 2/3., 2)
@@ -19168,19 +19145,19 @@ static float __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor(float __pyx_v
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("intensifyColor", 1);
 
-  /* "src/draw_utils/draw_utils.pyx":25
+  /* "src/draw_utils/draw_utils.pyx":23
  * 
  * cdef float intensifyColor(float d):
  *     return 1 - np.power(d * 2/3., 2)             # <<<<<<<<<<<<<<
  * 
  * cdef float map(float x, float a, float b, float c, float d):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 25, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_power); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 25, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_power); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyFloat_FromDouble((((double)(__pyx_v_d * 2.0)) / 3.)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 25, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble((((double)(__pyx_v_d * 2.0)) / 3.)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -19201,20 +19178,20 @@ static float __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor(float __pyx_v
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 2+__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 25, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 23, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
-  __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 25, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_6 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 25, __pyx_L1_error)
+  __pyx_t_6 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_6 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 23, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_6;
   goto __pyx_L0;
 
-  /* "src/draw_utils/draw_utils.pyx":24
- *         img.image_array[int(i), int(j)] = int(c * 255)
+  /* "src/draw_utils/draw_utils.pyx":22
+ *         img.image_array[int(x), int(y)] = int(c * 255)
  * 
  * cdef float intensifyColor(float d):             # <<<<<<<<<<<<<<
  *     return 1 - np.power(d * 2/3., 2)
@@ -19234,7 +19211,7 @@ static float __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor(float __pyx_v
   return __pyx_r;
 }
 
-/* "src/draw_utils/draw_utils.pyx":27
+/* "src/draw_utils/draw_utils.pyx":25
  *     return 1 - np.power(d * 2/3., 2)
  * 
  * cdef float map(float x, float a, float b, float c, float d):             # <<<<<<<<<<<<<<
@@ -19245,7 +19222,7 @@ static float __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor(float __pyx_v
 static float __pyx_f_3src_10draw_utils_10draw_utils_map(float __pyx_v_x, float __pyx_v_a, float __pyx_v_b, float __pyx_v_c, float __pyx_v_d) {
   float __pyx_r;
 
-  /* "src/draw_utils/draw_utils.pyx":28
+  /* "src/draw_utils/draw_utils.pyx":26
  * 
  * cdef float map(float x, float a, float b, float c, float d):
  *     return (x - a)/(b - a) * (d - c)             # <<<<<<<<<<<<<<
@@ -19255,7 +19232,7 @@ static float __pyx_f_3src_10draw_utils_10draw_utils_map(float __pyx_v_x, float _
   __pyx_r = (((__pyx_v_x - __pyx_v_a) / (__pyx_v_b - __pyx_v_a)) * (__pyx_v_d - __pyx_v_c));
   goto __pyx_L0;
 
-  /* "src/draw_utils/draw_utils.pyx":27
+  /* "src/draw_utils/draw_utils.pyx":25
  *     return 1 - np.power(d * 2/3., 2)
  * 
  * cdef float map(float x, float a, float b, float c, float d):             # <<<<<<<<<<<<<<
@@ -19268,7 +19245,7 @@ static float __pyx_f_3src_10draw_utils_10draw_utils_map(float __pyx_v_x, float _
   return __pyx_r;
 }
 
-/* "src/draw_utils/draw_utils.pyx":30
+/* "src/draw_utils/draw_utils.pyx":28
  *     return (x - a)/(b - a) * (d - c)
  * 
  * cdef void line(cython.floatcomplex p0, cython.floatcomplex p1, ImageDataclass img):             # <<<<<<<<<<<<<<
@@ -19303,85 +19280,76 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("line", 1);
 
-  /* "src/draw_utils/draw_utils.pyx":35
+  /* "src/draw_utils/draw_utils.pyx":33
  * 
  *     #If the two points are very close, just draw a point
  *     if abs(p0 - p1) <= 1e-6:             # <<<<<<<<<<<<<<
- *         point(p0.real, p0.imag, 1, img)
+ *   #      point(p0.real, p0.imag, 1, img)
  *         return
  */
   __pyx_t_1 = (__Pyx_c_abs_float(__Pyx_c_diff_float(__pyx_v_p0, __pyx_v_p1)) <= 1e-6);
   if (__pyx_t_1) {
 
-    /* "src/draw_utils/draw_utils.pyx":36
- *     #If the two points are very close, just draw a point
+    /* "src/draw_utils/draw_utils.pyx":35
  *     if abs(p0 - p1) <= 1e-6:
- *         point(p0.real, p0.imag, 1, img)             # <<<<<<<<<<<<<<
- *         return
- * 
- */
-    __pyx_f_3src_10draw_utils_10draw_utils_point(__Pyx_CREAL(__pyx_v_p0), __Pyx_CIMAG(__pyx_v_p0), 1.0, __pyx_v_img); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 36, __pyx_L1_error)
-
-    /* "src/draw_utils/draw_utils.pyx":37
- *     if abs(p0 - p1) <= 1e-6:
- *         point(p0.real, p0.imag, 1, img)
+ *   #      point(p0.real, p0.imag, 1, img)
  *         return             # <<<<<<<<<<<<<<
  * 
- *     cdef float x0 = p0.real
+ *     cdef float x0 = map(p0.real, img.z_min.real, img.z_max.real, 0, img.width)
  */
     goto __pyx_L0;
 
-    /* "src/draw_utils/draw_utils.pyx":35
+    /* "src/draw_utils/draw_utils.pyx":33
  * 
  *     #If the two points are very close, just draw a point
  *     if abs(p0 - p1) <= 1e-6:             # <<<<<<<<<<<<<<
- *         point(p0.real, p0.imag, 1, img)
+ *   #      point(p0.real, p0.imag, 1, img)
  *         return
  */
   }
 
-  /* "src/draw_utils/draw_utils.pyx":39
+  /* "src/draw_utils/draw_utils.pyx":37
  *         return
  * 
- *     cdef float x0 = p0.real             # <<<<<<<<<<<<<<
- *     cdef float y0 = p0.imag
- *     cdef float x1 = p1.real
+ *     cdef float x0 = map(p0.real, img.z_min.real, img.z_max.real, 0, img.width)             # <<<<<<<<<<<<<<
+ *     cdef float y0 = map(p0.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
+ *     cdef float x1 = map(p1.real, img.z_min.real, img.z_max.real, 0, img.width)
  */
-  __pyx_t_2 = __Pyx_CREAL(__pyx_v_p0);
+  __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_map(__Pyx_CREAL(__pyx_v_p0), __Pyx_CREAL(__pyx_v_img->z_min), __Pyx_CREAL(__pyx_v_img->z_max), 0.0, __pyx_v_img->width); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 37, __pyx_L1_error)
   __pyx_v_x0 = __pyx_t_2;
 
-  /* "src/draw_utils/draw_utils.pyx":40
+  /* "src/draw_utils/draw_utils.pyx":38
  * 
- *     cdef float x0 = p0.real
- *     cdef float y0 = p0.imag             # <<<<<<<<<<<<<<
- *     cdef float x1 = p1.real
- *     cdef float y1 = p1.imag
+ *     cdef float x0 = map(p0.real, img.z_min.real, img.z_max.real, 0, img.width)
+ *     cdef float y0 = map(p0.imag, img.z_min.imag, img.z_max.imag, 0, img.height)             # <<<<<<<<<<<<<<
+ *     cdef float x1 = map(p1.real, img.z_min.real, img.z_max.real, 0, img.width)
+ *     cdef float y1 = map(p1.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
  */
-  __pyx_t_2 = __Pyx_CIMAG(__pyx_v_p0);
+  __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_map(__Pyx_CIMAG(__pyx_v_p0), __Pyx_CIMAG(__pyx_v_img->z_min), __Pyx_CIMAG(__pyx_v_img->z_max), 0.0, __pyx_v_img->height); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 38, __pyx_L1_error)
   __pyx_v_y0 = __pyx_t_2;
 
-  /* "src/draw_utils/draw_utils.pyx":41
- *     cdef float x0 = p0.real
- *     cdef float y0 = p0.imag
- *     cdef float x1 = p1.real             # <<<<<<<<<<<<<<
- *     cdef float y1 = p1.imag
+  /* "src/draw_utils/draw_utils.pyx":39
+ *     cdef float x0 = map(p0.real, img.z_min.real, img.z_max.real, 0, img.width)
+ *     cdef float y0 = map(p0.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
+ *     cdef float x1 = map(p1.real, img.z_min.real, img.z_max.real, 0, img.width)             # <<<<<<<<<<<<<<
+ *     cdef float y1 = map(p1.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
  * 
  */
-  __pyx_t_2 = __Pyx_CREAL(__pyx_v_p1);
+  __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_map(__Pyx_CREAL(__pyx_v_p1), __Pyx_CREAL(__pyx_v_img->z_min), __Pyx_CREAL(__pyx_v_img->z_max), 0.0, __pyx_v_img->width); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 39, __pyx_L1_error)
   __pyx_v_x1 = __pyx_t_2;
 
-  /* "src/draw_utils/draw_utils.pyx":42
- *     cdef float y0 = p0.imag
- *     cdef float x1 = p1.real
- *     cdef float y1 = p1.imag             # <<<<<<<<<<<<<<
+  /* "src/draw_utils/draw_utils.pyx":40
+ *     cdef float y0 = map(p0.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
+ *     cdef float x1 = map(p1.real, img.z_min.real, img.z_max.real, 0, img.width)
+ *     cdef float y1 = map(p1.imag, img.z_min.imag, img.z_max.imag, 0, img.height)             # <<<<<<<<<<<<<<
  * 
  *     cdef float x = x0
  */
-  __pyx_t_2 = __Pyx_CIMAG(__pyx_v_p1);
+  __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_map(__Pyx_CIMAG(__pyx_v_p1), __Pyx_CIMAG(__pyx_v_img->z_min), __Pyx_CIMAG(__pyx_v_img->z_max), 0.0, __pyx_v_img->height); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 40, __pyx_L1_error)
   __pyx_v_y1 = __pyx_t_2;
 
-  /* "src/draw_utils/draw_utils.pyx":44
- *     cdef float y1 = p1.imag
+  /* "src/draw_utils/draw_utils.pyx":42
+ *     cdef float y1 = map(p1.imag, img.z_min.imag, img.z_max.imag, 0, img.height)
  * 
  *     cdef float x = x0             # <<<<<<<<<<<<<<
  *     cdef float y = y0
@@ -19389,7 +19357,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_x = __pyx_v_x0;
 
-  /* "src/draw_utils/draw_utils.pyx":45
+  /* "src/draw_utils/draw_utils.pyx":43
  * 
  *     cdef float x = x0
  *     cdef float y = y0             # <<<<<<<<<<<<<<
@@ -19398,7 +19366,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_y = __pyx_v_y0;
 
-  /* "src/draw_utils/draw_utils.pyx":46
+  /* "src/draw_utils/draw_utils.pyx":44
  *     cdef float x = x0
  *     cdef float y = y0
  *     cdef float dx = x1 - x0             # <<<<<<<<<<<<<<
@@ -19407,7 +19375,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_dx = (__pyx_v_x1 - __pyx_v_x0);
 
-  /* "src/draw_utils/draw_utils.pyx":47
+  /* "src/draw_utils/draw_utils.pyx":45
  *     cdef float y = y0
  *     cdef float dx = x1 - x0
  *     cdef float dy = y1 - y0             # <<<<<<<<<<<<<<
@@ -19416,7 +19384,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_dy = (__pyx_v_y1 - __pyx_v_y0);
 
-  /* "src/draw_utils/draw_utils.pyx":48
+  /* "src/draw_utils/draw_utils.pyx":46
  *     cdef float dx = x1 - x0
  *     cdef float dy = y1 - y0
  *     cdef float d = 2 * dy - dx             # <<<<<<<<<<<<<<
@@ -19425,7 +19393,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_d = ((2.0 * __pyx_v_dy) - __pyx_v_dx);
 
-  /* "src/draw_utils/draw_utils.pyx":50
+  /* "src/draw_utils/draw_utils.pyx":48
  *     cdef float d = 2 * dy - dx
  * 
  *     cdef float D = 0             # <<<<<<<<<<<<<<
@@ -19434,19 +19402,19 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_D = 0.0;
 
-  /* "src/draw_utils/draw_utils.pyx":52
+  /* "src/draw_utils/draw_utils.pyx":50
  *     cdef float D = 0
  * 
  *     cdef float length = np.sqrt(dx * dx + dy * dy)             # <<<<<<<<<<<<<<
  * 
  *     cdef float sin = dx / length
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 52, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 52, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyFloat_FromDouble(((__pyx_v_dx * __pyx_v_dx) + (__pyx_v_dy * __pyx_v_dy))); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 52, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(((__pyx_v_dx * __pyx_v_dx) + (__pyx_v_dy * __pyx_v_dy))); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -19467,15 +19435,15 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 52, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 50, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
-  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 52, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 50, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_length = __pyx_t_2;
 
-  /* "src/draw_utils/draw_utils.pyx":54
+  /* "src/draw_utils/draw_utils.pyx":52
  *     cdef float length = np.sqrt(dx * dx + dy * dy)
  * 
  *     cdef float sin = dx / length             # <<<<<<<<<<<<<<
@@ -19484,7 +19452,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_sin = (__pyx_v_dx / __pyx_v_length);
 
-  /* "src/draw_utils/draw_utils.pyx":55
+  /* "src/draw_utils/draw_utils.pyx":53
  * 
  *     cdef float sin = dx / length
  *     cdef float cos = dy / length             # <<<<<<<<<<<<<<
@@ -19493,7 +19461,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
   __pyx_v_cos = (__pyx_v_dy / __pyx_v_length);
 
-  /* "src/draw_utils/draw_utils.pyx":56
+  /* "src/draw_utils/draw_utils.pyx":54
  *     cdef float sin = dx / length
  *     cdef float cos = dy / length
  *     while (x <= x1):             # <<<<<<<<<<<<<<
@@ -19504,37 +19472,37 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
     __pyx_t_1 = (__pyx_v_x <= __pyx_v_x1);
     if (!__pyx_t_1) break;
 
-    /* "src/draw_utils/draw_utils.pyx":57
+    /* "src/draw_utils/draw_utils.pyx":55
  *     cdef float cos = dy / length
  *     while (x <= x1):
  *         point(x, y - 1, intensifyColor(D + cos), img)             # <<<<<<<<<<<<<<
  *         point(x, y, intensifyColor(D), img)
  *         point(x, y + 1, intensifyColor(D - cos), img)
  */
-    __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor((__pyx_v_D + __pyx_v_cos)); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 57, __pyx_L1_error)
-    __pyx_f_3src_10draw_utils_10draw_utils_point(__pyx_v_x, (__pyx_v_y - 1.0), __pyx_t_2, __pyx_v_img); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 57, __pyx_L1_error)
+    __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor((__pyx_v_D + __pyx_v_cos)); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 55, __pyx_L1_error)
+    __pyx_f_3src_10draw_utils_10draw_utils_point(__pyx_v_x, (__pyx_v_y - 1.0), __pyx_t_2, __pyx_v_img); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 55, __pyx_L1_error)
 
-    /* "src/draw_utils/draw_utils.pyx":58
+    /* "src/draw_utils/draw_utils.pyx":56
  *     while (x <= x1):
  *         point(x, y - 1, intensifyColor(D + cos), img)
  *         point(x, y, intensifyColor(D), img)             # <<<<<<<<<<<<<<
  *         point(x, y + 1, intensifyColor(D - cos), img)
  *         x = x + 1
  */
-    __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor(__pyx_v_D); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 58, __pyx_L1_error)
-    __pyx_f_3src_10draw_utils_10draw_utils_point(__pyx_v_x, __pyx_v_y, __pyx_t_2, __pyx_v_img); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 58, __pyx_L1_error)
+    __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor(__pyx_v_D); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 56, __pyx_L1_error)
+    __pyx_f_3src_10draw_utils_10draw_utils_point(__pyx_v_x, __pyx_v_y, __pyx_t_2, __pyx_v_img); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 56, __pyx_L1_error)
 
-    /* "src/draw_utils/draw_utils.pyx":59
+    /* "src/draw_utils/draw_utils.pyx":57
  *         point(x, y - 1, intensifyColor(D + cos), img)
  *         point(x, y, intensifyColor(D), img)
  *         point(x, y + 1, intensifyColor(D - cos), img)             # <<<<<<<<<<<<<<
  *         x = x + 1
  *         if (d <= 0):
  */
-    __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor((__pyx_v_D - __pyx_v_cos)); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 59, __pyx_L1_error)
-    __pyx_f_3src_10draw_utils_10draw_utils_point(__pyx_v_x, (__pyx_v_y + 1.0), __pyx_t_2, __pyx_v_img); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 59, __pyx_L1_error)
+    __pyx_t_2 = __pyx_f_3src_10draw_utils_10draw_utils_intensifyColor((__pyx_v_D - __pyx_v_cos)); if (unlikely(__pyx_t_2 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(1, 57, __pyx_L1_error)
+    __pyx_f_3src_10draw_utils_10draw_utils_point(__pyx_v_x, (__pyx_v_y + 1.0), __pyx_t_2, __pyx_v_img); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 57, __pyx_L1_error)
 
-    /* "src/draw_utils/draw_utils.pyx":60
+    /* "src/draw_utils/draw_utils.pyx":58
  *         point(x, y, intensifyColor(D), img)
  *         point(x, y + 1, intensifyColor(D - cos), img)
  *         x = x + 1             # <<<<<<<<<<<<<<
@@ -19543,7 +19511,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
     __pyx_v_x = (__pyx_v_x + 1.0);
 
-    /* "src/draw_utils/draw_utils.pyx":61
+    /* "src/draw_utils/draw_utils.pyx":59
  *         point(x, y + 1, intensifyColor(D - cos), img)
  *         x = x + 1
  *         if (d <= 0):             # <<<<<<<<<<<<<<
@@ -19553,7 +19521,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
     __pyx_t_1 = (__pyx_v_d <= 0.0);
     if (__pyx_t_1) {
 
-      /* "src/draw_utils/draw_utils.pyx":62
+      /* "src/draw_utils/draw_utils.pyx":60
  *         x = x + 1
  *         if (d <= 0):
  *             D = D + sin             # <<<<<<<<<<<<<<
@@ -19562,7 +19530,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
       __pyx_v_D = (__pyx_v_D + __pyx_v_sin);
 
-      /* "src/draw_utils/draw_utils.pyx":63
+      /* "src/draw_utils/draw_utils.pyx":61
  *         if (d <= 0):
  *             D = D + sin
  *             d = d + 2 * dy             # <<<<<<<<<<<<<<
@@ -19571,7 +19539,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
       __pyx_v_d = (__pyx_v_d + (2.0 * __pyx_v_dy));
 
-      /* "src/draw_utils/draw_utils.pyx":61
+      /* "src/draw_utils/draw_utils.pyx":59
  *         point(x, y + 1, intensifyColor(D - cos), img)
  *         x = x + 1
  *         if (d <= 0):             # <<<<<<<<<<<<<<
@@ -19581,7 +19549,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
       goto __pyx_L6;
     }
 
-    /* "src/draw_utils/draw_utils.pyx":65
+    /* "src/draw_utils/draw_utils.pyx":63
  *             d = d + 2 * dy
  *         else:
  *             D = D + sin - cos             # <<<<<<<<<<<<<<
@@ -19591,7 +19559,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
     /*else*/ {
       __pyx_v_D = ((__pyx_v_D + __pyx_v_sin) - __pyx_v_cos);
 
-      /* "src/draw_utils/draw_utils.pyx":66
+      /* "src/draw_utils/draw_utils.pyx":64
  *         else:
  *             D = D + sin - cos
  *             d = d + 2 * (dy - dx)             # <<<<<<<<<<<<<<
@@ -19599,7 +19567,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
  */
       __pyx_v_d = (__pyx_v_d + (2.0 * (__pyx_v_dy - __pyx_v_dx)));
 
-      /* "src/draw_utils/draw_utils.pyx":67
+      /* "src/draw_utils/draw_utils.pyx":65
  *             D = D + sin - cos
  *             d = d + 2 * (dy - dx)
  *             y = y + 1             # <<<<<<<<<<<<<<
@@ -19609,7 +19577,7 @@ static void __pyx_f_3src_10draw_utils_10draw_utils_line(__pyx_t_float_complex __
     __pyx_L6:;
   }
 
-  /* "src/draw_utils/draw_utils.pyx":30
+  /* "src/draw_utils/draw_utils.pyx":28
  *     return (x - a)/(b - a) * (d - c)
  * 
  * cdef void line(cython.floatcomplex p0, cython.floatcomplex p1, ImageDataclass img):             # <<<<<<<<<<<<<<
