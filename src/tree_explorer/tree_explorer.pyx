@@ -173,5 +173,5 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
         if kc.level == -1 and kc.tag[0] == start_tag:
             break
         turn_forward_move(kc)
-    print(np.asarray(img.image_array)) 
+
     return np.asarray(img.image_array) 
