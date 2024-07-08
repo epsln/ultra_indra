@@ -1907,8 +1907,8 @@ typedef npy_cdouble __pyx_t_5numpy_complex_t;
  * import cython
  * 
  * cdef class ImageDataclass:             # <<<<<<<<<<<<<<
- *     # fields can be declared using annotations
  *     cdef int width
+ *     cdef int height
  */
 struct __pyx_obj_3src_4data_15image_dataclass_ImageDataclass {
   PyObject_HEAD
