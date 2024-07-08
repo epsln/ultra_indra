@@ -116,7 +116,6 @@ cdef void turn_forward_move(KleinDataclass kc) noexcept :
     else:
         matmul(kc.words, kc.generators[idx_gen], kc.level)
 
-        
     kc.level += 1
 
 cdef void forward_move(KleinDataclass kc) noexcept :
@@ -135,62 +134,12 @@ cdef void forward_move(KleinDataclass kc) noexcept :
         matmul(kc.words, kc.generators[idx_gen], kc.level)
     kc.level += 1
 
-#cpdef list compute_start_points(int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape):
-#    cdef np.ndarray[np.complex64_t, ndim = 3] words = np.zeros((max_depth, 2, 2), dtype=np.complex64)
-#    cdef np.ndarray[np.int32_t, ndim = 1] tag   = np.empty((max_depth), dtype=np.int32)
-#    cdef np.ndarray[np.int32_t, ndim = 1] state = np.empty((max_depth), dtype=np.int32)
-#    cdef np.ndarray[np.int32_t, ndim = 1] level = np.zeros((1), dtype=np.int32)
-#    cdef np.ndarray[np.int32_t, ndim = 2] img = np.zeros((1080, 1080), dtype=np.int32)
-#    cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((4), dtype=np.complex64)
-#
-#    bounds[0] = -1 - 1j
-#    bounds[1] = +1 + 1j
-#    bounds[2] = +1080 + 1080j
-#
-#    words[0] = generators[0] 
-#    tag[0] = 0 
-#    state[0] = 1 
-#
-#    cdef int[:] p_tag = tag
-#    cdef int[:] p_state = state 
-#    cdef int[:] p_level = level 
-#    cdef int[:] p_fix_pt_shape = fix_pt_shape.astype(np.int32) 
-#    cdef int[:, :] p_fsa = FSA.astype(np.int32)
-#    cdef cython.floatcomplex [:, :, :] p_words = words.astype(np.complex64)
-#    cdef cython.floatcomplex [:, :, :] p_generators = generators.astype(np.complex64)
-#    cdef cython.floatcomplex [:, :] p_fix_pt   = fix_pt.astype(np.complex64)
-#
-#
-#    cdef int[:, :] p_img = img.astype(np.intc)
-#    cdef cython.floatcomplex[:] p_bounds = bounds.astype(np.complex64)
-#    p_tag[0] = 0 
-#    p_state[0] = 1 
-#
-#    last_points = []
-#    
-#    while not (p_level[0] == -1 and p_tag[0] == 1):
-#        while branch_terminated(p_tag, p_state, p_fsa, p_words, p_fix_pt, p_fix_pt_shape, p_img, p_bounds, p_level, epsilon, max_depth) == 0:
-#            forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
-#        last_points.append((tag[level[0]], state[level[0]], words[level[0], :, :]))
-#        while True:
-#            backward_move(p_level) 
-#            if available_turn(p_tag, p_state, p_fsa, p_words, p_level, epsilon) == 1 or p_level[0] == -1:
-#                break
-#        if p_level[0] == -1 and p_tag[0] == 1:
-#            break
-#        turn_forward_move(p_tag, p_state, p_fsa, p_words, p_generators, p_level, epsilon, max_depth)
-#    return last_points 
-
 cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_word, int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape, np.ndarray img_):
     cdef np.ndarray[np.complex64_t, ndim = 3] words = np.zeros((max_depth, 2, 2), dtype=np.complex64)
     cdef np.ndarray[np.int32_t, ndim = 1] tag   = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] state = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] level = np.zeros((1), dtype=np.int32)
     cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((3), dtype=np.complex64)
-
-    bounds[0] = -1 - 1j
-    bounds[1] = +1 + 1j
-    bounds[2] = +1080 + 1080j
 
     tag[0] = start_tag 
     words[0] = start_word 
@@ -213,7 +162,6 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
             z_min = -1 - 1j,
             z_max = 1 + 1j
             )
-
     
     while not (kc.level == -1 and kc.tag[0] == start_tag):
         while branch_terminated(kc, img) == 0:
@@ -225,5 +173,5 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
         if kc.level == -1 and kc.tag[0] == start_tag:
             break
         turn_forward_move(kc)
-    
+    print(np.asarray(img.image_array)) 
     return np.asarray(img.image_array) 
