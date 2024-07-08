@@ -8,8 +8,9 @@ import cython
 from cython.parallel import prange
 import numpy as np
 cimport numpy as np
-from src.draw_utils.draw_utils import line
-from src.klein_dataclass.klein_dataclass cimport KleinDataclass
+from src.draw_utils.draw_utils cimport line
+from src.data.klein_dataclass cimport KleinDataclass
+from src.data.image_dataclass cimport ImageDataclass 
 
 cdef int mod(int a, int b):
     cdef int r = a % b;
@@ -54,7 +55,7 @@ cdef void matmul(cython.floatcomplex[:, :, :] a, cython.floatcomplex[:, :] b, in
     a[level + 1, 1, 1] = a[level, 1, 0] * b[0, 1] + a[level, 1, 1] * b[1, 1]
     
 
-cdef int branch_terminated(KleinDataclass kc, int[:, :] img, cython.floatcomplex[:] bounds) noexcept :
+cdef int branch_terminated(KleinDataclass kc, ImageDataclass img) noexcept :
     if kc.level == kc.max_depth - 1:
         return 1 
 
@@ -78,13 +79,12 @@ cdef int branch_terminated(KleinDataclass kc, int[:, :] img, cython.floatcomplex
         
     for i from 0 <= i < num_fp:
         #TODO: Memoization
-        #TODO: Line tracing
         fp = kc.fixed_points[idx_gen, i]
         comp_fp = kc.fixed_points[idx_gen, i + 1]
         p = mobius(kc.words[kc.level], fp)
         comp_p = mobius(kc.words[kc.level], comp_fp)
 
-        line(p, comp_p, img, bounds)
+        line(p, comp_p, img)
 
     return 1 
 
@@ -186,7 +186,6 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
     cdef np.ndarray[np.int32_t, ndim = 1] tag   = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] state = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] level = np.zeros((1), dtype=np.int32)
-    cdef np.ndarray[np.int32_t, ndim = 2] img = np.zeros((1080, 1080), dtype=np.int32)
     cdef np.ndarray[np.complex64_t, ndim = 1] bounds = np.zeros((3), dtype=np.complex64)
 
     bounds[0] = -1 - 1j
@@ -196,7 +195,7 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
     tag[0] = start_tag 
     words[0] = start_word 
     state[0] = start_state 
-    kc = KleinDataclass(
+    cdef KleinDataclass kc = KleinDataclass(
             tag = tag,
             state = state,
             FSA = FSA.astype(np.int32),
@@ -206,20 +205,18 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
             fixed_points_shape = fix_pt_shape.astype(np.int32),
             epsilon = epsilon,
             max_depth = max_depth
-            )
-    cdef int[:] p_tag = tag
-    cdef int[:] p_state = state 
-    cdef int[:] p_level = level 
-    cdef int[:] p_fix_pt_shape = fix_pt_shape.astype(np.int32) 
-    cdef int[:, :] p_fsa = FSA.astype(np.int32)
-    cdef cython.floatcomplex [:, :, :] p_words = words.astype(np.complex64)
-    cdef cython.floatcomplex [:, :, :] p_generators = generators.astype(np.complex64)
-    cdef int[:, :] p_img = img.astype(np.intc)
-    cdef cython.floatcomplex[:] p_bounds = bounds.astype(np.complex64)
-    cdef cython.floatcomplex [:, :] p_fix_pt   = fix_pt.astype(np.complex64)
+    )
 
+    cdef ImageDataclass img = ImageDataclass(
+            width = 1080,
+            height = 1080,
+            z_min = -1 - 1j,
+            z_max = 1 + 1j
+            )
+
+    
     while not (kc.level == -1 and kc.tag[0] == start_tag):
-        while branch_terminated(kc, p_img, p_bounds) == 0:
+        while branch_terminated(kc, img) == 0:
             forward_move(kc)
         while True:
             backward_move(kc) 
@@ -229,4 +226,4 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
             break
         turn_forward_move(kc)
     
-    return np.asarray(p_img) 
+    return np.asarray(img.image_array) 
