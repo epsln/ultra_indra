@@ -15,15 +15,18 @@ ext_modules = []
 
 if use_cython:
     ext_modules += [
-        Extension("src.klein_dataclass.klein_dataclass", ["src/klein_dataclass/klein_dataclass.pyx"]),
+        Extension("src.data.klein_dataclass", ["src/data/klein_dataclass.pyx"]),
+        Extension("src.data.image_dataclass", ["src/data/image_dataclass.pyx"]),
         Extension("src.tree_explorer.tree_explorer", ["src/tree_explorer/tree_explorer.pyx"]),
         Extension("src.draw_utils.draw_utils", ["src/draw_utils/draw_utils.pyx"]),
     ]
     cmdclass.update({'build_ext': build_ext})
 else:
     ext_modules += [
-        Extension("klein_compute.tree_explorer", ["src/tree_explorer/tree_explorer.c"]),
-        Extension("klein_compute.draw_utils", ["src/draw_utils/draw_utils.c"]),
+        Extension("src.data.klein_dataclass", ["src/data/klein_dataclass.c"]),
+        Extension("src.data.image_dataclass", ["src/data/image_dataclass.c"]),
+        Extension("src.tree_explorer.tree_explorer", ["src/tree_explorer/tree_explorer.c"]),
+        Extension("src.draw_utils.draw_utils", ["src/draw_utils/draw_utils.c"]),
     ]
 
 setup(
