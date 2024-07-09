@@ -1,6 +1,11 @@
 from fractions import Fraction
 from scipy.optimize import root_scalar
 
+def gcd(a: int, b: int):
+    if b == 0:
+        return a
+    return gcd(b, a % b)
+
 def trace_poly(fract: Fraction, ta: complex, tB: complex, taB: complex):
     #See pp. 286
     if fract == Fraction(0, 1):
