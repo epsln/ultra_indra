@@ -39,7 +39,7 @@ def output_manager_fixture(output_model_fixture):
 
 @pytest.fixture
 def fraction_manager_fixture():
-    return FractionManager()
+    return FractionManager(fractions = [Fraction(0, 1)])
 
 @pytest.fixture
 def recipe_manager_fixture():
