@@ -4,12 +4,12 @@
 {
     "distutils": {
         "depends": [],
-        "name": "src.tree_explorer.klein_dataclass",
+        "name": "src.data.klein_dataclass",
         "sources": [
-            "src/tree_explorer/klein_dataclass.pyx"
+            "src/data/klein_dataclass.pyx"
         ]
     },
-    "module_name": "src.tree_explorer.klein_dataclass"
+    "module_name": "src.data.klein_dataclass"
 }
 END: Cython Metadata */
 
@@ -1229,8 +1229,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__src__tree_explorer__klein_dataclass
-#define __PYX_HAVE_API__src__tree_explorer__klein_dataclass
+#define __PYX_HAVE__src__data__klein_dataclass
+#define __PYX_HAVE_API__src__data__klein_dataclass
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -1515,7 +1515,7 @@ static const char *__pyx_filename;
 
 static const char *__pyx_f[] = {
   "<stringsource>",
-  "src/tree_explorer/klein_dataclass.pyx",
+  "src/data/klein_dataclass.pyx",
   "__init__.cython-30.pxd",
   "type.pxd",
 };
@@ -1861,7 +1861,7 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
 /* #### Code section: type_declarations ### */
 
 /*--- Type declarations ---*/
-struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass;
+struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
@@ -1903,14 +1903,14 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "src/tree_explorer/klein_dataclass.pxd":3
+/* "src/data/klein_dataclass.pxd":3
  * import cython
  * 
  * cdef class KleinDataclass:             # <<<<<<<<<<<<<<
  *     # fields can be declared using annotations
  *     cdef int[:] tag
  */
-struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass {
+struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass {
   PyObject_HEAD
   __Pyx_memviewslice tag;
   __Pyx_memviewslice state;
@@ -3173,7 +3173,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__p
 
 /* Module declarations from "numpy" */
 
-/* Module declarations from "src.tree_explorer.klein_dataclass" */
+/* Module declarations from "src.data.klein_dataclass" */
 static PyObject *__pyx_collections_abc_Sequence = 0;
 static PyObject *generic = 0;
 static PyObject *strided = 0;
@@ -3182,7 +3182,7 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static PyObject *__pyx_f_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *, PyObject *); /*proto*/
+static PyObject *__pyx_f_3src_4data_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *, PyObject *); /*proto*/
 static int __pyx_array_allocate_buffer(struct __pyx_array_obj *); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -3221,11 +3221,11 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, 
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, __PYX_IS_UNSIGNED(int) ? 'U' : 'I', __PYX_IS_UNSIGNED(int), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo___pyx_t_float_complex = { "float complex", NULL, sizeof(__pyx_t_float_complex), { 0 }, 0, 'C', 0, 0 };
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "src.tree_explorer.klein_dataclass"
-extern int __pyx_module_is_main_src__tree_explorer__klein_dataclass;
-int __pyx_module_is_main_src__tree_explorer__klein_dataclass = 0;
+#define __Pyx_MODULE_NAME "src.data.klein_dataclass"
+extern int __pyx_module_is_main_src__data__klein_dataclass;
+int __pyx_module_is_main_src__data__klein_dataclass = 0;
 
-/* Implementation of "src.tree_explorer.klein_dataclass" */
+/* Implementation of "src.data.klein_dataclass" */
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin___import__;
 static PyObject *__pyx_builtin_ValueError;
@@ -3349,6 +3349,7 @@ static const char __pyx_k_Cannot_index_with_type[] = "Cannot index with type '";
 static const char __pyx_k_MemoryView_of_r_object[] = "<MemoryView of %r object>";
 static const char __pyx_k_MemoryView_of_r_at_0x_x[] = "<MemoryView of %r at 0x%x>";
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
+static const char __pyx_k_src_data_klein_dataclass[] = "src.data.klein_dataclass";
 static const char __pyx_k_Dimension_d_is_not_direct[] = "Dimension %d is not direct";
 static const char __pyx_k_Index_out_of_bounds_axis_d[] = "Index out of bounds (axis %d)";
 static const char __pyx_k_Step_may_not_be_zero_axis_d[] = "Step may not be zero (axis %d)";
@@ -3374,7 +3375,6 @@ static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to conver
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension ";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
-static const char __pyx_k_src_tree_explorer_klein_dataclas[] = "src.tree_explorer.klein_dataclass";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
 static const char __pyx_k_Incompatible_checksums_0x_x_vs_0_2[] = "Incompatible checksums (0x%x vs (0x5379ec1, 0x8d417d6, 0xee9530e) = (FSA, epsilon, fixed_points, fixed_points_shape, generators, level, max_depth, state, tag, words))";
 /* #### Code section: decls ### */
@@ -3419,11 +3419,11 @@ static void __pyx_memoryviewslice___pyx_pf_15View_dot_MemoryView_16_memoryviewsl
 static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___init__(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *__pyx_v_self, PyArrayObject *__pyx_v_tag, PyArrayObject *__pyx_v_state, PyArrayObject *__pyx_v_FSA, PyArrayObject *__pyx_v_words, PyArrayObject *__pyx_v_generators, PyArrayObject *__pyx_v_fixed_points, PyArrayObject *__pyx_v_fixed_points_shape, float __pyx_v_epsilon, int __pyx_v_max_depth); /* proto */
-static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_2__reduce_cython__(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_4__setstate_cython__(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_KleinDataclass(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_3src_13tree_explorer_15klein_dataclass_KleinDataclass(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static int __pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass___init__(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *__pyx_v_self, PyArrayObject *__pyx_v_tag, PyArrayObject *__pyx_v_state, PyArrayObject *__pyx_v_FSA, PyArrayObject *__pyx_v_words, PyArrayObject *__pyx_v_generators, PyArrayObject *__pyx_v_fixed_points, PyArrayObject *__pyx_v_fixed_points_shape, float __pyx_v_epsilon, int __pyx_v_max_depth); /* proto */
+static PyObject *__pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass_2__reduce_cython__(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass_4__setstate_cython__(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_3src_4data_15klein_dataclass___pyx_unpickle_KleinDataclass(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_3src_4data_15klein_dataclass_KleinDataclass(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -3496,13 +3496,13 @@ typedef struct {
   PyTypeObject *__pyx_ptype_5numpy_character;
   PyTypeObject *__pyx_ptype_5numpy_ufunc;
   #if CYTHON_USE_MODULE_STATE
-  PyObject *__pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass;
+  PyObject *__pyx_type_3src_4data_15klein_dataclass_KleinDataclass;
   PyObject *__pyx_type___pyx_array;
   PyObject *__pyx_type___pyx_MemviewEnum;
   PyObject *__pyx_type___pyx_memoryview;
   PyObject *__pyx_type___pyx_memoryviewslice;
   #endif
-  PyTypeObject *__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass;
+  PyTypeObject *__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass;
   PyTypeObject *__pyx_array_type;
   PyTypeObject *__pyx_MemviewEnum_type;
   PyTypeObject *__pyx_memoryview_type;
@@ -3627,7 +3627,7 @@ typedef struct {
   PyObject *__pyx_n_s_shape;
   PyObject *__pyx_n_s_size;
   PyObject *__pyx_n_s_spec;
-  PyObject *__pyx_n_s_src_tree_explorer_klein_dataclas;
+  PyObject *__pyx_n_s_src_data_klein_dataclass;
   PyObject *__pyx_n_s_start;
   PyObject *__pyx_n_s_state;
   PyObject *__pyx_n_s_step;
@@ -3737,8 +3737,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_flexible);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_character);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_ufunc);
-  Py_CLEAR(clear_module_state->__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass);
-  Py_CLEAR(clear_module_state->__pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass);
+  Py_CLEAR(clear_module_state->__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass);
+  Py_CLEAR(clear_module_state->__pyx_type_3src_4data_15klein_dataclass_KleinDataclass);
   Py_CLEAR(clear_module_state->__pyx_array_type);
   Py_CLEAR(clear_module_state->__pyx_type___pyx_array);
   Py_CLEAR(clear_module_state->__pyx_MemviewEnum_type);
@@ -3867,7 +3867,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_shape);
   Py_CLEAR(clear_module_state->__pyx_n_s_size);
   Py_CLEAR(clear_module_state->__pyx_n_s_spec);
-  Py_CLEAR(clear_module_state->__pyx_n_s_src_tree_explorer_klein_dataclas);
+  Py_CLEAR(clear_module_state->__pyx_n_s_src_data_klein_dataclass);
   Py_CLEAR(clear_module_state->__pyx_n_s_start);
   Py_CLEAR(clear_module_state->__pyx_n_s_state);
   Py_CLEAR(clear_module_state->__pyx_n_s_step);
@@ -3955,8 +3955,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_flexible);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_character);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_ufunc);
-  Py_VISIT(traverse_module_state->__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass);
-  Py_VISIT(traverse_module_state->__pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass);
+  Py_VISIT(traverse_module_state->__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass);
+  Py_VISIT(traverse_module_state->__pyx_type_3src_4data_15klein_dataclass_KleinDataclass);
   Py_VISIT(traverse_module_state->__pyx_array_type);
   Py_VISIT(traverse_module_state->__pyx_type___pyx_array);
   Py_VISIT(traverse_module_state->__pyx_MemviewEnum_type);
@@ -4085,7 +4085,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_shape);
   Py_VISIT(traverse_module_state->__pyx_n_s_size);
   Py_VISIT(traverse_module_state->__pyx_n_s_spec);
-  Py_VISIT(traverse_module_state->__pyx_n_s_src_tree_explorer_klein_dataclas);
+  Py_VISIT(traverse_module_state->__pyx_n_s_src_data_klein_dataclass);
   Py_VISIT(traverse_module_state->__pyx_n_s_start);
   Py_VISIT(traverse_module_state->__pyx_n_s_state);
   Py_VISIT(traverse_module_state->__pyx_n_s_step);
@@ -4206,13 +4206,13 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_ptype_5numpy_character __pyx_mstate_global->__pyx_ptype_5numpy_character
 #define __pyx_ptype_5numpy_ufunc __pyx_mstate_global->__pyx_ptype_5numpy_ufunc
 #if CYTHON_USE_MODULE_STATE
-#define __pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass __pyx_mstate_global->__pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass
+#define __pyx_type_3src_4data_15klein_dataclass_KleinDataclass __pyx_mstate_global->__pyx_type_3src_4data_15klein_dataclass_KleinDataclass
 #define __pyx_type___pyx_array __pyx_mstate_global->__pyx_type___pyx_array
 #define __pyx_type___pyx_MemviewEnum __pyx_mstate_global->__pyx_type___pyx_MemviewEnum
 #define __pyx_type___pyx_memoryview __pyx_mstate_global->__pyx_type___pyx_memoryview
 #define __pyx_type___pyx_memoryviewslice __pyx_mstate_global->__pyx_type___pyx_memoryviewslice
 #endif
-#define __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass __pyx_mstate_global->__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass
+#define __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass __pyx_mstate_global->__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass
 #define __pyx_array_type __pyx_mstate_global->__pyx_array_type
 #define __pyx_MemviewEnum_type __pyx_mstate_global->__pyx_MemviewEnum_type
 #define __pyx_memoryview_type __pyx_mstate_global->__pyx_memoryview_type
@@ -4337,7 +4337,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_shape __pyx_mstate_global->__pyx_n_s_shape
 #define __pyx_n_s_size __pyx_mstate_global->__pyx_n_s_size
 #define __pyx_n_s_spec __pyx_mstate_global->__pyx_n_s_spec
-#define __pyx_n_s_src_tree_explorer_klein_dataclas __pyx_mstate_global->__pyx_n_s_src_tree_explorer_klein_dataclas
+#define __pyx_n_s_src_data_klein_dataclass __pyx_mstate_global->__pyx_n_s_src_data_klein_dataclass
 #define __pyx_n_s_start __pyx_mstate_global->__pyx_n_s_start
 #define __pyx_n_s_state __pyx_mstate_global->__pyx_n_s_state
 #define __pyx_n_s_step __pyx_mstate_global->__pyx_n_s_step
@@ -19279,7 +19279,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "src/tree_explorer/klein_dataclass.pyx":7
+/* "src/data/klein_dataclass.pyx":7
  * cdef class KleinDataclass:
  *     # fields can be declared using annotations
  *     def __init__(self, np.ndarray tag, np.ndarray state, np.ndarray FSA, np.ndarray words, np.ndarray generators, np.ndarray fixed_points, np.ndarray fixed_points_shape, float epsilon, int max_depth):             # <<<<<<<<<<<<<<
@@ -19288,8 +19288,8 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
  */
 
 /* Python wrapper */
-static int __pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_tag = 0;
   PyArrayObject *__pyx_v_state = 0;
   PyArrayObject *__pyx_v_FSA = 0;
@@ -19469,7 +19469,7 @@ static int __pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_1__i
       __Pyx_Arg_XDECREF_VARARGS(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.KleinDataclass.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.KleinDataclass.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
@@ -19480,7 +19480,7 @@ static int __pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_1__i
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_generators), __pyx_ptype_5numpy_ndarray, 1, "generators", 0))) __PYX_ERR(1, 7, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_fixed_points), __pyx_ptype_5numpy_ndarray, 1, "fixed_points", 0))) __PYX_ERR(1, 7, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_fixed_points_shape), __pyx_ptype_5numpy_ndarray, 1, "fixed_points_shape", 0))) __PYX_ERR(1, 7, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___init__(((struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *)__pyx_v_self), __pyx_v_tag, __pyx_v_state, __pyx_v_FSA, __pyx_v_words, __pyx_v_generators, __pyx_v_fixed_points, __pyx_v_fixed_points_shape, __pyx_v_epsilon, __pyx_v_max_depth);
+  __pyx_r = __pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass___init__(((struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *)__pyx_v_self), __pyx_v_tag, __pyx_v_state, __pyx_v_FSA, __pyx_v_words, __pyx_v_generators, __pyx_v_fixed_points, __pyx_v_fixed_points_shape, __pyx_v_epsilon, __pyx_v_max_depth);
 
   /* function exit code */
   goto __pyx_L0;
@@ -19497,7 +19497,7 @@ static int __pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_1__i
   return __pyx_r;
 }
 
-static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___init__(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *__pyx_v_self, PyArrayObject *__pyx_v_tag, PyArrayObject *__pyx_v_state, PyArrayObject *__pyx_v_FSA, PyArrayObject *__pyx_v_words, PyArrayObject *__pyx_v_generators, PyArrayObject *__pyx_v_fixed_points, PyArrayObject *__pyx_v_fixed_points_shape, float __pyx_v_epsilon, int __pyx_v_max_depth) {
+static int __pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass___init__(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *__pyx_v_self, PyArrayObject *__pyx_v_tag, PyArrayObject *__pyx_v_state, PyArrayObject *__pyx_v_FSA, PyArrayObject *__pyx_v_words, PyArrayObject *__pyx_v_generators, PyArrayObject *__pyx_v_fixed_points, PyArrayObject *__pyx_v_fixed_points_shape, float __pyx_v_epsilon, int __pyx_v_max_depth) {
   int __pyx_r;
   __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -19507,7 +19507,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":8
+  /* "src/data/klein_dataclass.pyx":8
  *     # fields can be declared using annotations
  *     def __init__(self, np.ndarray tag, np.ndarray state, np.ndarray FSA, np.ndarray words, np.ndarray generators, np.ndarray fixed_points, np.ndarray fixed_points_shape, float epsilon, int max_depth):
  *         self.tag = tag             # <<<<<<<<<<<<<<
@@ -19520,7 +19520,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":9
+  /* "src/data/klein_dataclass.pyx":9
  *     def __init__(self, np.ndarray tag, np.ndarray state, np.ndarray FSA, np.ndarray words, np.ndarray generators, np.ndarray fixed_points, np.ndarray fixed_points_shape, float epsilon, int max_depth):
  *         self.tag = tag
  *         self.state = state             # <<<<<<<<<<<<<<
@@ -19533,7 +19533,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":10
+  /* "src/data/klein_dataclass.pyx":10
  *         self.tag = tag
  *         self.state = state
  *         self.FSA = FSA             # <<<<<<<<<<<<<<
@@ -19546,7 +19546,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __pyx_t_2.memview = NULL;
   __pyx_t_2.data = NULL;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":11
+  /* "src/data/klein_dataclass.pyx":11
  *         self.state = state
  *         self.FSA = FSA
  *         self.words = words             # <<<<<<<<<<<<<<
@@ -19559,7 +19559,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __pyx_t_3.memview = NULL;
   __pyx_t_3.data = NULL;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":12
+  /* "src/data/klein_dataclass.pyx":12
  *         self.FSA = FSA
  *         self.words = words
  *         self.generators = generators             # <<<<<<<<<<<<<<
@@ -19572,7 +19572,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __pyx_t_3.memview = NULL;
   __pyx_t_3.data = NULL;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":13
+  /* "src/data/klein_dataclass.pyx":13
  *         self.words = words
  *         self.generators = generators
  *         self.fixed_points = fixed_points             # <<<<<<<<<<<<<<
@@ -19585,7 +19585,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __pyx_t_4.memview = NULL;
   __pyx_t_4.data = NULL;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":14
+  /* "src/data/klein_dataclass.pyx":14
  *         self.generators = generators
  *         self.fixed_points = fixed_points
  *         self.fixed_points_shape = fixed_points_shape             # <<<<<<<<<<<<<<
@@ -19598,7 +19598,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":15
+  /* "src/data/klein_dataclass.pyx":15
  *         self.fixed_points = fixed_points
  *         self.fixed_points_shape = fixed_points_shape
  *         self.level = 0             # <<<<<<<<<<<<<<
@@ -19607,7 +19607,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
  */
   __pyx_v_self->level = 0;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":16
+  /* "src/data/klein_dataclass.pyx":16
  *         self.fixed_points_shape = fixed_points_shape
  *         self.level = 0
  *         self.epsilon = epsilon             # <<<<<<<<<<<<<<
@@ -19615,14 +19615,14 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
  */
   __pyx_v_self->epsilon = __pyx_v_epsilon;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":17
+  /* "src/data/klein_dataclass.pyx":17
  *         self.level = 0
  *         self.epsilon = epsilon
  *         self.max_depth = max_depth             # <<<<<<<<<<<<<<
  */
   __pyx_v_self->max_depth = __pyx_v_max_depth;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":7
+  /* "src/data/klein_dataclass.pyx":7
  * cdef class KleinDataclass:
  *     # fields can be declared using annotations
  *     def __init__(self, np.ndarray tag, np.ndarray state, np.ndarray FSA, np.ndarray words, np.ndarray generators, np.ndarray fixed_points, np.ndarray fixed_points_shape, float epsilon, int max_depth):             # <<<<<<<<<<<<<<
@@ -19638,7 +19638,7 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_3, 1);
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_4, 1);
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.KleinDataclass.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.KleinDataclass.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   return __pyx_r;
@@ -19651,15 +19651,15 @@ static int __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass___in
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_3__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_3__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_3__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_3__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_3src_4data_15klein_dataclass_14KleinDataclass_3__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_3__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -19684,14 +19684,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__reduce_cython__", 0))) return NULL;
-  __pyx_r = __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_2__reduce_cython__(((struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass_2__reduce_cython__(((struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_2__reduce_cython__(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *__pyx_v_self) {
+static PyObject *__pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass_2__reduce_cython__(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *__pyx_v_self) {
   PyObject *__pyx_v_state = 0;
   PyObject *__pyx_v__dict = 0;
   int __pyx_v_use_setstate;
@@ -19962,7 +19962,7 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclas
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.KleinDataclass.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.KleinDataclass.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_state);
@@ -19980,15 +19980,15 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclas
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_5__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_5__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_5__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_5__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_3src_4data_15klein_dataclass_14KleinDataclass_5__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_5__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -20058,11 +20058,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.KleinDataclass.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.KleinDataclass.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_4__setstate_cython__(((struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass_4__setstate_cython__(((struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   {
@@ -20075,7 +20075,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_4__setstate_cython__(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_3src_4data_15klein_dataclass_14KleinDataclass_4__setstate_cython__(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -20090,7 +20090,7 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclas
  *     __pyx_unpickle_KleinDataclass__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
   if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_v___pyx_state))) __PYX_ERR(0, 17, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_3src_4data_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
@@ -20106,7 +20106,7 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclas
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.KleinDataclass.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.KleinDataclass.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -20121,15 +20121,15 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass_14KleinDataclas
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_13tree_explorer_15klein_dataclass_1__pyx_unpickle_KleinDataclass(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_3src_4data_15klein_dataclass_1__pyx_unpickle_KleinDataclass(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_3src_13tree_explorer_15klein_dataclass_1__pyx_unpickle_KleinDataclass = {"__pyx_unpickle_KleinDataclass", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_13tree_explorer_15klein_dataclass_1__pyx_unpickle_KleinDataclass, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_13tree_explorer_15klein_dataclass_1__pyx_unpickle_KleinDataclass(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_3src_4data_15klein_dataclass_1__pyx_unpickle_KleinDataclass = {"__pyx_unpickle_KleinDataclass", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_4data_15klein_dataclass_1__pyx_unpickle_KleinDataclass, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_4data_15klein_dataclass_1__pyx_unpickle_KleinDataclass(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -20229,11 +20229,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.__pyx_unpickle_KleinDataclass", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.__pyx_unpickle_KleinDataclass", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_KleinDataclass(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_3src_4data_15klein_dataclass___pyx_unpickle_KleinDataclass(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
 
   /* function exit code */
   {
@@ -20246,7 +20246,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_KleinDataclass(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_3src_4data_15klein_dataclass___pyx_unpickle_KleinDataclass(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_v___pyx_PickleError = 0;
   PyObject *__pyx_v___pyx_result = 0;
   PyObject *__pyx_r = NULL;
@@ -20328,7 +20328,7 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_
  *     if __pyx_state is not None:
  *         __pyx_unpickle_KleinDataclass__set_state(<KleinDataclass> __pyx_result, __pyx_state)
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass), __pyx_n_s_new); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass), __pyx_n_s_new); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -20373,7 +20373,7 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_
  * cdef __pyx_unpickle_KleinDataclass__set_state(KleinDataclass __pyx_result, tuple __pyx_state):
  */
     if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_v___pyx_state))) __PYX_ERR(0, 9, __pyx_L1_error)
-    __pyx_t_1 = __pyx_f_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(((struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_3src_4data_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(((struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
@@ -20409,7 +20409,7 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.__pyx_unpickle_KleinDataclass", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.__pyx_unpickle_KleinDataclass", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v___pyx_PickleError);
@@ -20427,7 +20427,7 @@ static PyObject *__pyx_pf_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_
  *     if len(__pyx_state) > 10 and hasattr(__pyx_result, '__dict__'):
  */
 
-static PyObject *__pyx_f_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_f_3src_4data_15klein_dataclass___pyx_unpickle_KleinDataclass__set_state(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -20658,7 +20658,7 @@ static PyObject *__pyx_f_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_K
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_AddTraceback("src.tree_explorer.klein_dataclass.__pyx_unpickle_KleinDataclass__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.data.klein_dataclass.__pyx_unpickle_KleinDataclass__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -20666,8 +20666,8 @@ static PyObject *__pyx_f_3src_13tree_explorer_15klein_dataclass___pyx_unpickle_K
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_3src_13tree_explorer_15klein_dataclass_KleinDataclass(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *p;
+static PyObject *__pyx_tp_new_3src_4data_15klein_dataclass_KleinDataclass(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *p;
   PyObject *o;
   #if CYTHON_COMPILING_IN_LIMITED_API
   allocfunc alloc_func = (allocfunc)PyType_GetSlot(t, Py_tp_alloc);
@@ -20680,7 +20680,7 @@ static PyObject *__pyx_tp_new_3src_13tree_explorer_15klein_dataclass_KleinDatacl
   }
   if (unlikely(!o)) return 0;
   #endif
-  p = ((struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *)o);
+  p = ((struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *)o);
   p->tag.data = NULL;
   p->tag.memview = NULL;
   p->state.data = NULL;
@@ -20698,11 +20698,11 @@ static PyObject *__pyx_tp_new_3src_13tree_explorer_15klein_dataclass_KleinDatacl
   return o;
 }
 
-static void __pyx_tp_dealloc_3src_13tree_explorer_15klein_dataclass_KleinDataclass(PyObject *o) {
-  struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *p = (struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass *)o;
+static void __pyx_tp_dealloc_3src_4data_15klein_dataclass_KleinDataclass(PyObject *o) {
+  struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *p = (struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass *)o;
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely((PY_VERSION_HEX >= 0x03080000 || __Pyx_PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE)) && __Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
-    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_3src_13tree_explorer_15klein_dataclass_KleinDataclass) {
+    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_3src_4data_15klein_dataclass_KleinDataclass) {
       if (PyObject_CallFinalizerFromDealloc(o)) return;
     }
   }
@@ -20731,34 +20731,34 @@ static void __pyx_tp_dealloc_3src_13tree_explorer_15klein_dataclass_KleinDatacla
   #endif
 }
 
-static PyMethodDef __pyx_methods_3src_13tree_explorer_15klein_dataclass_KleinDataclass[] = {
-  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+static PyMethodDef __pyx_methods_3src_4data_15klein_dataclass_KleinDataclass[] = {
+  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
-static PyType_Slot __pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass_slots[] = {
-  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_3src_13tree_explorer_15klein_dataclass_KleinDataclass},
-  {Py_tp_methods, (void *)__pyx_methods_3src_13tree_explorer_15klein_dataclass_KleinDataclass},
-  {Py_tp_init, (void *)__pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_1__init__},
-  {Py_tp_new, (void *)__pyx_tp_new_3src_13tree_explorer_15klein_dataclass_KleinDataclass},
+static PyType_Slot __pyx_type_3src_4data_15klein_dataclass_KleinDataclass_slots[] = {
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_3src_4data_15klein_dataclass_KleinDataclass},
+  {Py_tp_methods, (void *)__pyx_methods_3src_4data_15klein_dataclass_KleinDataclass},
+  {Py_tp_init, (void *)__pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_1__init__},
+  {Py_tp_new, (void *)__pyx_tp_new_3src_4data_15klein_dataclass_KleinDataclass},
   {0, 0},
 };
-static PyType_Spec __pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass_spec = {
-  "src.tree_explorer.klein_dataclass.KleinDataclass",
-  sizeof(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass),
+static PyType_Spec __pyx_type_3src_4data_15klein_dataclass_KleinDataclass_spec = {
+  "src.data.klein_dataclass.KleinDataclass",
+  sizeof(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE,
-  __pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass_slots,
+  __pyx_type_3src_4data_15klein_dataclass_KleinDataclass_slots,
 };
 #else
 
-static PyTypeObject __pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass = {
+static PyTypeObject __pyx_type_3src_4data_15klein_dataclass_KleinDataclass = {
   PyVarObject_HEAD_INIT(0, 0)
-  "src.tree_explorer.klein_dataclass.""KleinDataclass", /*tp_name*/
-  sizeof(struct __pyx_obj_3src_13tree_explorer_15klein_dataclass_KleinDataclass), /*tp_basicsize*/
+  "src.data.klein_dataclass.""KleinDataclass", /*tp_name*/
+  sizeof(struct __pyx_obj_3src_4data_15klein_dataclass_KleinDataclass), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_3src_13tree_explorer_15klein_dataclass_KleinDataclass, /*tp_dealloc*/
+  __pyx_tp_dealloc_3src_4data_15klein_dataclass_KleinDataclass, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -20791,7 +20791,7 @@ static PyTypeObject __pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDatac
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_3src_13tree_explorer_15klein_dataclass_KleinDataclass, /*tp_methods*/
+  __pyx_methods_3src_4data_15klein_dataclass_KleinDataclass, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -20801,9 +20801,9 @@ static PyTypeObject __pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDatac
   #if !CYTHON_USE_TYPE_SPECS
   0, /*tp_dictoffset*/
   #endif
-  __pyx_pw_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_1__init__, /*tp_init*/
+  __pyx_pw_3src_4data_15klein_dataclass_14KleinDataclass_1__init__, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_3src_13tree_explorer_15klein_dataclass_KleinDataclass, /*tp_new*/
+  __pyx_tp_new_3src_4data_15klein_dataclass_KleinDataclass, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -20972,7 +20972,7 @@ static PyType_Slot __pyx_type___pyx_array_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_array_spec = {
-  "src.tree_explorer.klein_dataclass.array",
+  "src.data.klein_dataclass.array",
   sizeof(struct __pyx_array_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_SEQUENCE,
@@ -21018,7 +21018,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "src.tree_explorer.klein_dataclass.""array", /*tp_name*/
+  "src.data.klein_dataclass.""array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -21178,7 +21178,7 @@ static PyType_Slot __pyx_type___pyx_MemviewEnum_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_MemviewEnum_spec = {
-  "src.tree_explorer.klein_dataclass.Enum",
+  "src.data.klein_dataclass.Enum",
   sizeof(struct __pyx_MemviewEnum_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC,
@@ -21188,7 +21188,7 @@ static PyType_Spec __pyx_type___pyx_MemviewEnum_spec = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "src.tree_explorer.klein_dataclass.""Enum", /*tp_name*/
+  "src.data.klein_dataclass.""Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -21485,7 +21485,7 @@ static PyType_Slot __pyx_type___pyx_memoryview_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_memoryview_spec = {
-  "src.tree_explorer.klein_dataclass.memoryview",
+  "src.data.klein_dataclass.memoryview",
   sizeof(struct __pyx_memoryview_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC,
@@ -21531,7 +21531,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "src.tree_explorer.klein_dataclass.""memoryview", /*tp_name*/
+  "src.data.klein_dataclass.""memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -21683,7 +21683,7 @@ static PyType_Slot __pyx_type___pyx_memoryviewslice_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_memoryviewslice_spec = {
-  "src.tree_explorer.klein_dataclass._memoryviewslice",
+  "src.data.klein_dataclass._memoryviewslice",
   sizeof(struct __pyx_memoryviewslice_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC|Py_TPFLAGS_SEQUENCE,
@@ -21693,7 +21693,7 @@ static PyType_Spec __pyx_type___pyx_memoryviewslice_spec = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "src.tree_explorer.klein_dataclass.""_memoryviewslice", /*tp_name*/
+  "src.data.klein_dataclass.""_memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -21917,7 +21917,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
     {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
     {&__pyx_n_s_spec, __pyx_k_spec, sizeof(__pyx_k_spec), 0, 0, 1, 1},
-    {&__pyx_n_s_src_tree_explorer_klein_dataclas, __pyx_k_src_tree_explorer_klein_dataclas, sizeof(__pyx_k_src_tree_explorer_klein_dataclas), 0, 0, 1, 1},
+    {&__pyx_n_s_src_data_klein_dataclass, __pyx_k_src_data_klein_dataclass, sizeof(__pyx_k_src_data_klein_dataclass), 0, 0, 1, 1},
     {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
     {&__pyx_n_s_state, __pyx_k_state, sizeof(__pyx_k_state), 0, 0, 1, 1},
     {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
@@ -22259,27 +22259,27 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass_spec, NULL); if (unlikely(!__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass)) __PYX_ERR(1, 5, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass_spec, __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_3src_4data_15klein_dataclass_KleinDataclass_spec, NULL); if (unlikely(!__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass)) __PYX_ERR(1, 5, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_3src_4data_15klein_dataclass_KleinDataclass_spec, __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
   #else
-  __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass = &__pyx_type_3src_13tree_explorer_15klein_dataclass_KleinDataclass;
+  __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass = &__pyx_type_3src_4data_15klein_dataclass_KleinDataclass;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
-  __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass->tp_print = 0;
+  __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass->tp_print = 0;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass->tp_dictoffset && __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass->tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass->tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass->tp_dictoffset && __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass->tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_KleinDataclass, (PyObject *) __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_KleinDataclass, (PyObject *) __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass) < 0) __PYX_ERR(1, 5, __pyx_L1_error)
   #endif
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
@@ -22747,14 +22747,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_src__tree_explorer__klein_dataclass) {
+  if (__pyx_module_is_main_src__data__klein_dataclass) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name_2, __pyx_n_s_main) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(1, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "src.tree_explorer.klein_dataclass")) {
-      if (unlikely((PyDict_SetItemString(modules, "src.tree_explorer.klein_dataclass", __pyx_m) < 0))) __PYX_ERR(1, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "src.data.klein_dataclass")) {
+      if (unlikely((PyDict_SetItemString(modules, "src.data.klein_dataclass", __pyx_m) < 0))) __PYX_ERR(1, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -23288,7 +23288,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_Enum, __pyx_t_7) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":2
+  /* "src/data/klein_dataclass.pyx":2
  * cimport cython
  * import numpy as np             # <<<<<<<<<<<<<<
  * cimport numpy as np
@@ -23304,11 +23304,11 @@ if (!__Pyx_RefNanny) {
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_3__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_KleinDataclass___reduce_cython, NULL, __pyx_n_s_src_tree_explorer_klein_dataclas, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_3src_4data_15klein_dataclass_14KleinDataclass_3__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_KleinDataclass___reduce_cython, NULL, __pyx_n_s_src_data_klein_dataclass, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass, __pyx_n_s_reduce_cython, __pyx_t_7) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass, __pyx_n_s_reduce_cython, __pyx_t_7) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  PyType_Modified(__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass);
+  PyType_Modified(__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass);
 
   /* "(tree fragment)":16
  *     else:
@@ -23316,23 +23316,23 @@ if (!__Pyx_RefNanny) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_KleinDataclass__set_state(self, __pyx_state)
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_3src_13tree_explorer_15klein_dataclass_14KleinDataclass_5__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_KleinDataclass___setstate_cython, NULL, __pyx_n_s_src_tree_explorer_klein_dataclas, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_3src_4data_15klein_dataclass_14KleinDataclass_5__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_KleinDataclass___setstate_cython, NULL, __pyx_n_s_src_data_klein_dataclass, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass, __pyx_n_s_setstate_cython, __pyx_t_7) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass, __pyx_n_s_setstate_cython, __pyx_t_7) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  PyType_Modified(__pyx_ptype_3src_13tree_explorer_15klein_dataclass_KleinDataclass);
+  PyType_Modified(__pyx_ptype_3src_4data_15klein_dataclass_KleinDataclass);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_KleinDataclass(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_3src_13tree_explorer_15klein_dataclass_1__pyx_unpickle_KleinDataclass, 0, __pyx_n_s_pyx_unpickle_KleinDataclass, NULL, __pyx_n_s_src_tree_explorer_klein_dataclas, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_3src_4data_15klein_dataclass_1__pyx_unpickle_KleinDataclass, 0, __pyx_n_s_pyx_unpickle_KleinDataclass, NULL, __pyx_n_s_src_data_klein_dataclass, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_KleinDataclass, __pyx_t_7) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "src/tree_explorer/klein_dataclass.pyx":1
+  /* "src/data/klein_dataclass.pyx":1
  * cimport cython             # <<<<<<<<<<<<<<
  * import numpy as np
  * cimport numpy as np
@@ -23351,7 +23351,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_7);
   if (__pyx_m) {
     if (__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init src.tree_explorer.klein_dataclass", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init src.data.klein_dataclass", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -23365,7 +23365,7 @@ if (!__Pyx_RefNanny) {
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init src.tree_explorer.klein_dataclass");
+    PyErr_SetString(PyExc_ImportError, "init src.data.klein_dataclass");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

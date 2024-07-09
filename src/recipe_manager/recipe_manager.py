@@ -1,4 +1,5 @@
 import numpy as np
+from fractions import Fraction
 from src.models import FractalModel
 import logging
 
@@ -22,9 +23,9 @@ class RecipeManager:
     def compute_generators(ta, tb, tab):
         pass
 
-    def generate(self, ta, tb=None, tab=None):
+    def generate(self, ta, tb=None, tab=None, fract = Fraction(0, 1)):
         gens = self.compute_generators(ta, tb, tab)
-        return FractalModel(generators=gens)
+        return FractalModel(generators=gens, special_fract = fract)
 
     @staticmethod
     def maskit(ta, tb=None, tab=None):
