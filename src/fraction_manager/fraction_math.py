@@ -1,5 +1,5 @@
 from fractions import Fraction
-from scipy.optimize import root_scalar
+from scipy.optimize import newton 
 
 def gcd(a: int, b: int):
     if b == 0:
@@ -40,5 +40,5 @@ def trace_poly(fract: Fraction, ta: complex, tB: complex, taB: complex):
 def trace_equation(fract: Fraction, mu: complex):
     return trace_poly(fract, -1j * mu, 2, -1j * mu + 2j) - 2
 
-def trace_solver(fract: Fraction):
-    return root_scalar(self, trace_equation, method = 'brent', xtol = self.root_epsilon, maxiter = self.root_maxiter)
+def trace_solver(fract: Fraction, z0):
+    return newton(trace_equation, z0) 

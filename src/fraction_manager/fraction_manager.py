@@ -26,5 +26,7 @@ class FractionManager:
         return cls(fractions = v)
 
     def generate(self):
+        ta = 2
         for fract in self.fractions:
-            yield self.recipe.generate(trace_solver(fract), 2, fract)
+            ta = trace_solver(fract, ta)
+            yield self.recipe.generate(ta, 2)
