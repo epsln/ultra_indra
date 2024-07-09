@@ -1,6 +1,7 @@
 from src.models import FractalModel, ComputeModel, OutputModel
 from src.klein_composer import KleinComposer 
 from src.output_manager import OutputManager 
+from src.fraction_manager import FractionManager
 import numpy as np
 from fractions import Fraction
 import pytest
@@ -35,6 +36,10 @@ def output_model_fixture():
 @pytest.fixture
 def output_manager_fixture(output_model_fixture):
         return OutputManager(output_model_fixture)
+
+@pytest.fixture
+def fraction_manager_fixture():
+    return FractionManager()
 
 @pytest.fixture
 def recipe_manager_fixture():
