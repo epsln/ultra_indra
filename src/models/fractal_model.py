@@ -23,7 +23,9 @@ class FractalModel:
         self._compute_fixed_points()
         self.FSA = FSA
 
-    def _mobius_fixed_point(self, mat: np.ndarray):
+    @staticmethod
+    def _mobius_fixed_point(mat: np.ndarray):
+        #TODO: Move to math utils
         coeff = np.array([mat[1, 0], (mat[1, 1] - mat[0, 0]), -mat[0, 1]])
         return np.roots(coeff)
 
