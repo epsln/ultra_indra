@@ -17,9 +17,9 @@ def test_init():
 
 def test_init_from_farey():
     f = FractionManager.from_farey_sequence(max_denum = 5)
-    assert len(f.fractions) == 11
+    assert len(f.fractions) == 10
     f = FractionManager.from_farey_sequence(max_denum = 10)
-    assert len(f.fractions) == 33 
+    assert len(f.fractions) == 32 
     
 def test_generate(fm):
    fractal_model = fm.generate()

@@ -18,6 +18,9 @@ class FractionManager:
         self.root_iter = root_iter 
         self.root_epsilon = root_epsilon
         self.recipe = RecipeManager("grandma_recipe")
+        self.mu = 2j
+        if Fraction(1, 1) in self.fractions:
+            self.fractions.remove(Fraction(1, 1))
 
     @classmethod
     def from_farey_sequence(cls, max_denum: int):
@@ -27,21 +30,20 @@ class FractionManager:
             for j in range(i, max_denum + 1):
                 if gcd(i, j) == 1:
                     v.append(Fraction(i, j))
+        v = sorted(v)
         return cls(fractions = v)
 
     def generate(self):
-        ta = 2j
         for fract in self.fractions:
-            print(fract, ta)
-            ta = self.trace_solver(fract, ta)
-            yield self.recipe.generate(ta, 2)
+            self.mu = self.trace_solver(fract, self.mu)
+            yield self.recipe.generate(self.mu * -1j, 2)
 
     def trace_solver(self, fract: Fraction, ta: complex):
         #Need to implement custom newton root finder
         #As the function to optimize needs a fraction and a z value
         z = ta
         if cmath.isinf(trace_equation(fract, ta)):
-            raise ValueError("Newton method failed !")
+            raise ValueError("Newton method failed ! ta is inf")
         for i in range(self.root_iter):
             real_v = (trace_equation(fract, z + self.root_epsilon) - trace_equation(fract, z - self.root_epsilon))/(2 * self.root_epsilon)
             imag_v = (trace_equation(fract, z + self.root_epsilon *1j) - trace_equation(fract, z - self.root_epsilon * 1j))/(2j * self.root_epsilon)
