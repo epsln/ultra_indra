@@ -36,7 +36,7 @@ class FractionManager:
     def generate(self):
         for fract in self.fractions:
             self.mu = self.trace_solver(fract, self.mu)
-            yield self.recipe.generate(self.mu * -1j, 2)
+            yield self.recipe.generate(self.mu * 1j, 2)
 
     def trace_solver(self, fract: Fraction, ta: complex):
         #Need to implement custom newton root finder
