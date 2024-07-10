@@ -5,6 +5,7 @@ from fractions import Fraction
 from tests.conftest import fraction_manager_fixture as fm
 from src.fraction_manager import FractionManager 
 from src.fraction_manager.fraction_manager import FractionManager
+from src.fraction_manager.fraction_math import trace_equation 
 
 def test_init():
     with pytest.raises(ValueError):
@@ -22,3 +23,7 @@ def test_init_from_farey():
     
 def test_generate(fm):
    fractal_model = fm.generate()
+
+def test_trace_solver(fm):
+   ta = fm.trace_solver(Fraction(1, 2), 2j)
+   assert np.isclose(trace_equation(Fraction(1, 2), ta), 0)

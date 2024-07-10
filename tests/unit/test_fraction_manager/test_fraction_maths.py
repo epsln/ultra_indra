@@ -9,7 +9,7 @@ def test_gcd():
     assert fm.gcd(10, 52) == 2
 
 def test_poly():
-    assert fm.trace_poly(Fraction(0, 1), 2, 2, 2) == 2
+    assert fm.trace_poly(0, 1, 2, 2, 2) == 2
 
 def test_trace_equation():
     assert fm.trace_equation(Fraction(0, 1), 2) == -2-2j
