@@ -44,7 +44,6 @@ def trace_poly(p: int, q: int, ta: complex, tB: complex, taB: complex):
 
             tr_uv = tr_v * tr_uv - tr_u
             tr_u = temp
-    #print(f"tr_uv: {tr_uv:.2} ta: {ta}, tb: {tB} taB: {taB}" )
     return tr_uv
 
 def trace_equation(fract: Fraction, mu: complex):
