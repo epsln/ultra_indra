@@ -54,6 +54,7 @@ class OutputManager:
             self.output_dir, f"img_{self.image_count}.{self.file_type}"
         )
         self.image_count += 1
+        _logger.info(f"Saving {self.filename}, img_count: {self.image_count}")
 
     def _image_saver(self, image):
         cv2.imwrite(self.filename, image)
