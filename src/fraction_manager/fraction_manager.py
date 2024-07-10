@@ -1,10 +1,14 @@
 from fractions import Fraction
+import cmath
+import logging
 
 from src.recipe_manager import RecipeManager 
-from src.fraction_manager.fraction_math import trace_solver, gcd
+from src.fraction_manager.fraction_math import trace_equation, gcd
+
+_logger = logging.getLogger(__name__)
 
 class FractionManager:
-    def __init__(self, fractions: list[Fraction],  root_iter = 1000, root_epsilon = 1e-6):
+    def __init__(self, fractions: list[Fraction],  root_iter = 100, root_epsilon = 1e-6):
         if root_iter < 10:
             raise ValueError(f"Value root_iter must be > 10 !")
         if root_epsilon < 0 or root_epsilon > 1:
@@ -26,7 +30,27 @@ class FractionManager:
         return cls(fractions = v)
 
     def generate(self):
-        ta = 2
+        ta = 2j
         for fract in self.fractions:
-            ta = trace_solver(fract, ta)
+            print(fract, ta)
+            ta = self.trace_solver(fract, ta)
             yield self.recipe.generate(ta, 2)
+
+    def trace_solver(self, fract: Fraction, ta: complex):
+        #Need to implement custom newton root finder
+        #As the function to optimize needs a fraction and a z value
+        z = ta
+        if cmath.isinf(trace_equation(fract, ta)):
+            raise ValueError("Newton method failed !")
+        for i in range(self.root_iter):
+            real_v = (trace_equation(fract, z + self.root_epsilon) - trace_equation(fract, z - self.root_epsilon))/(2 * self.root_epsilon)
+            imag_v = (trace_equation(fract, z + self.root_epsilon *1j) - trace_equation(fract, z - self.root_epsilon * 1j))/(2j * self.root_epsilon)
+            deriv = (real_v + imag_v)/2.
+            trace_eq_val = trace_equation(fract, z)
+            z -= trace_eq_val/deriv
+            if abs(trace_eq_val) <= self.root_epsilon:
+                return z
+
+        raise ValueError(f"Newton method failed after {self.root_iter} iterations ! Last values: f({z}) = {trace_eq_val}")
+
+
