@@ -1,6 +1,5 @@
 import cv2
 import logging
-import numpy as np
 import os
 
 _logger = logging.getLogger(__name__)

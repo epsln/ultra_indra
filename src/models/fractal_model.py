@@ -2,7 +2,6 @@ from src.utils import pad_to_dense, cyclic_permutation
 
 import numpy as np
 from fractions import Fraction
-from itertools import permutations
 from typing import Optional
 
 DEFAULT_FSA: np.ndarray = np.array(

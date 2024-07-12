@@ -11,9 +11,9 @@ _logger = logging.getLogger(__name__)
 class FractionManager:
     def __init__(self, fractions: list[Fraction], root_iter=100, root_epsilon=1e-6):
         if root_iter < 10:
-            raise ValueError(f"Value root_iter must be > 10 !")
+            raise ValueError("Value root_iter must be > 10 !")
         if root_epsilon < 0 or root_epsilon > 1:
-            raise ValueError(f"Value root_epsilon must be in ]0; 1[ !")
+            raise ValueError("Value root_epsilon must be in ]0; 1[ !")
 
         self.fractions = fractions
         self.root_iter = root_iter
