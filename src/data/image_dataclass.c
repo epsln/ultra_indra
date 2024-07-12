@@ -19413,7 +19413,7 @@ static int __pyx_pf_3src_4data_15image_dataclass_14ImageDataclass___init__(struc
  *     def __init__(self, int width, int height, cython.floatcomplex z_min, cython.floatcomplex z_max):
  *         self.width = width             # <<<<<<<<<<<<<<
  *         self.height = height
- *         self.z_min = z_min
+ *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)
  */
   __pyx_v_self->width = __pyx_v_width;
 
@@ -19421,35 +19421,17 @@ static int __pyx_pf_3src_4data_15image_dataclass_14ImageDataclass___init__(struc
  *     def __init__(self, int width, int height, cython.floatcomplex z_min, cython.floatcomplex z_max):
  *         self.width = width
  *         self.height = height             # <<<<<<<<<<<<<<
+ *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)
  *         self.z_min = z_min
- *         self.z_max = z_max
  */
   __pyx_v_self->height = __pyx_v_height;
 
   /* "src/data/image_dataclass.pyx":9
  *         self.width = width
  *         self.height = height
- *         self.z_min = z_min             # <<<<<<<<<<<<<<
- *         self.z_max = z_max
- *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)
- */
-  __pyx_v_self->z_min = __pyx_v_z_min;
-
-  /* "src/data/image_dataclass.pyx":10
- *         self.height = height
- *         self.z_min = z_min
- *         self.z_max = z_max             # <<<<<<<<<<<<<<
- *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)
- *         img = np.zeros(shape = (self.width, self.height), dtype = np.intc)
- */
-  __pyx_v_self->z_max = __pyx_v_z_max;
-
-  /* "src/data/image_dataclass.pyx":11
- *         self.z_min = z_min
- *         self.z_max = z_max
  *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)             # <<<<<<<<<<<<<<
- *         img = np.zeros(shape = (self.width, self.height), dtype = np.intc)
- *         self.image_array = img
+ *         self.z_min = z_min
+ *         self.z_max = z_max
  */
   __pyx_t_1 = __pyx_v_self->height;
   __pyx_t_2 = __pyx_v_self->width;
@@ -19471,59 +19453,95 @@ static int __pyx_pf_3src_4data_15image_dataclass_14ImageDataclass___init__(struc
   __pyx_t_3 = __pyx_t_2;
   if (unlikely(__pyx_t_3 == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(1, 11, __pyx_L1_error)
+    __PYX_ERR(1, 9, __pyx_L1_error)
   }
   __pyx_v_self->aspect_ratio = (__pyx_t_5 / ((double)__pyx_t_3));
 
-  /* "src/data/image_dataclass.pyx":12
- *         self.z_max = z_max
+  /* "src/data/image_dataclass.pyx":10
+ *         self.height = height
  *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)
+ *         self.z_min = z_min             # <<<<<<<<<<<<<<
+ *         self.z_max = z_max
+ *         self.z_min.real*= self.aspect_ratio
+ */
+  __pyx_v_self->z_min = __pyx_v_z_min;
+
+  /* "src/data/image_dataclass.pyx":11
+ *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)
+ *         self.z_min = z_min
+ *         self.z_max = z_max             # <<<<<<<<<<<<<<
+ *         self.z_min.real*= self.aspect_ratio
+ *         self.z_max.real *= self.aspect_ratio
+ */
+  __pyx_v_self->z_max = __pyx_v_z_max;
+
+  /* "src/data/image_dataclass.pyx":12
+ *         self.z_min = z_min
+ *         self.z_max = z_max
+ *         self.z_min.real*= self.aspect_ratio             # <<<<<<<<<<<<<<
+ *         self.z_max.real *= self.aspect_ratio
+ *         img = np.zeros(shape = (self.width, self.height), dtype = np.intc)
+ */
+  __Pyx_SET_CREAL(__pyx_v_self->z_min, (__Pyx_CREAL(__pyx_v_self->z_min) * __pyx_v_self->aspect_ratio));
+
+  /* "src/data/image_dataclass.pyx":13
+ *         self.z_max = z_max
+ *         self.z_min.real*= self.aspect_ratio
+ *         self.z_max.real *= self.aspect_ratio             # <<<<<<<<<<<<<<
+ *         img = np.zeros(shape = (self.width, self.height), dtype = np.intc)
+ *         self.image_array = img
+ */
+  __Pyx_SET_CREAL(__pyx_v_self->z_max, (__Pyx_CREAL(__pyx_v_self->z_max) * __pyx_v_self->aspect_ratio));
+
+  /* "src/data/image_dataclass.pyx":14
+ *         self.z_min.real*= self.aspect_ratio
+ *         self.z_max.real *= self.aspect_ratio
  *         img = np.zeros(shape = (self.width, self.height), dtype = np.intc)             # <<<<<<<<<<<<<<
  *         self.image_array = img
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_self->width); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_self->width); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_self->height); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_self->height); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_GIVEREF(__pyx_t_8);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_8)) __PYX_ERR(1, 14, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_9);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_9)) __PYX_ERR(1, 12, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_9)) __PYX_ERR(1, 14, __pyx_L1_error);
   __pyx_t_8 = 0;
   __pyx_t_9 = 0;
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_shape, __pyx_t_10) < 0) __PYX_ERR(1, 12, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_shape, __pyx_t_10) < 0) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_intc); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_intc); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, __pyx_t_9) < 0) __PYX_ERR(1, 12, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, __pyx_t_9) < 0) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_empty_tuple, __pyx_t_6); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_empty_tuple, __pyx_t_6); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_img = __pyx_t_9;
   __pyx_t_9 = 0;
 
-  /* "src/data/image_dataclass.pyx":13
- *         self.aspect_ratio = max(self.width, self.height) * 1.0/min(self.width, self.height)
+  /* "src/data/image_dataclass.pyx":15
+ *         self.z_max.real *= self.aspect_ratio
  *         img = np.zeros(shape = (self.width, self.height), dtype = np.intc)
  *         self.image_array = img             # <<<<<<<<<<<<<<
  * 
  */
-  __pyx_t_11 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_v_img, PyBUF_WRITABLE); if (unlikely(!__pyx_t_11.memview)) __PYX_ERR(1, 13, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_v_img, PyBUF_WRITABLE); if (unlikely(!__pyx_t_11.memview)) __PYX_ERR(1, 15, __pyx_L1_error)
   __PYX_XCLEAR_MEMVIEW(&__pyx_v_self->image_array, 0);
   __pyx_v_self->image_array = __pyx_t_11;
   __pyx_t_11.memview = NULL;
