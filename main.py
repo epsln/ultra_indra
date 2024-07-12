@@ -17,13 +17,11 @@ if __name__ == "__main__":
     om = OutputModel(file_type="jpg", output_directory="output")
     output_manager = OutputManager(om)
     fract_manager = FractionManager.from_farey_sequence(5)
-    cm = ComputeModel(max_depth=15, epsilon = 0.0001, num_threads=4)
+    cm = ComputeModel(max_depth=40, epsilon = 0.0001, num_threads=4)
 
     for fm in fract_manager.generate():
 
-        kc = KleinComposer(fm, cm)
-
-        
+        kc = KleinComposer(fm, cm, om)
 
         p = kc.compute_thread()
 
