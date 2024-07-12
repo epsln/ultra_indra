@@ -1,11 +1,11 @@
 from dataclasses import dataclass
+import numpy as np
 
 
 @dataclass
 class OutputModel:
-    image_width: int = 1920
-    image_height: int = 1080
-    bounds: float = 1
-    center: float = 0
+    image_dim: tuple = (1920, 1080)
+    z_min: complex = -1 - 1j
+    z_max: complex = +1 + 1j
     file_type: str = "jpg"
     output_directory: str = "output"

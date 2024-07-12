@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 
 class KleinComposer:
-    def __init__(self, fractal_model, compute_model):
+    def __init__(self, fractal_model, compute_model, output_model):
         self.gen = fractal_model.generators
         self.fsa = fractal_model.FSA
         self.fsa = np.array(
@@ -23,6 +23,7 @@ class KleinComposer:
 
         self.cm = compute_model
         self.fm = fractal_model
+        self.om = output_model
 
         # TODO: Rename threads into workers
         self.pool = Pool(self.cm.num_threads)
@@ -44,8 +45,8 @@ class KleinComposer:
         return output
 
     def compute_thread(self):
+        #TODO: Find some way to clean up argument passing
         start_elements = self.compute_start_points()
-        img = np.zeros((1080, 1080))
         arguments = [
             (
                 e[0],
@@ -57,7 +58,9 @@ class KleinComposer:
                 self.fm.FSA,
                 self.fm.fixed_points,
                 self.fm.fixed_points_shape,
-                img,
+                self.om.image_dim,
+                self.om.z_min,
+                self.om.z_max 
             )
             for e in start_elements
         ]
@@ -65,6 +68,8 @@ class KleinComposer:
         with self.pool as p:
             output = p.starmap(compute_tree, arguments)
 
+        image = np.zeros(self.om.image_dim)
         for o in output:
-            img = np.add(img, o)
-        return img
+            image = np.add(image, o)
+
+        return image 

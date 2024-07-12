@@ -134,7 +134,7 @@ cdef void forward_move(KleinDataclass kc) noexcept :
         matmul(kc.words, kc.generators[idx_gen], kc.level)
     kc.level += 1
 
-cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_word, int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape, np.ndarray img_):
+cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_word, int max_depth, float epsilon, np.ndarray generators, np.ndarray FSA, np.ndarray fix_pt, np.ndarray fix_pt_shape, tuple image_dim, complex z_min, complex z_max):
     cdef np.ndarray[np.complex64_t, ndim = 3] words = np.zeros((max_depth, 2, 2), dtype=np.complex64)
     cdef np.ndarray[np.int32_t, ndim = 1] tag   = np.empty((max_depth), dtype=np.int32)
     cdef np.ndarray[np.int32_t, ndim = 1] state = np.empty((max_depth), dtype=np.int32)
@@ -157,10 +157,10 @@ cpdef np.ndarray compute_tree(int start_tag, int start_state, np.ndarray start_w
     )
 
     cdef ImageDataclass img = ImageDataclass(
-            width = 1080,
-            height = 1080,
-            z_min = -1 - 1j,
-            z_max = 1 + 1j
+            width = image_dim[0],
+            height = image_dim[1],
+            z_min = z_min,
+            z_max = z_max 
             )
     
     while not (kc.level == -1 and kc.tag[0] == start_tag):
