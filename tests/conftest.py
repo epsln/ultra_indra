@@ -25,13 +25,13 @@ def compute_model_fixture():
                         )
 
 @pytest.fixture
-def klein_composer_fixture(fractal_model_fixture, compute_model_fixture):
-    return KleinComposer(fractal_model_fixture, compute_model_fixture)
-
-@pytest.fixture
 def output_model_fixture():
     with tempfile.TemporaryDirectory() as tmpdirname:
         return OutputModel(output_directory = tmpdirname)
+
+@pytest.fixture
+def klein_composer_fixture(fractal_model_fixture, compute_model_fixture, output_model_fixture):
+    return KleinComposer(fractal_model_fixture, compute_model_fixture, output_model_fixture)
 
 @pytest.fixture
 def output_manager_fixture(output_model_fixture):
