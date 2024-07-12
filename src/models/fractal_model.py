@@ -25,7 +25,7 @@ class FractalModel:
 
     @staticmethod
     def _mobius_fixed_point(mat: np.ndarray):
-        #TODO: Move to math utils
+        # TODO: Move to math utils
         coeff = np.array([mat[1, 0], (mat[1, 1] - mat[0, 0]), -mat[0, 1]])
         return np.roots(coeff)
 
@@ -57,7 +57,7 @@ class FractalModel:
         special_word_inv = [(i + 2) % 4 for i in self.special_word]
         cleaned_spe_w = []
 
-        for w in [[0, 1, 2, 3], self.special_word, special_word_inv, [1, 0, 3, 2]]: 
+        for w in [[0, 1, 2, 3], self.special_word, special_word_inv, [1, 0, 3, 2]]:
             for perm in cyclic_permutation(w):
                 valid = True
                 for curr_e, next_e in zip(perm, perm[1:]):
@@ -66,7 +66,7 @@ class FractalModel:
                         break
                 if valid:
                     cleaned_spe_w.append(perm)
-                    
+
         for perm in cleaned_spe_w:
             word = self.generators[perm[0]]
             for p in perm[1:]:

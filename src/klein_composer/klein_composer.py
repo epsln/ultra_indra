@@ -45,7 +45,7 @@ class KleinComposer:
         return output
 
     def compute_thread(self):
-        #TODO: Find some way to clean up argument passing
+        # TODO: Find some way to clean up argument passing
         start_elements = self.compute_start_points()
         arguments = [
             (
@@ -60,7 +60,7 @@ class KleinComposer:
                 self.fm.fixed_points_shape,
                 self.om.image_dim,
                 self.om.z_min,
-                self.om.z_max 
+                self.om.z_max,
             )
             for e in start_elements
         ]
@@ -72,4 +72,4 @@ class KleinComposer:
         for o in output:
             image = np.add(image, o)
 
-        return image 
+        return image

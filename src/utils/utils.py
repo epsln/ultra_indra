@@ -12,6 +12,7 @@ def pad_to_dense(M):
         Z[enu, : len(row)] += row
     return Z
 
+
 def cyclic_permutation(a):
     n = len(a)
     b = [[a[i - j] for i in range(n)] for j in range(n)]
